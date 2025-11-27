@@ -15,7 +15,7 @@ export function FarmerProfileScreen({ onBack }) {
     phone: "+91 98765 43210",
     district: "Patiala",
     state: "Punjab",
-    experience: "Intermediate",
+    experience: "Pro",
     fieldSize: 5,
     crops: ["Wheat", "Rice", "Sugarcane"],
   })
@@ -97,7 +97,7 @@ export function FarmerProfileScreen({ onBack }) {
 
         {/* Details Card */}
         <div className="bg-card border-[1.5px] border-border rounded-2xl p-6 shadow-[0_2px_8px_rgba(107,166,115,0.08),0_1px_3px_rgba(107,166,115,0.04)] hover:shadow-[0_4px_12px_rgba(107,166,115,0.12),0_2px_6px_rgba(107,166,115,0.08)] hover:-translate-y-0.5 transition-all relative before:content-[''] before:absolute before:inset-[-2px] before:border-2 before:border-primary before:rounded-2xl before:opacity-0 hover:before:opacity-20 before:transition-opacity space-y-4">
-          <h3 className="text-lg font-semibold mb-4 flex items-center gap-2" style={{ fontFamily: "Mali, cursive" }}>
+          <h3 className="text-lg font-semibold mb-4 flex items-center gap-2" style={{ fontFamily: "'Segoe UI', sans-serif" }}>
             <Leaf className="w-5 h-5 text-primary" />
             Personal Details
           </h3>
@@ -141,7 +141,7 @@ export function FarmerProfileScreen({ onBack }) {
         </div>
 
         <div className="bg-card border-[1.5px] border-border rounded-2xl p-6 shadow-[0_2px_8px_rgba(107,166,115,0.08),0_1px_3px_rgba(107,166,115,0.04)] hover:shadow-[0_4px_12px_rgba(107,166,115,0.12),0_2px_6px_rgba(107,166,115,0.08)] hover:-translate-y-0.5 transition-all relative before:content-[''] before:absolute before:inset-[-2px] before:border-2 before:border-primary before:rounded-2xl before:opacity-0 hover:before:opacity-20 before:transition-opacity">
-          <h3 className="text-lg font-semibold mb-5 flex items-center gap-2" style={{ fontFamily: "Mali, cursive" }}>
+          <h3 className="text-lg font-semibold mb-5 flex items-center gap-2" style={{ fontFamily: "'Segoe UI', sans-serif" }}>
             <Award className="w-5 h-5 text-accent" />
             Achievement Timeline
           </h3>

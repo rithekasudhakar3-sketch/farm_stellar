@@ -160,7 +160,7 @@ export function FarmerSignupScreen({ onSuccess, onBack }) {
               <div className="bg-card rounded-2xl p-6 border border-border shadow-sm">
                 <h3 className="font-bold text-foreground mb-4">Farming Experience</h3>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                  {["Beginner", "Intermediate", "Pro"].map((level) => (
+                  {["Beginner", "Pro"].map((level) => (
                     <button
                       key={level}
                       onClick={() => setFormData({ ...formData, experience: level })}

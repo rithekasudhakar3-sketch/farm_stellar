@@ -134,7 +134,7 @@ export function CommunityScreen({ onBack }) {
                   {post.avatar}
                 </div>
                 <div className="flex-1">
-                  <h3 className="font-semibold text-foreground" style={{ fontFamily: "Mali, cursive" }}>
+                  <h3 className="font-semibold text-foreground" style={{ fontFamily: "'Segoe UI', sans-serif" }}>
                     {post.author}
                   </h3>
                   <div className="flex items-center gap-2 text-sm text-muted-foreground">

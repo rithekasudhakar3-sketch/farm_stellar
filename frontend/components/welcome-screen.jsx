@@ -10,14 +10,14 @@ export function WelcomeScreen({ onFarmerLogin, onAdminLogin, onSignup }) {
         className="absolute inset-0 bg-cover bg-center bg-no-repeat"
         style={{ backgroundImage: "url('/farm-landscape-background.jpg')" }}
       />
-      <div className="absolute inset-0 bg-gradient-to-b from-background/90 via-background/80 to-background/95" />
+      <div className="absolute inset-0" />
 
       <div className="relative z-10 flex flex-col items-center">
         <div className="text-center mb-12">
           <div className="center-flex w-20 h-20 bg-primary rounded-3xl mb-6 shadow-lg">
             <Leaf className="icon-2xl text-primary-foreground" />
           </div>
-          <h1 className="text-display text-foreground mb-3 text-balance">FarmQuest</h1>
+          <h1 className="text-display text-foreground mb-3 text-balance">FarmStellar</h1>
           <p className="text-body text-muted-foreground text-balance max-w-md mx-auto">
             Master sustainable farming through interactive quests and earn rewards
           </p>

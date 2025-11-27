@@ -50,14 +50,14 @@ export function FarmerDashboardScreen({ onStartQuest, onViewImpact, quests, onNa
         <div className="absolute top-4 right-8 opacity-20 animate-sway">
           <Leaf className="w-16 h-16 text-primary" />
         </div>
-        <div className="absolute bottom-4 left-12 opacity-25 animate-float-gentle">
-          <Flower2 className="w-12 h-12 text-accent" />
+        <div className="absolute bottom-4 left-12  ">
+          <Flower2 className="w-12 h-12 text-accent animate-sway" />
         </div>
 
         <div className="max-w-6xl mx-auto relative z-10">
           <div className="flex items-center gap-3 mb-2">
             <Sun className="icon-md text-accent animate-spin-slow" />
-            <h2 className="text-h2 text-foreground" style={{ fontFamily: "Mali, cursive" }}>
+            <h2 className="text-h2 text-foreground" style={{ fontFamily: "'Segoe UI', sans-serif" }}>
               Good Morning, {FARMER_DATA.name}! 🌿
             </h2>
           </div>
@@ -73,14 +73,14 @@ export function FarmerDashboardScreen({ onStartQuest, onViewImpact, quests, onNa
             <div className="flex items-start gap-6 mb-6">
               <LevelBadge level={FARMER_DATA.level} size="lg" />
               <div className="flex-1">
-                <p className="text-small text-muted-foreground mb-1 flex items-center gap-2">
+                <p className="text-mediun text-muted-foreground mb-1 flex items-center gap-2">
                   <Sprout className="icon-xs" />
                   Growing Farmer
                 </p>
-                <p className="text-h1 text-primary mb-1" style={{ fontFamily: "Mali, cursive" }}>
+                <p className="text-h1 text-primary mb-1" style={{ fontFamily: "'Segoe UI', sans-serif" }}>
                   Level {FARMER_DATA.level}
                 </p>
-                <p className="text-tiny text-muted-foreground">Keep nurturing your skills! 🌱</p>
+                <p className="text-medium text-muted-foreground">Keep nurturing your skills! 🌱</p>
               </div>
             </div>
             <XPProgressBar
@@ -109,7 +109,7 @@ export function FarmerDashboardScreen({ onStartQuest, onViewImpact, quests, onNa
                 <span className="inline-block w-2 h-2 rounded-full bg-accent animate-pulse shadow-lg shadow-accent/50"></span>
                 TODAY'S QUEST
               </p>
-              <h3 className="text-h3 text-foreground mb-2" style={{ fontFamily: "Mali, cursive" }}>
+              <h3 className="text-h3 text-foreground mb-2" style={{ fontFamily: "'Segoe UI', sans-serif" }}>
                 Soil Basics Quest
               </h3>
               <p className="text-small text-muted-foreground mb-4">
@@ -134,7 +134,7 @@ export function FarmerDashboardScreen({ onStartQuest, onViewImpact, quests, onNa
                 <CloudRain className="icon-md text-accent" />
               </div>
               <div className="flex-1">
-                <h3 className="text-h4 text-foreground mb-1" style={{ fontFamily: "Mali, cursive" }}>
+                <h3 className="text-h4 text-foreground mb-1" style={{ fontFamily: "'Segoe UI', sans-serif" }}>
                   Today's Weather
                 </h3>
                 <p className="text-tiny text-muted-foreground">Bangalore Rural, Karnataka</p>
@@ -166,7 +166,7 @@ export function FarmerDashboardScreen({ onStartQuest, onViewImpact, quests, onNa
                 <Sprout className="icon-md text-primary" />
               </div>
               <div className="flex-1">
-                <h3 className="text-h4 text-foreground mb-1" style={{ fontFamily: "Mali, cursive" }}>
+                <h3 className="text-h4 text-foreground mb-1" style={{ fontFamily: "'Segoe UI', sans-serif" }}>
                   Crop Suggestions
                 </h3>
                 <p className="text-tiny text-muted-foreground">Based on your climate</p>
@@ -188,7 +188,7 @@ export function FarmerDashboardScreen({ onStartQuest, onViewImpact, quests, onNa
 
         <div className="bg-card border-[1.5px] border-border rounded-2xl p-6 shadow-[0_2px_8px_rgba(107,166,115,0.08),0_1px_3px_rgba(107,166,115,0.04)] hover:shadow-[0_4px_12px_rgba(107,166,115,0.12),0_2px_6px_rgba(107,166,115,0.08)] hover:-translate-y-0.5 transition-all relative before:content-[''] before:absolute before:inset-[-2px] before:border-2 before:border-primary before:rounded-2xl before:opacity-0 hover:before:opacity-20 before:transition-opacity soft-glow">
           <div className="flex items-center justify-between mb-6">
-            <h3 className="text-h3 text-foreground flex items-center gap-2" style={{ fontFamily: "Mali, cursive" }}>
+            <h3 className="text-h3 text-foreground flex items-center gap-2" style={{ fontFamily: "'Segoe UI', sans-serif" }}>
               <Star className="icon-md text-accent" />
               Your Progress
             </h3>
@@ -237,7 +237,7 @@ export function FarmerDashboardScreen({ onStartQuest, onViewImpact, quests, onNa
 
         {/* Quests Section */}
         <div>
-          <h3 className="text-h2 text-foreground mb-5 flex items-center gap-2" style={{ fontFamily: "Mali, cursive" }}>
+          <h3 className="text-h2 text-foreground mb-5 flex items-center gap-2" style={{ fontFamily: "'Segoe UI', sans-serif" }}>
             <Flower2 className="icon-lg text-primary" />
             Available Quests
           </h3>
@@ -257,11 +257,11 @@ export function FarmerDashboardScreen({ onStartQuest, onViewImpact, quests, onNa
                       <IconComponent className="icon-lg text-primary" />
                     </div>
                     <span className="text-tiny bg-accent/20 text-accent-foreground px-3 py-1.5 rounded-full font-medium border border-accent/30">
-                      {quest.difficulty === "Easy" ? "🌼" : quest.difficulty === "Medium" ? "🌼🌼" : "🌼🌼🌼"}{" "}
+                      {quest.difficulty === "Easy" ? " " : quest.difficulty === "Medium" ? " " : " "}{" "}
                       {quest.difficulty}
                     </span>
                   </div>
-                  <h4 className="text-h4 text-foreground mb-2 text-balance" style={{ fontFamily: "Mali, cursive" }}>
+                  <h4 className="text-h4 text-foreground mb-2 text-balance" style={{ fontFamily: "'Segoe UI', sans-serif" }}>
                     {quest.title}
                   </h4>
                   <p className="text-small text-muted-foreground mb-4 line-clamp-2">{quest.description}</p>

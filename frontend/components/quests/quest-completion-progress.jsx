@@ -74,7 +74,7 @@ export function QuestCompletionProgress({ steps, completedSteps }) {
 
                 {/* Growing plant animation for current step */}
                 {isCurrent && (
-                  <p className="text-xs text-accent font-medium mt-1 animate-bounce">🌱 Complete this to grow!</p>
+                  <p className="text-xs text-black font-medium mt-1 ">🌱 Complete this to grow!</p>
                 )}
               </div>
             </div>

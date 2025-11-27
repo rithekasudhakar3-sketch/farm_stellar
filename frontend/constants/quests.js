@@ -1,7 +1,7 @@
 export const QUESTS_DATA = {
   soil_scout: {
     id: "soil_scout",
-    title: "Soil Scout: Basic Identification Adventure",
+    title: "Meet the Soil: Basic Identification Adventure",
     description: "Learn soil types and their properties for healthy crop growth.",
     activities: [
       "Collect soil samples",
@@ -22,7 +22,7 @@ export const QUESTS_DATA = {
 
   crop_quest: {
     id: "crop_quest",
-    title: "Crop Quest: Pick Your Sustainable Stars",
+    title: "Crops that Fits: Guide farmers to the Right choice",
     description: "Discover the best sustainable crops for your region.",
     activities: [
       "Browse recommended crops",
@@ -42,7 +42,7 @@ export const QUESTS_DATA = {
 
   compost_kickoff: {
     id: "compost_kickoff",
-    title: "Compost Kickoff: Turn Trash to Treasure",
+    title: "Soil Booster: Turn Trash to Treasure",
     description: "Turn organic waste into nutrient-rich compost.",
     activities: [
       "Choose compost spot",
@@ -83,7 +83,7 @@ export const QUESTS_DATA = {
 
   mini_garden: {
     id: "mini_garden",
-    title: "Mini Garden Magic: 5-Plant Starter Patch",
+    title: "Miniplot Mastery: 5-Plant Starter Patch",
     description: "Create your first small garden with 5 easy plants.",
     activities: [
       "Select 5 beginner-friendly plants",
@@ -104,7 +104,7 @@ export const QUESTS_DATA = {
 
   mulch_master: {
     id: "mulch_master",
-    title: "Mulch Master: Shield Your Soil",
+    title: "Soil Shield: Protect Your Soil",
     description: "Protect your soil using natural mulch.",
     activities: [
       "Collect dry leaves/straw",
@@ -208,7 +208,7 @@ export const QUESTS_DATA = {
 
   biodiversity_strip: {
     id: "biodiversity_strip",
-    title: "Create a Biodiversity Strip",
+    title: "Biodiversity Bloom Bar",
     description: "Build a strip of flowering plants to attract beneficial insects.",
     activities: [
       "Select 5 pollinator plants",
@@ -229,7 +229,7 @@ export const QUESTS_DATA = {
 
   rainwater_hero: {
     id: "rainwater_hero",
-    title: "Rainwater Harvesting Hero",
+    title: "Rainwater Hero: Simple Harvesting Setup",
     description: "Set up a simple rainwater collection system.",
     activities: [
       "Place barrel under roof edge",
@@ -250,7 +250,7 @@ export const QUESTS_DATA = {
 
   biochar_maker: {
     id: "biochar_maker",
-    title: "Biochar Maker",
+    title: "Biochar Mastery Challenge",
     description: "Create biochar using farm waste to enrich soil.",
     activities: [
       "Collect woody waste",

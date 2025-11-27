@@ -8,10 +8,10 @@ import { Button } from "@/components/ui/button"
 export function AdminFarmersScreen({ onBack }) {
   const [searchQuery, setSearchQuery] = useState("")
   const [farmers] = useState([
-    { id: 1, name: "Raj Kumar", district: "Patiala", xp: 150, level: 3, experience: "Intermediate" },
+    // { id: 1, name: "Raj Kumar", district: "Patiala", xp: 150, level: 3, experience: "Intermediate" },
     { id: 2, name: "Priya Singh", district: "Ludhiana", xp: 200, level: 4, experience: "Advanced" },
     { id: 3, name: "Amit Verma", district: "Amritsar", xp: 80, level: 2, experience: "Beginner" },
-    { id: 4, name: "Sunita Kaur", district: "Jalandhar", xp: 120, level: 3, experience: "Intermediate" },
+    // { id: 4, name: "Sunita Kaur", district: "Jalandhar", xp: 120, level: 3, experience: "Intermediate" },
   ])
 
   const filteredFarmers = farmers.filter((farmer) => farmer.name.toLowerCase().includes(searchQuery.toLowerCase()))

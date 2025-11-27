@@ -214,7 +214,7 @@ export function SettingsScreen({ userData, onBack, onUpdate }) {
             <ArrowLeft className="icon-md" />
           </button>
           <div>
-            <h1 className="text-h2 text-foreground" style={{ fontFamily: "Mali, cursive" }}>
+            <h1 className="text-h2 text-foreground" style={{ fontFamily: "'Segoe UI', sans-serif" }}>
               Settings
             </h1>
             <p className="text-small text-muted-foreground">Manage your account and preferences</p>
@@ -225,7 +225,7 @@ export function SettingsScreen({ userData, onBack, onUpdate }) {
       <div className="max-w-4xl mx-auto p-4 space-y-6">
         {/* Section 1: Account Settings */}
         <div className="space-y-4">
-          <h2 className="text-h3 font-bold flex items-center gap-2" style={{ fontFamily: "Mali, cursive" }}>
+          <h2 className="text-h3 font-bold flex items-center gap-2" style={{ fontFamily: "'Segoe UI', sans-serif" }}>
             <User className="icon-md text-primary" />
             Account Settings
           </h2>
@@ -424,7 +424,7 @@ export function SettingsScreen({ userData, onBack, onUpdate }) {
         </div>
 
         <div className="space-y-4">
-          <h2 className="text-h3 font-bold flex items-center gap-2" style={{ fontFamily: "Mali, cursive" }}>
+          <h2 className="text-h3 font-bold flex items-center gap-2" style={{ fontFamily: "'Segoe UI', sans-serif" }}>
             <TrendingUp className="icon-md text-primary" />
             Farmer Level & Progress
           </h2>
@@ -485,7 +485,7 @@ export function SettingsScreen({ userData, onBack, onUpdate }) {
 
         {/* Section 2: Notification Preferences */}
         <div className="space-y-4">
-          <h2 className="text-h3 font-bold flex items-center gap-2" style={{ fontFamily: "Mali, cursive" }}>
+          <h2 className="text-h3 font-bold flex items-center gap-2" style={{ fontFamily: "'Segoe UI', sans-serif" }}>
             <Bell className="icon-md text-primary" />
             Notification Preferences
           </h2>
@@ -602,7 +602,7 @@ export function SettingsScreen({ userData, onBack, onUpdate }) {
 
         {/* Section 3: Privacy & Data */}
         <div className="space-y-4">
-          <h2 className="text-h3 font-bold flex items-center gap-2" style={{ fontFamily: "Mali, cursive" }}>
+          <h2 className="text-h3 font-bold flex items-center gap-2" style={{ fontFamily: "'Segoe UI', sans-serif" }}>
             <Shield className="icon-md text-primary" />
             Privacy & Community
           </h2>
@@ -1037,7 +1037,7 @@ export function SettingsScreen({ userData, onBack, onUpdate }) {
         </div>
 
         <div className="space-y-4">
-          <h2 className="text-h3 font-bold flex items-center gap-2" style={{ fontFamily: "Mali, cursive" }}>
+          <h2 className="text-h3 font-bold flex items-center gap-2" style={{ fontFamily: "'Segoe UI', sans-serif" }}>
             <Leaf className="icon-md text-primary" />
             Farming Preferences
           </h2>
@@ -1418,7 +1418,7 @@ export function SettingsScreen({ userData, onBack, onUpdate }) {
         </div>
 
         <div className="space-y-4">
-          <h2 className="text-h3 font-bold flex items-center gap-2" style={{ fontFamily: "Mali, cursive" }}>
+          <h2 className="text-h3 font-bold flex items-center gap-2" style={{ fontFamily: "'Segoe UI', sans-serif" }}>
             <HelpCircle className="icon-md text-primary" />
             Support & Help
           </h2>

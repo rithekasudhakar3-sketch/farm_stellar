@@ -8,19 +8,19 @@ export function AdminDashboardScreen({ onNavigate }) {
   const [selectedFarmer, setSelectedFarmer] = useState(null)
 
   const farmers = [
-    {
-      id: 1,
-      name: "Rajesh Kumar",
-      experience: "Intermediate",
-      district: "Bangalore Rural",
-      crops: "Rice, Wheat",
-      status: "Active",
-      farmSize: "2.5 acres",
-      fertilizers: "Urea, DAP",
-      pesticides: "Chlorpyrifos",
-      questsCompleted: 12,
-      xp: 235,
-    },
+    // {
+    //   id: 1,
+    //   name: "Rajesh Kumar",
+    //   experience: "Intermediate",
+    //   district: "Bangalore Rural",
+    //   crops: "Rice, Wheat",
+    //   status: "Active",
+    //   farmSize: "2.5 acres",
+    //   fertilizers: "Urea, DAP",
+    //   pesticides: "Chlorpyrifos",
+    //   questsCompleted: 12,
+    //   xp: 235,
+    // },
     {
       id: 2,
       name: "Priya Sharma",
