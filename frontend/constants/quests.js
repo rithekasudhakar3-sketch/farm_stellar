@@ -16,7 +16,7 @@ export const QUESTS_DATA = {
     ],
     difficulty: "Beginner",
     cropType: "General",
-    xpReward: 50,
+    xpReward: 5,
     badgeName: "Soil Scout"
   },
 
@@ -158,9 +158,9 @@ export const QUESTS_DATA = {
       "Improve coconut root health",
       "Increase moisture retention"
     ],
-    difficulty: "Beginner",
+    difficulty: "Pro",
     cropType: "Coconut",
-    xpReward: 25,
+    xpReward: 85,
     badgeName: "Basin Builder"
   },
 
