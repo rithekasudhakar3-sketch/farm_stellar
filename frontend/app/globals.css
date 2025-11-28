@@ -418,8 +418,8 @@
   }
 
   .btn-secondary {
-    @apply border-2 border-border text-foreground font-bold py-4 px-6 rounded-2xl;
-    @apply hover:bg-muted transition-all hover:scale-105;
+    @apply bg-card border-2 border-border text-foreground font-bold py-4 px-6 rounded-2xl;
+    @apply hover:bg-secondary hover:text-secondary-foreground transition-all hover:scale-105 shadow-sm hover:shadow-md;
   }
 
   .btn-accent {
