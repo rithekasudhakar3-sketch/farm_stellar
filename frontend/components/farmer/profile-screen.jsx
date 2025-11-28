@@ -2,7 +2,7 @@
 "use client"
 
 import { useState } from "react"
-import { ArrowLeft, Edit2, MapPin, TrendingUp, Award, Leaf, Flower2 } from "lucide-react"
+import { ArrowLeft, Edit2, MapPin, TrendingUp, Award, Leaf } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -15,7 +15,7 @@ export function FarmerProfileScreen({ onBack }) {
     phone: "+91 98765 43210",
     district: "Patiala",
     state: "Punjab",
-    experience: "Pro",
+    experience: "Intermediate",
     fieldSize: 5,
     crops: ["Wheat", "Rice", "Sugarcane"],
   })
@@ -56,9 +56,9 @@ export function FarmerProfileScreen({ onBack }) {
       <div className="max-w-2xl mx-auto p-4 space-y-6">
         <div className="bg-card border-[1.5px] border-border rounded-2xl p-8 shadow-[0_2px_8px_rgba(107,166,115,0.08),0_1px_3px_rgba(107,166,115,0.04)] hover:shadow-[0_4px_12px_rgba(107,166,115,0.12),0_2px_6px_rgba(107,166,115,0.08)] hover:-translate-y-0.5 transition-all watercolor-bg border-2 border-primary/20 relative overflow-hidden soft-glow">
           {/* Decorative elements */}
-          <div className="absolute top-4 right-4 opacity-15">
+          {/* <div className="absolute top-4 right-4 opacity-15">
             <Flower2 className="w-16 h-16 text-accent" />
-          </div>
+          </div> */}
           <div className="absolute bottom-4 left-4 opacity-10">
             <Leaf className="w-20 h-20 text-primary" />
           </div>

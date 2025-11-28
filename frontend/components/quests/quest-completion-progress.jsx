@@ -34,7 +34,7 @@ export function QuestCompletionProgress({ steps, completedSteps }) {
             <div key={idx} className="flex items-start gap-3 group">
               {/* Step indicator with growing plant */}
               <div className="relative flex-shrink-0">
-                <div
+                {/* <div
                   className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-300 ${
                     isCompleted
                       ? "bg-gradient-to-br from-accent to-primary scale-110 shadow-lg"
@@ -42,24 +42,24 @@ export function QuestCompletionProgress({ steps, completedSteps }) {
                         ? "bg-primary/20 border-2 border-primary animate-pulse"
                         : "bg-muted border border-border"
                   }`}
-                >
-                  {isCompleted ? (
+                > */}
+                  {/* {isCompleted ? (
                     <Sprout className="w-5 h-5 text-white animate-wiggle" />
                   ) : (
                     <span className="text-sm font-bold text-muted-foreground">{idx + 1}</span>
                   )}
-                </div>
+                </div> */}
 
                 {/* Checkmark badge */}
-                {isCompleted && (
+                {/* {isCompleted && (
                   <div className="absolute -top-1 -right-1 w-5 h-5 bg-accent rounded-full flex items-center justify-center border-2 border-background">
                     <Check className="w-3 h-3 text-white" />
                   </div>
-                )}
+                )} */}
               </div>
 
               {/* Step text */}
-              <div className="flex-1 pt-2">
+              {/* <div className="flex-1 pt-2">
                 <p
                   className={`text-sm transition-all ${
                     isCompleted
@@ -70,23 +70,23 @@ export function QuestCompletionProgress({ steps, completedSteps }) {
                   }`}
                 >
                   {step}
-                </p>
+                </p> */}
 
                 {/* Growing plant animation for current step */}
-                {isCurrent && (
-                  <p className="text-xs text-black font-medium mt-1 ">🌱 Complete this to grow!</p>
-                )}
+                {/* {isCurrent && (
+                  <p className="text-xs text- font-medium mt-1 ">🌱 Complete this to grow!</p>
+                )} */}
               </div>
-            </div>
+            // </div>
           )
         })}
       </div>
 
       {/* Completion message */}
       {progress === 100 && (
-        <div className="bg-gradient-to-r from-accent/20 via-primary/20 to-secondary/20 rounded-xl p-4 text-center animate-pulse border border-accent/30">
-          <p className="text-lg font-bold text-foreground mb-1">🎉 Quest Complete!</p>
-          <p className="text-xs text-muted-foreground">Your plant has fully grown!</p>
+        <div className="bg-gradient-to-r from-beige/20 via-primary/20 to-secondary/20 rounded-xl p-4 text-center animate-pulse border border-accent/30">
+          <p className="text-lg font-bold text-foreground">🎉 Quest Complete!</p>
+          <p className="text-xl text-muted-foreground">Your plant has fully grown!</p>
         </div>
       )}
     </div>

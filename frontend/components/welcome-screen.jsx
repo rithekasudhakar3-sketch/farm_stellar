@@ -40,7 +40,7 @@ export function WelcomeScreen({ onFarmerLogin, onAdminLogin, onSignup }) {
           </button>
         </div>
 
-        <p className="text-tiny text-muted-foreground mt-8 text-center">Learn. Grow. Sustain.</p>
+        <p className="text-medium text-muted-foreground mt-8 text-center">Learn. Grow. Sustain.</p>
       </div>
     </div>
   )

@@ -4,7 +4,7 @@ import { useEffect } from "react"
 import { Leaf, Sprout, Droplets, CloudRain, BarChart3, Flower2, Sun, Trophy, Award, Star, BookOpen } from "lucide-react"
 import { XPProgressBar } from "./xp-progress-bar"
 import { LevelBadge } from "./level-badge"
-import { StreakTracker } from "./streak-tracker"
+//import { StreakTracker } from "./streak-tracker"
 
 export function FarmerDashboardScreen({ onStartQuest, onViewImpact, quests, onNavigate, userData, onShowToast }) {
   const availableQuests = Object.values(quests)
@@ -15,8 +15,8 @@ export function FarmerDashboardScreen({ onStartQuest, onViewImpact, quests, onNa
     level: userData?.level || 3,
     currentXP: userData?.currentXP || 235,
     requiredXP: userData?.requiredXP || 400,
-    currentStreak: userData?.currentStreak || 7,
-    activeDays: userData?.activeDays || [0, 1, 2, 3, 4, 5, 6],
+    // currentStreak: userData?.currentStreak || 7,
+    // activeDays: userData?.activeDays || [0, 1, 2, 3, 4, 5, 6],
     location: userData?.location || "Bangalore Rural, Karnataka",
   }
 
@@ -91,7 +91,7 @@ export function FarmerDashboardScreen({ onStartQuest, onViewImpact, quests, onNa
             />
           </div>
 
-          <StreakTracker currentStreak={FARMER_DATA.currentStreak} streakDays={FARMER_DATA.activeDays} />
+       {/* //   <StreakTracker currentStreak={FARMER_DATA.currentStreak} streakDays={FARMER_DATA.activeDays} /> */}
         </div>
 
         {/* Featured Quest */}
@@ -105,7 +105,7 @@ export function FarmerDashboardScreen({ onStartQuest, onViewImpact, quests, onNa
               <Leaf className="icon-lg text-primary" />
             </div>
             <div className="flex-1">
-              <p className="text-tiny text-muted-foreground font-medium mb-1 flex items-center gap-2">
+              <p className="text-medium text-muted-foreground font-medium mb-1 flex items-center gap-2">
                 <span className="inline-block w-2 h-2 rounded-full bg-accent animate-pulse shadow-lg shadow-accent/50"></span>
                 TODAY'S QUEST
               </p>
@@ -137,7 +137,7 @@ export function FarmerDashboardScreen({ onStartQuest, onViewImpact, quests, onNa
                 <h3 className="text-h4 text-foreground mb-1" style={{ fontFamily: "'Segoe UI', sans-serif" }}>
                   Today's Weather
                 </h3>
-                <p className="text-tiny text-muted-foreground">Bangalore Rural, Karnataka</p>
+                <p className="text-medium text-muted-foreground">Bangalore Rural, Karnataka</p>
               </div>
             </div>
             <div className="space-y-3">
@@ -169,7 +169,7 @@ export function FarmerDashboardScreen({ onStartQuest, onViewImpact, quests, onNa
                 <h3 className="text-h4 text-foreground mb-1" style={{ fontFamily: "'Segoe UI', sans-serif" }}>
                   Crop Suggestions
                 </h3>
-                <p className="text-tiny text-muted-foreground">Based on your climate</p>
+                <p className="text-medium text-muted-foreground">Based on your climate</p>
               </div>
             </div>
             <div className="space-y-2">
@@ -208,7 +208,7 @@ export function FarmerDashboardScreen({ onStartQuest, onViewImpact, quests, onNa
               >
                 <stat.icon className="icon-2xl text-accent mx-auto mb-3" />
                 <p className="text-4xl font-bold text-foreground">{stat.value}</p>
-                <p className="text-tiny text-muted-foreground mt-2">{stat.label}</p>
+                <p className="text-medium text-muted-foreground mt-2">{stat.label}</p>
               </div>
             ))}
           </div>
@@ -216,20 +216,20 @@ export function FarmerDashboardScreen({ onStartQuest, onViewImpact, quests, onNa
           <div className="mt-6 pt-6 border-t-2 border-dashed border-border">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               <div className="text-center">
-                <p className="text-2xl font-bold text-primary">{userData?.currentStreak || 7}</p>
-                <p className="text-tiny text-muted-foreground mt-1">Day Streak 🔥</p>
+                {/* <p className="text-2xl font-bold text-primary">{userData?.currentStreak || 7}</p>
+                <p className="text-medium text-muted-foreground mt-1">Day Streak 🔥</p> */}
               </div>
               <div className="text-center">
                 <p className="text-2xl font-bold text-accent">{userData?.currentXP || 235}</p>
-                <p className="text-tiny text-muted-foreground mt-1">Total XP ✨</p>
+                <p className="text-medium text-muted-foreground mt-1">Total XP ✨</p>
               </div>
               <div className="text-center">
                 <p className="text-2xl font-bold text-primary">15</p>
-                <p className="text-tiny text-muted-foreground mt-1">Hours Learned 📚</p>
+                <p className="text-medium text-muted-foreground mt-1">Hours Learned 📚</p>
               </div>
               <div className="text-center">
                 <p className="text-2xl font-bold text-accent">92%</p>
-                <p className="text-tiny text-muted-foreground mt-1">Completion Rate 🎯</p>
+                <p className="text-medium text-muted-foreground mt-1">Completion Rate 🎯</p>
               </div>
             </div>
           </div>
@@ -256,7 +256,7 @@ export function FarmerDashboardScreen({ onStartQuest, onViewImpact, quests, onNa
                     <div className="p-3 bg-gradient-to-br from-accent/20 to-accent/10 rounded-2xl group-hover:from-accent/30 group-hover:to-accent/15 transition-colors">
                       <IconComponent className="icon-lg text-primary" />
                     </div>
-                    <span className="text-tiny bg-accent/20 text-accent-foreground px-3 py-1.5 rounded-full font-medium border border-accent/30">
+                    <span className="text-medium bg-accent/20 text-accent-foreground px-3 py-1.5 rounded-full font-medium border border-accent/30">
                       {quest.difficulty === "Easy" ? " " : quest.difficulty === "Medium" ? " " : " "}{" "}
                       {quest.difficulty}
                     </span>
@@ -266,7 +266,7 @@ export function FarmerDashboardScreen({ onStartQuest, onViewImpact, quests, onNa
                   </h4>
                   <p className="text-small text-muted-foreground mb-4 line-clamp-2">{quest.description}</p>
                   <div className="flex items-center justify-between pt-4 border-t-2 border-dashed border-border">
-                    <span className="text-tiny text-muted-foreground">{quest.activities.length} activities 📋</span>
+                    <span className="text-medium text-muted-foreground">{quest.activities.length} activities 📋</span>
                     <span className="text-small font-bold text-accent">+{quest.xpReward} XP ✨</span>
                   </div>
                 </div>
