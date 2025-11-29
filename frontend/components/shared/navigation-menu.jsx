@@ -104,7 +104,7 @@ export function NavigationMenu({
                   </div>
                 </div>
               </div>
-              <div className="flex items-center gap-2 text-tiny text-muted-foreground">
+              <div className="flex items-center gap-2 text-medium text-muted-foreground">
                 <MapPin className="w-3 h-3" />
                 <span>{userLocation}</span>
               </div>
@@ -158,7 +158,7 @@ export function NavigationMenu({
 
           <div className="p-6 border-t border-border mt-auto">
             <div className="bg-accent/10 rounded-xl p-4">
-              <p className="text-tiny text-muted-foreground text-center">
+              <p className="text-medium text-muted-foreground text-center">
                 FarmQuest v1.0.0
                 <br />
                 Empowering sustainable farming

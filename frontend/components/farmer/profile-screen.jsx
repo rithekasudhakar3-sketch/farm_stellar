@@ -2,7 +2,7 @@
 "use client"
 
 import { useState } from "react"
-import { ArrowLeft, Edit2, MapPin, TrendingUp, Award, Leaf, Flower2 } from "lucide-react"
+import { ArrowLeft, Edit2, MapPin, TrendingUp, Award, Leaf } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -56,9 +56,9 @@ export function FarmerProfileScreen({ onBack }) {
       <div className="max-w-2xl mx-auto p-4 space-y-6">
         <div className="bg-card border-[1.5px] border-border rounded-2xl p-8 shadow-[0_2px_8px_rgba(107,166,115,0.08),0_1px_3px_rgba(107,166,115,0.04)] hover:shadow-[0_4px_12px_rgba(107,166,115,0.12),0_2px_6px_rgba(107,166,115,0.08)] hover:-translate-y-0.5 transition-all watercolor-bg border-2 border-primary/20 relative overflow-hidden soft-glow">
           {/* Decorative elements */}
-          <div className="absolute top-4 right-4 opacity-15">
+          {/* <div className="absolute top-4 right-4 opacity-15">
             <Flower2 className="w-16 h-16 text-accent" />
-          </div>
+          </div> */}
           <div className="absolute bottom-4 left-4 opacity-10">
             <Leaf className="w-20 h-20 text-primary" />
           </div>
@@ -97,7 +97,7 @@ export function FarmerProfileScreen({ onBack }) {
 
         {/* Details Card */}
         <div className="bg-card border-[1.5px] border-border rounded-2xl p-6 shadow-[0_2px_8px_rgba(107,166,115,0.08),0_1px_3px_rgba(107,166,115,0.04)] hover:shadow-[0_4px_12px_rgba(107,166,115,0.12),0_2px_6px_rgba(107,166,115,0.08)] hover:-translate-y-0.5 transition-all relative before:content-[''] before:absolute before:inset-[-2px] before:border-2 before:border-primary before:rounded-2xl before:opacity-0 hover:before:opacity-20 before:transition-opacity space-y-4">
-          <h3 className="text-lg font-semibold mb-4 flex items-center gap-2" style={{ fontFamily: "Mali, cursive" }}>
+          <h3 className="text-lg font-semibold mb-4 flex items-center gap-2" style={{ fontFamily: "'Segoe UI', sans-serif" }}>
             <Leaf className="w-5 h-5 text-primary" />
             Personal Details
           </h3>
@@ -141,7 +141,7 @@ export function FarmerProfileScreen({ onBack }) {
         </div>
 
         <div className="bg-card border-[1.5px] border-border rounded-2xl p-6 shadow-[0_2px_8px_rgba(107,166,115,0.08),0_1px_3px_rgba(107,166,115,0.04)] hover:shadow-[0_4px_12px_rgba(107,166,115,0.12),0_2px_6px_rgba(107,166,115,0.08)] hover:-translate-y-0.5 transition-all relative before:content-[''] before:absolute before:inset-[-2px] before:border-2 before:border-primary before:rounded-2xl before:opacity-0 hover:before:opacity-20 before:transition-opacity">
-          <h3 className="text-lg font-semibold mb-5 flex items-center gap-2" style={{ fontFamily: "Mali, cursive" }}>
+          <h3 className="text-lg font-semibold mb-5 flex items-center gap-2" style={{ fontFamily: "'Segoe UI', sans-serif" }}>
             <Award className="w-5 h-5 text-accent" />
             Achievement Timeline
           </h3>

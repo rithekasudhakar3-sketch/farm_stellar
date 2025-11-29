@@ -149,8 +149,8 @@
   body {
     @apply bg-background text-foreground;
     /* Matcha-inspired gradient background - soft and calming */
-    background-image: radial-gradient(circle at 20% 80%, oklch(0.94 0.03 140) 0%, transparent 50%),
-      radial-gradient(circle at 80% 20%, oklch(0.93 0.02 155) 0%, transparent 50%);
+    /* background-image: radial-gradient(circle at 20% 80%, oklch(0.94 0.03 140) 0%, transparent 50%),
+      radial-gradient(circle at 80% 20%, oklch(0.93 0.02 155) 0%, transparent 50%); */
   }
 
   /* Japanese minimalist animations - smooth and energizing */
@@ -407,8 +407,8 @@
   .text-small {
     @apply text-sm leading-relaxed;
   }
-  .text-tiny {
-    @apply text-xs leading-normal;
+  .text-medium {
+    @apply text-xs font-bold leading-tight;
   }
 
   /* Button standardization - consistent padding */
@@ -418,8 +418,8 @@
   }
 
   .btn-secondary {
-    @apply border-2 border-border text-foreground font-bold py-4 px-6 rounded-2xl;
-    @apply hover:bg-muted transition-all hover:scale-105;
+    @apply bg-card border-2 border-border text-foreground font-bold py-4 px-6 rounded-2xl;
+    @apply hover:bg-secondary hover:text-secondary-foreground transition-all hover:scale-105 shadow-sm hover:shadow-md;
   }
 
   .btn-accent {

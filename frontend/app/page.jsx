@@ -1,451 +1,347 @@
 "use client"
 
-import { useState, useEffect } from "react"
-import { PhoneLoginScreen } from "@/components/auth/phone-login-screen"
-import { OtpVerificationScreen } from "@/components/auth/otp-verification-screen"
-import { FarmerTypeSelectionScreen } from "@/components/auth/farmer-type-selection-screen"
-import { FarmDetailsScreen } from "@/components/auth/farm-details-screen"
-import { PermissionsScreen } from "@/components/auth/permissions-screen"
-import { AdminPasskeyLoginScreen } from "@/components/auth/admin-passkey-login-screen"
-import { WelcomeScreen } from "@/components/welcome-screen"
+import { useEffect, useState } from "react"
+import { useRouter } from "next/navigation"
+import { Button } from "@/components/ui/button"
+import { 
+  Sprout, 
+  Trophy, 
+  Users, 
+  BookOpen, 
+  Sparkles, 
+  ArrowRight,
+  Leaf,
+  Sun,
+  Droplet,
+  TrendingUp,
+  Award,
+  Globe
+} from "lucide-react"
 
-import { QuestIntroScreen } from "@/components/quests/quest-intro-screen"
-import { QuestStepsScreen } from "@/components/quests/quest-steps-screen"
-import { SubmitProofScreen } from "@/components/quests/submit-proof-screen"
-import { VerificationScreen } from "@/components/quests/verification-screen"
-import { RewardScreen } from "@/components/quests/reward-screen"
-import { LearningSummaryScreen } from "@/components/quests/learning-summary-screen"
-import { QuestsListScreen } from "@/components/quests/quests-list-screen"
-
-import { FarmerDashboardScreen } from "@/components/farmer/dashboard-screen"
-import { CommunityScreen } from "@/components/farmer/community-screen"
-import { RewardsScreen } from "@/components/farmer/rewards-screen"
-import { FarmerProfileScreen } from "@/components/farmer/profile-screen"
-import { SettingsScreen } from "@/components/farmer/settings-screen"
-import { ImpactTrackerScreen } from "@/components/farmer/impact-tracker-screen"
-
-import { AdminDashboardScreen } from "@/components/admin/dashboard-screen"
-import { AdminFarmersScreen } from "@/components/admin/farmers-screen"
-import { AdminQuestsScreen } from "@/components/admin/quests-screen"
-import { AdminVerificationScreen } from "@/components/admin/verification-screen"
-import { AdminRewardsScreen } from "@/components/admin/rewards-screen"
-
-import { NavigationMenu } from "@/components/shared/navigation-menu"
-import { LoadingScreen } from "@/components/shared/loading-screen"
-import { ErrorScreen } from "@/components/shared/error-screen"
-
-import { QUESTS_DATA } from "@/constants/quests"
-import { SCREENS, USER_TYPES } from "@/constants/app"
-
-export default function FarmQuestApp() {
-  const [activeScreen, setActiveScreen] = useState(SCREENS.WELCOME)
-  const [currentQuestId, setCurrentQuestId] = useState(null)
-  const [authenticatedUserType, setAuthenticatedUserType] = useState(null)
-  const [isLoading, setIsLoading] = useState(false)
-  const [error, setError] = useState(null)
-  const [isFirstLogin, setIsFirstLogin] = useState(false)
-  const [showToast, setShowToast] = useState(false)
-  const [toastMessage, setToastMessage] = useState("")
-
-  const [userData, setUserData] = useState({
-    phone: "",
-    farmerType: "",
-    farmDetails: {},
-    hasLand: true,
-    permissions: {},
-    xp: 0,
-    level: 1,
-    completedQuests: [],
-    badges: [],
-  })
+export default function LandingPage() {
+  const router = useRouter()
+  const [isAuthenticated, setIsAuthenticated] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
-    const savedAuth = localStorage.getItem("farmquest_auth")
-    const savedUserData = localStorage.getItem("farmquest_userdata")
-
-    if (savedAuth) {
-      const { userType, screen } = JSON.parse(savedAuth)
-      setAuthenticatedUserType(userType)
-      setActiveScreen(screen)
+    // Check if user is authenticated
+    const auth = localStorage.getItem("farmquest_auth")
+    if (auth) {
+      setIsAuthenticated(true)
     }
-
-    if (savedUserData) {
-      setUserData(JSON.parse(savedUserData))
-    }
-
-    // Debug: Log quest data to help troubleshoot
-    console.log("[FarmQuestApp] Available quests:", Object.keys(QUESTS_DATA))
-    console.log("[FarmQuestApp] Total quests:", Object.keys(QUESTS_DATA).length)
+    setIsLoading(false)
   }, [])
 
-  useEffect(() => {
-    const AUTHENTICATED_SCREENS = [
-      SCREENS.FARMER_DASHBOARD,
-      SCREENS.QUESTS_LIST,
-      SCREENS.QUEST_INTRO,
-      SCREENS.QUEST_STEPS,
-      SCREENS.QUEST_SUBMIT_PROOF,
-      SCREENS.QUEST_VERIFICATION,
-      SCREENS.QUEST_REWARD,
-      SCREENS.QUEST_SUMMARY,
-      SCREENS.COMMUNITY,
-      SCREENS.REWARDS,
-      SCREENS.FARMER_PROFILE,
-      SCREENS.SETTINGS,
-      SCREENS.IMPACT_TRACKER,
-      SCREENS.ADMIN_DASHBOARD,
-      SCREENS.ADMIN_FARMERS,
-      SCREENS.ADMIN_QUESTS,
-      SCREENS.ADMIN_VERIFICATION,
-      SCREENS.ADMIN_REWARDS,
-    ]
-
-    if (AUTHENTICATED_SCREENS.includes(activeScreen) && !authenticatedUserType) {
-      console.log("[v0] Protected route accessed without auth - redirecting to welcome")
-      setActiveScreen(SCREENS.WELCOME)
-    }
-  }, [activeScreen, authenticatedUserType])
-
-  const handleNavigate = (screen, data = {}) => {
-    const needsLoading = [SCREENS.OTP_VERIFICATION_LOGIN, SCREENS.OTP_VERIFICATION_SIGNUP].includes(screen)
-
-    if (needsLoading) {
-      setIsLoading(true)
-    }
-
-    setActiveScreen(screen)
-    if (Object.keys(data).length > 0) {
-      const newUserData = { ...userData, ...data }
-      setUserData(newUserData)
-      localStorage.setItem("farmquest_userdata", JSON.stringify(newUserData))
-    }
-
-    if (needsLoading) {
-      setTimeout(() => setIsLoading(false), 500)
+  const handleGetStarted = () => {
+    if (isAuthenticated) {
+      const auth = JSON.parse(localStorage.getItem("farmquest_auth"))
+      if (auth.userType === "admin") {
+        router.push("/admin/dashboard")
+      } else {
+        router.push("/dashboard")
+      }
+    } else {
+      router.push("/welcome")
     }
   }
 
-  const handleLoginSuccess = () => {
-    const hasLoggedInBefore = localStorage.getItem("farmquest_has_logged_in")
-    if (!hasLoggedInBefore) {
-      setIsFirstLogin(true)
-      localStorage.setItem("farmquest_has_logged_in", "true")
-    }
-
-    setAuthenticatedUserType(USER_TYPES.FARMER)
-    localStorage.setItem(
-      "farmquest_auth",
-      JSON.stringify({
-        userType: USER_TYPES.FARMER,
-        screen: SCREENS.FARMER_DASHBOARD,
-      }),
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-muted-foreground">Loading...</p>
+        </div>
+      </div>
     )
-
-    showSuccessToast(`🌻 Namaste ${userData.name || "Farmer"}! Welcome to your garden`)
-    handleNavigate(SCREENS.FARMER_DASHBOARD)
-  }
-
-  const handleSignupSuccess = (phone) => {
-    handleNavigate(SCREENS.FARMER_TYPE_SELECTION, { phone })
-  }
-
-  const handleQuestStart = (questId) => {
-    setCurrentQuestId(questId)
-    handleNavigate(SCREENS.QUEST_INTRO)
-  }
-
-  const handleQuestComplete = (quest) => {
-    const newXP = userData.xp + quest.xpReward
-    const newLevel = Math.floor(newXP / 100) + 1
-    const leveledUp = newLevel > userData.level
-
-    const updatedData = {
-      ...userData,
-      xp: newXP,
-      level: newLevel,
-      completedQuests: [...userData.completedQuests, quest.id],
-      badges: [...userData.badges, quest.badgeName],
-    }
-
-    setUserData(updatedData)
-    localStorage.setItem("farmquest_userdata", JSON.stringify(updatedData))
-
-    return { leveledUp, newLevel }
-  }
-
-  const handleLogout = () => {
-    localStorage.removeItem("farmquest_auth")
-    localStorage.removeItem("farmquest_userdata")
-
-    setActiveScreen(SCREENS.WELCOME)
-    setCurrentQuestId(null)
-    setAuthenticatedUserType(null)
-    setUserData({
-      phone: "",
-      farmerType: "",
-      farmDetails: {},
-      hasLand: true,
-      permissions: {},
-      xp: 0,
-      level: 1,
-      completedQuests: [],
-      badges: [],
-    })
-  }
-
-  const currentQuestData = currentQuestId ? QUESTS_DATA[currentQuestId] : null
-
-  const AUTHENTICATED_SCREENS = [
-    SCREENS.FARMER_DASHBOARD,
-    SCREENS.QUESTS_LIST,
-    SCREENS.QUEST_INTRO,
-    SCREENS.QUEST_STEPS,
-    SCREENS.QUEST_SUBMIT_PROOF,
-    SCREENS.QUEST_VERIFICATION,
-    SCREENS.QUEST_REWARD,
-    SCREENS.QUEST_SUMMARY,
-    SCREENS.COMMUNITY,
-    SCREENS.REWARDS,
-    SCREENS.FARMER_PROFILE,
-    SCREENS.SETTINGS,
-    SCREENS.IMPACT_TRACKER,
-    SCREENS.ADMIN_DASHBOARD,
-    SCREENS.ADMIN_FARMERS,
-    SCREENS.ADMIN_QUESTS,
-    SCREENS.ADMIN_VERIFICATION,
-    SCREENS.ADMIN_REWARDS,
-  ]
-
-  const shouldShowNavigation = AUTHENTICATED_SCREENS.includes(activeScreen)
-
-  const showSuccessToast = (message) => {
-    setToastMessage(message)
-    setShowToast(true)
-    setTimeout(() => setShowToast(false), 4000)
-  }
-
-  if (isLoading && activeScreen !== SCREENS.WELCOME) {
-    return <LoadingScreen />
-  }
-
-  if (error) {
-    return <ErrorScreen error={error} onRetry={() => setError(null)} />
   }
 
   return (
-    <div className="min-h-screen bg-background">
-      {shouldShowNavigation && (
-        <NavigationMenu
-          onLogout={handleLogout}
-          currentScreen={activeScreen}
-          onNavigate={handleNavigate}
-          userType={authenticatedUserType}
-          userData={{ name: userData.name || "Farmer", level: userData.level, xp: userData.xp }}
-        />
-      )}
+    <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/30 overflow-hidden">
+      {/* Animated Background Elements */}
+      <div className="fixed inset-0 pointer-events-none overflow-hidden">
+        <div className="absolute top-20 left-10 w-32 h-32 bg-primary/10 rounded-full blur-3xl animate-float-gentle"></div>
+        <div className="absolute bottom-20 right-10 w-40 h-40 bg-accent/10 rounded-full blur-3xl animate-float-gentle animation-delay-400"></div>
+        <div className="absolute top-1/2 left-1/3 w-24 h-24 bg-secondary/10 rounded-full blur-2xl animate-float-gentle animation-delay-200"></div>
+      </div>
 
-      {/* AUTH FLOW */}
-      {activeScreen === SCREENS.WELCOME && (
-        <WelcomeScreen
-          onFarmerLogin={() => handleNavigate(SCREENS.PHONE_LOGIN)}
-          onSignup={() => handleNavigate(SCREENS.PHONE_SIGNUP)}
-          onAdminLogin={() => handleNavigate(SCREENS.ADMIN_LOGIN)}
-        />
-      )}
+      {/* Navigation */}
+      <nav className="relative z-10 container mx-auto px-6 py-6">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-12 h-12 bg-gradient-to-br from-primary to-accent rounded-2xl flex items-center justify-center shadow-lg">
+              <Sprout className="w-7 h-7 text-white" />
+            </div>
+            <div>
+              <h1 className="text-2xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+                FarmStellar
+              </h1>
+              <p className="text-xs text-muted-foreground">Grow Your Knowledge</p>
+            </div>
+          </div>
+          
+          {isAuthenticated ? (
+            <Button onClick={handleGetStarted} className="btn-primary">
+              Go to Dashboard
+              <ArrowRight className="ml-2 w-4 h-4" />
+            </Button>
+          ) : (
+            <div className="flex gap-3">
+              <Button 
+                variant="outline" 
+                onClick={() => router.push("/welcome")}
+                className="border-2 hover:bg-secondary/20"
+              >
+                Sign In
+              </Button>
+              <Button onClick={handleGetStarted} className="btn-primary">
+                Get Started
+              </Button>
+            </div>
+          )}
+        </div>
+      </nav>
 
-      {activeScreen === SCREENS.PHONE_LOGIN && (
-        <PhoneLoginScreen
-          isSignup={false}
-          onSuccess={(phone) => handleNavigate(SCREENS.OTP_VERIFICATION_LOGIN, { phone })}
-          onBack={() => handleNavigate(SCREENS.WELCOME)}
-        />
-      )}
+      {/* Hero Section */}
+      <section className="relative z-10 container mx-auto px-6 pt-20 pb-32">
+        <div className="max-w-6xl mx-auto">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            {/* Left Content */}
+            <div className="space-y-8">
+              <div className="inline-flex items-center gap-2 bg-accent/20 text-accent-foreground px-4 py-2 rounded-full border border-accent/30">
+                <Sparkles className="w-4 h-4" />
+                <span className="text-sm font-semibold">Gamified Learning Platform</span>
+              </div>
+              
+              <div className="space-y-4">
+                <h1 className="text-5xl lg:text-6xl font-bold leading-tight">
+                  Master{" "}
+                  <span className="bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent animate-shimmer">
+                    Sustainable Farming
+                  </span>
+                  {" "}Through Play
+                </h1>
+                <p className="text-xl text-muted-foreground leading-relaxed">
+                  Join thousands of farmers learning modern agricultural techniques through 
+                  interactive quests, earn rewards, and build a sustainable future.
+                </p>
+              </div>
 
-      {activeScreen === SCREENS.OTP_VERIFICATION_LOGIN && (
-        <OtpVerificationScreen
-          phone={userData.phone}
-          onSuccess={handleLoginSuccess}
-          onBack={() => handleNavigate(SCREENS.PHONE_LOGIN)}
-        />
-      )}
+              <div className="flex flex-wrap gap-4">
+                <Button 
+                  onClick={handleGetStarted} 
+                  size="lg"
+                  className="btn-primary text-lg px-8 py-6 shadow-xl hover:shadow-2xl"
+                >
+                  Start Your Journey
+                  <ArrowRight className="ml-2 w-5 h-5" />
+                </Button>
+                <Button 
+                  variant="outline" 
+                  size="lg"
+                  onClick={() => document.getElementById('features').scrollIntoView({ behavior: 'smooth' })}
+                  className="border-2 text-lg px-8 py-6"
+                >
+                  Learn More
+                </Button>
+              </div>
 
-      {activeScreen === SCREENS.PHONE_SIGNUP && (
-        <PhoneLoginScreen
-          isSignup={true}
-          onSuccess={(phone) => handleNavigate(SCREENS.OTP_VERIFICATION_SIGNUP, { phone })}
-          onBack={() => handleNavigate(SCREENS.WELCOME)}
-        />
-      )}
+              {/* Stats */}
+              <div className="grid grid-cols-3 gap-6 pt-8">
+                <div className="space-y-1">
+                  <div className="text-3xl font-bold text-primary">10K+</div>
+                  <div className="text-sm text-muted-foreground">Active Farmers</div>
+                </div>
+                <div className="space-y-1">
+                  <div className="text-3xl font-bold text-accent">50+</div>
+                  <div className="text-sm text-muted-foreground">Learning Quests</div>
+                </div>
+                <div className="space-y-1">
+                  <div className="text-3xl font-bold text-secondary">95%</div>
+                  <div className="text-sm text-muted-foreground">Success Rate</div>
+                </div>
+              </div>
+            </div>
 
-      {activeScreen === SCREENS.OTP_VERIFICATION_SIGNUP && (
-        <OtpVerificationScreen
-          phone={userData.phone}
-          onSuccess={handleSignupSuccess}
-          onBack={() => handleNavigate(SCREENS.PHONE_SIGNUP)}
-        />
-      )}
-
-      {activeScreen === SCREENS.FARMER_TYPE_SELECTION && (
-        <FarmerTypeSelectionScreen
-          onSuccess={(farmerType) => handleNavigate(SCREENS.FARM_DETAILS, { farmerType })}
-          onBack={() => handleNavigate(SCREENS.OTP_VERIFICATION_SIGNUP)}
-        />
-      )}
-
-      {activeScreen === SCREENS.FARM_DETAILS && (
-        <FarmDetailsScreen
-          onSuccess={(farmDetails) =>
-            handleNavigate(SCREENS.PERMISSIONS, { farmDetails, hasLand: farmDetails.hasLand })
-          }
-          onBack={() => handleNavigate(SCREENS.FARMER_TYPE_SELECTION)}
-        />
-      )}
-
-      {activeScreen === SCREENS.PERMISSIONS && (
-        <PermissionsScreen
-          onSuccess={(permissions) => {
-            setAuthenticatedUserType(USER_TYPES.FARMER)
-            handleNavigate(SCREENS.FARMER_DASHBOARD, { permissions })
-          }}
-          onSkip={() => {
-            setAuthenticatedUserType(USER_TYPES.FARMER)
-            handleNavigate(SCREENS.FARMER_DASHBOARD)
-          }}
-        />
-      )}
-
-      {activeScreen === SCREENS.ADMIN_LOGIN && (
-        <AdminPasskeyLoginScreen
-          onSuccess={() => {
-            setAuthenticatedUserType(USER_TYPES.ADMIN)
-            handleNavigate(SCREENS.ADMIN_DASHBOARD)
-          }}
-          onBack={() => handleNavigate(SCREENS.WELCOME)}
-        />
-      )}
-
-      {/* FARMER SCREENS */}
-      {activeScreen === SCREENS.FARMER_DASHBOARD && (
-        <FarmerDashboardScreen
-          userData={{ ...userData, isFirstLogin }}
-          quests={QUESTS_DATA}
-          onStartQuest={handleQuestStart}
-          onNavigate={handleNavigate}
-          onShowToast={showSuccessToast}
-        />
-      )}
-
-      {activeScreen === SCREENS.QUESTS_LIST && (
-        <QuestsListScreen
-          quests={QUESTS_DATA}
-          completedQuests={userData.completedQuests}
-          farmerType={userData.farmerType}
-          onStartQuest={handleQuestStart}
-          onBack={() => handleNavigate(SCREENS.FARMER_DASHBOARD)}
-        />
-      )}
-
-      {activeScreen === SCREENS.COMMUNITY && (
-        <CommunityScreen userData={userData} onBack={() => handleNavigate(SCREENS.FARMER_DASHBOARD)} />
-      )}
-
-      {activeScreen === SCREENS.REWARDS && (
-        <RewardsScreen userData={userData} onBack={() => handleNavigate(SCREENS.FARMER_DASHBOARD)} />
-      )}
-
-      {activeScreen === SCREENS.FARMER_PROFILE && (
-        <FarmerProfileScreen
-          userData={userData}
-          onUpdate={(updatedData) => setUserData((prev) => ({ ...prev, ...updatedData }))}
-          onBack={() => handleNavigate(SCREENS.FARMER_DASHBOARD)}
-        />
-      )}
-
-      {activeScreen === SCREENS.SETTINGS && (
-        <SettingsScreen
-          userData={userData}
-          onUpdate={(updatedData) => setUserData((prev) => ({ ...prev, ...updatedData }))}
-          onBack={() => handleNavigate(SCREENS.FARMER_DASHBOARD)}
-        />
-      )}
-
-      {activeScreen === SCREENS.IMPACT_TRACKER && (
-        <ImpactTrackerScreen userData={userData} onBack={() => handleNavigate(SCREENS.FARMER_DASHBOARD)} />
-      )}
-
-      {/* QUEST FLOW */}
-      {activeScreen === SCREENS.QUEST_INTRO && currentQuestData && (
-        <QuestIntroScreen
-          quest={currentQuestData}
-          onStart={() => handleNavigate(SCREENS.QUEST_STEPS)}
-          onBack={() => handleNavigate(SCREENS.QUESTS_LIST)}
-        />
-      )}
-
-      {activeScreen === SCREENS.QUEST_STEPS && currentQuestData && (
-        <QuestStepsScreen
-          quest={currentQuestData}
-          onContinue={() => handleNavigate(SCREENS.QUEST_SUBMIT_PROOF)}
-          onBack={() => handleNavigate(SCREENS.QUEST_INTRO)}
-        />
-      )}
-
-      {activeScreen === SCREENS.QUEST_SUBMIT_PROOF && currentQuestData && (
-        <SubmitProofScreen
-          quest={currentQuestData}
-          onSubmit={() => {
-            showSuccessToast("✅ Submitted! We'll review within 24 hours 🌱")
-            handleNavigate(SCREENS.QUEST_VERIFICATION)
-          }}
-          onBack={() => handleNavigate(SCREENS.QUEST_STEPS)}
-        />
-      )}
-
-      {activeScreen === SCREENS.QUEST_VERIFICATION && currentQuestData && (
-        <VerificationScreen quest={currentQuestData} onContinue={() => handleNavigate(SCREENS.QUEST_REWARD)} />
-      )}
-
-      {activeScreen === SCREENS.QUEST_REWARD && currentQuestData && (
-        <RewardScreen
-          quest={currentQuestData}
-          userData={userData}
-          onComplete={handleQuestComplete}
-          onContinue={() => handleNavigate(SCREENS.QUEST_SUMMARY)}
-        />
-      )}
-
-      {activeScreen === SCREENS.QUEST_SUMMARY && currentQuestData && (
-        <LearningSummaryScreen quest={currentQuestData} onContinue={() => handleNavigate(SCREENS.FARMER_DASHBOARD)} />
-      )}
-
-      {/* ADMIN SCREENS */}
-      {activeScreen === SCREENS.ADMIN_DASHBOARD && <AdminDashboardScreen onNavigate={handleNavigate} />}
-
-      {activeScreen === SCREENS.ADMIN_FARMERS && (
-        <AdminFarmersScreen onBack={() => handleNavigate(SCREENS.ADMIN_DASHBOARD)} />
-      )}
-
-      {activeScreen === SCREENS.ADMIN_QUESTS && (
-        <AdminQuestsScreen quests={QUESTS_DATA} onBack={() => handleNavigate(SCREENS.ADMIN_DASHBOARD)} />
-      )}
-
-      {activeScreen === SCREENS.ADMIN_VERIFICATION && (
-        <AdminVerificationScreen onBack={() => handleNavigate(SCREENS.ADMIN_DASHBOARD)} />
-      )}
-
-      {activeScreen === SCREENS.ADMIN_REWARDS && (
-        <AdminRewardsScreen onBack={() => handleNavigate(SCREENS.ADMIN_DASHBOARD)} />
-      )}
-
-      {/* User Win: Toast Notification Component - always visible feedback */}
-      {showToast && (
-        <div className="fixed top-4 left-1/2 -translate-x-1/2 z-[100] animate-slide-down">
-          <div className="bg-accent text-accent-foreground px-6 py-3 rounded-2xl shadow-2xl border-2 border-accent/30 flex items-center gap-2 max-w-md">
-            <span className="text-lg">✓</span>
-            <p className="text-sm font-medium">{toastMessage}</p>
+            {/* Right Visual */}
+            <div className="relative">
+              <div className="relative w-full aspect-square max-w-lg mx-auto">
+                {/* Central Circle */}
+                <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-accent/20 rounded-full blur-3xl animate-pulse"></div>
+                
+                {/* Floating Icons */}
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="relative w-64 h-64">
+                    <div className="absolute top-0 left-1/2 -translate-x-1/2 w-16 h-16 bg-primary rounded-2xl flex items-center justify-center shadow-lg animate-float-gentle">
+                      <Sprout className="w-8 h-8 text-white" />
+                    </div>
+                    <div className="absolute top-1/4 right-0 w-14 h-14 bg-accent rounded-2xl flex items-center justify-center shadow-lg animate-float-gentle animation-delay-200">
+                      <Trophy className="w-7 h-7 text-accent-foreground" />
+                    </div>
+                    <div className="absolute bottom-1/4 right-0 w-14 h-14 bg-secondary rounded-2xl flex items-center justify-center shadow-lg animate-float-gentle animation-delay-400">
+                      <BookOpen className="w-7 h-7 text-white" />
+                    </div>
+                    <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-14 h-14 bg-primary rounded-2xl flex items-center justify-center shadow-lg animate-float-gentle animation-delay-600">
+                      <Sun className="w-7 h-7 text-white" />
+                    </div>
+                    <div className="absolute bottom-1/4 left-0 w-14 h-14 bg-accent rounded-2xl flex items-center justify-center shadow-lg animate-float-gentle animation-delay-200">
+                      <Droplet className="w-7 h-7 text-accent-foreground" />
+                    </div>
+                    <div className="absolute top-1/4 left-0 w-14 h-14 bg-secondary rounded-2xl flex items-center justify-center shadow-lg animate-float-gentle animation-delay-400">
+                      <Leaf className="w-7 h-7 text-white" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-      )}
+      </section>
+
+      {/* Features Section */}
+      <section id="features" className="relative z-10 bg-card/50 backdrop-blur-sm py-24">
+        <div className="container mx-auto px-6">
+          <div className="max-w-6xl mx-auto">
+            <div className="text-center mb-16">
+              <h2 className="text-4xl font-bold mb-4">Why Choose FarmStellar?</h2>
+              <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+                Experience a revolutionary approach to agricultural education
+              </p>
+            </div>
+
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {/* Feature 1 */}
+              <div className="group bg-card border-2 border-border rounded-3xl p-8 hover:border-primary transition-all hover:shadow-xl hover:-translate-y-2">
+                <div className="w-14 h-14 bg-primary/10 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-primary group-hover:scale-110 transition-all">
+                  <BookOpen className="w-7 h-7 text-primary group-hover:text-white transition-colors" />
+                </div>
+                <h3 className="text-2xl font-bold mb-3">Interactive Quests</h3>
+                <p className="text-muted-foreground leading-relaxed">
+                  Learn through engaging, story-driven quests that make agricultural education fun and memorable.
+                </p>
+              </div>
+
+              {/* Feature 2 */}
+              <div className="group bg-card border-2 border-border rounded-3xl p-8 hover:border-accent transition-all hover:shadow-xl hover:-translate-y-2">
+                <div className="w-14 h-14 bg-accent/10 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-accent group-hover:scale-110 transition-all">
+                  <Trophy className="w-7 h-7 text-accent group-hover:text-accent-foreground transition-colors" />
+                </div>
+                <h3 className="text-2xl font-bold mb-3">Earn Rewards</h3>
+                <p className="text-muted-foreground leading-relaxed">
+                  Complete quests to earn points, badges, and unlock advanced farming techniques.
+                </p>
+              </div>
+
+              {/* Feature 3 */}
+              <div className="group bg-card border-2 border-border rounded-3xl p-8 hover:border-secondary transition-all hover:shadow-xl hover:-translate-y-2">
+                <div className="w-14 h-14 bg-secondary/10 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-secondary group-hover:scale-110 transition-all">
+                  <Users className="w-7 h-7 text-secondary group-hover:text-white transition-colors" />
+                </div>
+                <h3 className="text-2xl font-bold mb-3">Community Learning</h3>
+                <p className="text-muted-foreground leading-relaxed">
+                  Connect with fellow farmers, share experiences, and grow together as a community.
+                </p>
+              </div>
+
+              {/* Feature 4 */}
+              <div className="group bg-card border-2 border-border rounded-3xl p-8 hover:border-primary transition-all hover:shadow-xl hover:-translate-y-2">
+                <div className="w-14 h-14 bg-primary/10 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-primary group-hover:scale-110 transition-all">
+                  <TrendingUp className="w-7 h-7 text-primary group-hover:text-white transition-colors" />
+                </div>
+                <h3 className="text-2xl font-bold mb-3">Track Progress</h3>
+                <p className="text-muted-foreground leading-relaxed">
+                  Monitor your learning journey with detailed analytics and personalized insights.
+                </p>
+              </div>
+
+              {/* Feature 5 */}
+              <div className="group bg-card border-2 border-border rounded-3xl p-8 hover:border-accent transition-all hover:shadow-xl hover:-translate-y-2">
+                <div className="w-14 h-14 bg-accent/10 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-accent group-hover:scale-110 transition-all">
+                  <Award className="w-7 h-7 text-accent group-hover:text-accent-foreground transition-colors" />
+                </div>
+                <h3 className="text-2xl font-bold mb-3">Certifications</h3>
+                <p className="text-muted-foreground leading-relaxed">
+                  Earn recognized certifications as you master sustainable farming practices.
+                </p>
+              </div>
+
+              {/* Feature 6 */}
+              <div className="group bg-card border-2 border-border rounded-3xl p-8 hover:border-secondary transition-all hover:shadow-xl hover:-translate-y-2">
+                <div className="w-14 h-14 bg-secondary/10 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-secondary group-hover:scale-110 transition-all">
+                  <Globe className="w-7 h-7 text-secondary group-hover:text-white transition-colors" />
+                </div>
+                <h3 className="text-2xl font-bold mb-3">Multilingual Support</h3>
+                <p className="text-muted-foreground leading-relaxed">
+                  Learn in your preferred language with support for multiple regional languages.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="relative z-10 py-24">
+        <div className="container mx-auto px-6">
+          <div className="max-w-4xl mx-auto">
+            <div className="bg-gradient-to-br from-primary via-primary to-accent rounded-3xl p-12 md:p-16 text-center shadow-2xl relative overflow-hidden">
+              {/* Background Pattern */}
+              <div className="absolute inset-0 opacity-10">
+                <div className="absolute top-10 left-10 w-20 h-20 border-4 border-white rounded-full"></div>
+                <div className="absolute bottom-10 right-10 w-32 h-32 border-4 border-white rounded-full"></div>
+                <div className="absolute top-1/2 left-1/4 w-16 h-16 border-4 border-white rounded-full"></div>
+              </div>
+
+              <div className="relative z-10 space-y-6">
+                <h2 className="text-4xl md:text-5xl font-bold text-white">
+                  Ready to Transform Your Farming?
+                </h2>
+                <p className="text-xl text-white/90 max-w-2xl mx-auto">
+                  Join FarmStellar today and start your journey towards sustainable, profitable farming.
+                </p>
+                <div className="pt-4">
+                  <Button 
+                    onClick={handleGetStarted}
+                    size="lg"
+                    className="bg-white text-primary hover:bg-white/90 text-lg px-10 py-7 shadow-xl hover:shadow-2xl hover:scale-105 transition-all"
+                  >
+                    Start Learning Now
+                    <ArrowRight className="ml-2 w-5 h-5" />
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="relative z-10 border-t border-border bg-card/30 backdrop-blur-sm py-12">
+        <div className="container mx-auto px-6">
+          <div className="max-w-6xl mx-auto">
+            <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 bg-gradient-to-br from-primary to-accent rounded-xl flex items-center justify-center">
+                  <Sprout className="w-6 h-6 text-white" />
+                </div>
+                <div>
+                  <h3 className="font-bold text-lg">FarmStellar</h3>
+                  <p className="text-sm text-muted-foreground">Grow Your Knowledge</p>
+                </div>
+              </div>
+              
+              <div className="text-center md:text-right">
+                <p className="text-sm text-muted-foreground">
+                  © 2025 FarmStellar. All rights reserved.
+                </p>
+                <p className="text-xs text-muted-foreground mt-1">
+                  Empowering farmers through gamified learning
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </footer>
     </div>
   )
 }

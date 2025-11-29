@@ -67,7 +67,7 @@ export function AdminLoginScreen({ onSuccess, onBack }) {
             <button
               onClick={handleLogin}
               disabled={!email || !passkey}
-              className="w-full bg-primary text-primary-foreground font-bold py-3 rounded-xl hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full bg-white text-primary-foreground font-bold py-3 rounded-xl hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               Login as Admin
             </button>

@@ -11,7 +11,7 @@ export function ImpactTrackerScreen({ onBack, userData }) {
 
   const ACHIEVEMENT_MILESTONES = [
     { label: "First Quest", completed: true, date: "Jan 15" },
-    { label: "5 Day Streak", completed: true, date: "Jan 20" },
+  //  { label: "5 Day Streak", completed: true, date: "Jan 20" },
     { label: "Level 3", completed: true, date: "Jan 22" },
     { label: "10 Quests", completed: false, date: "In Progress" },
     { label: "Level 5", completed: false, date: "Locked" },
@@ -48,8 +48,8 @@ export function ImpactTrackerScreen({ onBack, userData }) {
           </div>
           <div className="bg-card rounded-2xl p-5 border border-border shadow-sm text-center">
             <Zap className="w-8 h-8 text-accent mx-auto mb-2" />
-            <p className="text-3xl font-bold text-foreground">{userData?.currentStreak || 7}</p>
-            <p className="text-xs text-muted-foreground mt-1">Day Streak</p>
+            {/* <p className="text-3xl font-bold text-foreground">{userData?.currentStreak || 7}</p>
+            <p className="text-xs text-muted-foreground mt-1">Day Streak</p> */}
           </div>
         </div>
 
