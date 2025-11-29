@@ -257,7 +257,7 @@ export function FarmerDashboardScreen({ onStartQuest, onViewImpact, quests, onNa
                       <IconComponent className="icon-lg text-primary" />
                     </div>
                     <span className="text-tiny bg-accent/20 text-accent-foreground px-3 py-1.5 rounded-full font-medium border border-accent/30">
-                      {quest.difficulty === "Easy" ? "🌼" : quest.difficulty === "Medium" ? "🌼🌼" : "🌼🌼🌼"}{" "}
+                      {quest.difficulty === "Easy" ? " " : quest.difficulty === "Medium" ? " " : " "}{" "}
                       {quest.difficulty}
                     </span>
                   </div>
