@@ -6,6 +6,7 @@ import { SubmitProofScreen } from "@/components/quests/submit-proof-screen"
 import { VerificationScreen } from "@/components/quests/verification-screen"
 import { RewardScreen } from "@/components/quests/reward-screen"
 import { LearningSummaryScreen } from "@/components/quests/learning-summary-screen"
+import { SoilEvaluationScreen } from "@/components/quests/soil-evaluation-screen"
 import { QUESTS_DATA } from "@/constants/quests"
 import { useRouter, useParams, useSearchParams } from "next/navigation"
 import { useEffect, useState, Suspense } from "react"
@@ -79,12 +80,20 @@ function QuestContent() {
         router.push(`/quests/${questId}?step=${newStep}`)
     }
 
+    const questIds = Object.keys(QUESTS_DATA)
+    const currentQuestIndex = questIds.indexOf(questId)
+    const nextQuestId = questIds[currentQuestIndex + 1] || questIds[0]
+
+    const handleNextQuest = () => {
+        router.push(`/quests/${nextQuestId}`)
+    }
+
     return (
         <>
             {step === "intro" && (
                 <QuestIntroScreen
                     quest={quest}
-                    onStart={() => navigateToStep("steps")}
+                    onStart={() => navigateToStep("steps&page=1")}
                     onBack={() => router.push("/quests")}
                 />
             )}
@@ -98,14 +107,26 @@ function QuestContent() {
             )}
 
             {step === "submit" && (
-                <SubmitProofScreen
-                    quest={quest}
-                    onSubmit={() => {
-                        showSuccessToast("✅ Submitted! We'll review within 24 hours 🌱")
-                        navigateToStep("verification")
-                    }}
-                    onBack={() => navigateToStep("steps")}
-                />
+                quest.id === "soil_scout" ? (
+                    <SoilEvaluationScreen
+                        quest={quest}
+                        onSubmit={(evaluation) => {
+                            console.log("Evaluation submitted:", evaluation)
+                            showSuccessToast("✅ Evaluation Submitted! Great job! 🌱")
+                            navigateToStep("reward")
+                        }}
+                        onBack={() => navigateToStep("steps")}
+                    />
+                ) : (
+                    <SubmitProofScreen
+                        quest={quest}
+                        onSubmit={() => {
+                            showSuccessToast("✅ Submitted! We'll review within 24 hours 🌱")
+                            navigateToStep("verification")
+                        }}
+                        onBack={() => navigateToStep("steps")}
+                    />
+                )
             )}
 
             {step === "verification" && (
@@ -121,6 +142,7 @@ function QuestContent() {
                     userData={userData}
                     onComplete={handleQuestComplete}
                     onContinue={() => navigateToStep("summary")}
+                    onNextQuest={handleNextQuest}
                 />
             )}
 

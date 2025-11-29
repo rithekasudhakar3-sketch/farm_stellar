@@ -1,6 +1,6 @@
 "use client"
 
-import { QuestsListScreen } from "@/components/quests/quests-list-screen"
+import { RevampedQuestsListScreen } from "@/components/quests/revamped-quests-list-screen"
 import { QUESTS_DATA } from "@/constants/quests"
 import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
@@ -25,7 +25,7 @@ export default function QuestsPage() {
     }
 
     return (
-        <QuestsListScreen
+        <RevampedQuestsListScreen
             quests={QUESTS_DATA}
             completedQuests={userData.completedQuests || []}
             farmerType={userData.farmerType}

@@ -1,6 +1,6 @@
 "use client"
 
-import { FarmerDashboardScreen } from "@/components/farmer/dashboard-screen"
+import { RevampedDashboard } from "@/components/farmer/revamped-dashboard"
 import { QUESTS_DATA } from "@/constants/quests"
 import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
@@ -55,7 +55,7 @@ export default function DashboardPage() {
 
     return (
         <>
-            <FarmerDashboardScreen
+            <RevampedDashboard
                 userData={userData}
                 quests={QUESTS_DATA}
                 onStartQuest={handleStartQuest}

@@ -1,8 +1,8 @@
 export const QUESTS_DATA = {
   soil_scout: {
     id: "soil_scout",
-    title: "Meet the Soil: Basic Identification Adventure",
-    description: "Learn soil types and their properties for healthy crop growth.",
+    title: "Meet the Soil",
+    description: "Analyze the physical health of your garden soil to understand what plants will thrive in it.",
     activities: [
       "Collect soil samples",
       "Perform texture test (sand/silt/clay)",
@@ -17,12 +17,89 @@ export const QUESTS_DATA = {
     difficulty: "Beginner",
     cropType: "General",
     xpReward: 5,
-    badgeName: "Soil Scout"
+    badgeName: "Soil Scout",
+    steps: [
+      {
+        title: "Preparation & Gear Check",
+        objective: "Before you head out, gather your kit.",
+        subSteps: [
+          "Small trowel or sturdy spoon",
+          "3 Clean jars or Ziploc bags",
+          "Permanent marker",
+          "Water bottle",
+          "Notebook & Camera (Phone)",
+          "Optional: Ruler & Gloves"
+        ],
+        tip: "Pro Tip: Soil tests are best done when the soil is slightly damp, but not soaking wet from heavy rain.",
+        image: "/images/quests/soil_scout/step1.png"
+      },
+      {
+        title: "Step 1 — The Harvest (Sampling)",
+        objective: "Collect a representative sample of your soil.",
+        subSteps: [
+          "Select 3 Spots: Pick three distinct areas in your plot (e.g., near a plant, center of the row, and an empty corner).",
+          "Dig: Clear away surface leaves/mulch. Dig 6–10 cm deep (about finger-length).",
+          "Collect: Scoop about 1 cup of soil from each spot into separate bags/jars.",
+          "Label: Mark them clearly: S1, S2, S3."
+        ],
+        reason: "Why? Soil changes across a garden. Three spots give you an average, not an anomaly.",
+        image: "/images/quests/soil_scout/step2.jpg"
+      },
+      {
+        title: "Step 2 — Texture Analysis (The Physics)",
+        objective: "Determine if your soil is Sandy, Silty, or Clay-heavy.",
+        subSteps: [
+          "Method A: Take a moist pinch of soil (add a drop of water if needed).",
+          "Knead it into a ball, then press it between your thumb and finger to push out a 'ribbon.'",
+          "Check Ribbon: Sandy (No ribbon), Silty (Weak ribbon), Clay (Strong ribbon >2cm).",
+          "Method B: Fill a clear jar 2/3 with soil and top with water.",
+          "Add a pinch of salt and shake vigorously for 2 minutes.",
+          "Wait 24 Hours and observe layers (Sand bottom, Silt middle, Clay top)."
+        ],
+        image: "/images/quests/soil_scout/step3.png"
+      },
+      {
+        title: "Step 3 — Hydration Check",
+        objective: "Check water retention and drainage.",
+        subSteps: [
+          "The Squeeze Test: Pick up a handful of soil and squeeze gently. Open your hand.",
+          "Check if Dry: Falls apart immediately (Needs irrigation).",
+          "Check if Moist: Holds loose shape but crumbles (Ideal).",
+          "Check if Wet: Drips water, sticky blob (Poor drainage)."
+        ],
+        image: "/images/quests/soil_scout/step4.png"
+      },
+      {
+        title: "Step 4 — Sensory Check (Color & Smell)",
+        objective: "Assess organic health and aeration.",
+        subSteps: [
+          "Smell Test: Earthy/Fresh (Good) vs Sour/Rotten (Bad/Anaerobic).",
+          "Color Code: Dark Brown/Black (Rich Organic Matter).",
+          "Color Code: Red/Yellow (High Iron).",
+          "Color Code: Gray/Blue-ish (Waterlogged).",
+          "Color Code: Pale/White (Leached/Salty)."
+        ],
+        image: "/images/quests/soil_scout/step5.png"
+      },
+      {
+        title: "Conclusion & Learning Summary",
+        objective: "Mission Complete! Compile your notes.",
+        subSteps: [
+          "Determine Texture (e.g., Sandy Loam)",
+          "Determine Moisture (e.g., Well-drained)",
+          "Determine Health (e.g., Dark & Earthy)",
+          "Review: Texture dictates strategy.",
+          "Review: Color indicates diet.",
+          "Review: Smell reveals breath."
+        ],
+        image: null
+      }
+    ]
   },
 
   crop_quest: {
     id: "crop_quest",
-    title: "Crops that Fits: Guide farmers to the Right choice",
+    title: "Crops that Fits",
     description: "Discover the best sustainable crops for your region.",
     activities: [
       "Browse recommended crops",
@@ -42,7 +119,7 @@ export const QUESTS_DATA = {
 
   compost_kickoff: {
     id: "compost_kickoff",
-    title: "Soil Booster: Turn Trash to Treasure",
+    title: "Soil Booster",
     description: "Turn organic waste into nutrient-rich compost.",
     activities: [
       "Choose compost spot",
@@ -63,7 +140,7 @@ export const QUESTS_DATA = {
 
   zero_waste: {
     id: "zero_waste",
-    title: "Zero Waste Warrior: Segregate for Sustainability",
+    title: "Zero Waste Warrior",
     description: "Learn to segregate waste for eco-friendly farming.",
     activities: [
       "Separate organic and non-organic waste",
@@ -83,7 +160,7 @@ export const QUESTS_DATA = {
 
   mini_garden: {
     id: "mini_garden",
-    title: "Miniplot Mastery: 5-Plant Starter Patch",
+    title: "Miniplot Mastery",
     description: "Create your first small garden with 5 easy plants.",
     activities: [
       "Select 5 beginner-friendly plants",
@@ -104,7 +181,7 @@ export const QUESTS_DATA = {
 
   mulch_master: {
     id: "mulch_master",
-    title: "Soil Shield: Protect Your Soil",
+    title: "Soil Shield",
     description: "Protect your soil using natural mulch.",
     activities: [
       "Collect dry leaves/straw",
@@ -144,7 +221,7 @@ export const QUESTS_DATA = {
 
   coconut_basin: {
     id: "coconut_basin",
-    title: "Build the Life Ring: Coconut Basin Creation",
+    title: "Build the Life Ring",
     description: "Create water-saving basins around coconut trees.",
     activities: [
       "Mark 1–1.5m radius",
@@ -179,7 +256,7 @@ export const QUESTS_DATA = {
       "Enhance plant growth",
       "Improve soil health"
     ],
-    difficulty: "Beginner",
+    difficulty: "Pro",
     cropType: "Coconut",
     xpReward: 35,
     badgeName: "Bio-Elixir Maker"
@@ -229,7 +306,7 @@ export const QUESTS_DATA = {
 
   rainwater_hero: {
     id: "rainwater_hero",
-    title: "Rainwater Hero: Simple Harvesting Setup",
+    title: "Rainwater Hero",
     description: "Set up a simple rainwater collection system.",
     activities: [
       "Place barrel under roof edge",
@@ -271,7 +348,7 @@ export const QUESTS_DATA = {
 
   jeevamrutham: {
     id: "jeevamrutham",
-    title: "Microbe Booster: Jeevamrutham Mission",
+    title: "Jeevamrutham Mission",
     description: "Create Jeevamrutham to boost beneficial soil microbes.",
     activities: [
       "Mix cow dung & urine",
@@ -284,13 +361,13 @@ export const QUESTS_DATA = {
       "Enhance nutrient availability",
       "Increase crop health"
     ],
-    difficulty: "Beginner",
+    difficulty: "Pro",
     cropType: "General",
     xpReward: 60,
     badgeName: "Microbe Booster"
   }
 };
-  
+
 
 
 
