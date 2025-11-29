@@ -348,8 +348,8 @@ export const QUESTS_DATA = {
 
   jeevamrutham: {
     id: "jeevamrutham",
-    title: "Jeevamrutham Mission",
-    description: "Create Jeevamrutham to boost beneficial soil microbes.",
+    title: "Panchakavya",
+    description: "Create a batch of panchakavya, a potent traditional microbial culture that acts as an immunity booster for your garden.",
     activities: [
       "Mix cow dung & urine",
       "Add jaggery + flour",
@@ -364,7 +364,81 @@ export const QUESTS_DATA = {
     difficulty: "Pro",
     cropType: "General",
     xpReward: 60,
-    badgeName: "Microbe Booster"
+    badgeName: "Microbe Booster",
+    steps: [
+      {
+        title: "Prep & Inventory",
+        objective: "Before you brew, gather your alchemical ingredients. Note: This recipe is scaled for a standard 'Home Garden Bucket' (approx. 20 Liters).",
+        subSteps: [
+          "1 Plastic Bucket (20L capacity) – Do not use metal",
+          "A wooden stick (for stirring)",
+          "Breathable cloth (cotton or jute) & string/rope",
+          "1 kg Fresh Cow Dung (Indigenous cow dung is best, but any fresh dung works)",
+          "1 Liter Cow Urine (Aged is fine)",
+          "250g Jaggery (Black/chemical-free is best) OR fruit pulp",
+          "250g Pulse Flour (Besan/Gram flour or any dicot flour)",
+          "Handful of Soil (Undisturbed soil from a forest or healthy farm bund)"
+        ],
+        tip: "Time Required: 20 Minutes (Active) + 5 Days (Passive Fermentation). Goal: Brew a living culture that converts soil nutrients into a form plants can eat.",
+        image: "/images/quests/jeevamrutham/step1.jpg"
+      },
+      {
+        title: "Step 1 — The Base (The Culture)",
+        objective: "Create the liquid medium for the microbes.",
+        subSteps: [
+          "Water: Fill your 20L bucket with about 15–17 Liters of water (leave space at the top for foam)",
+          "The Source: Add the 1 kg of Cow Dung and 1 Liter of Cow Urine to the water",
+          "Mix: Use your wooden stick and mix thoroughly until the dung is dissolved and no large lumps remain"
+        ],
+        reason: "Why? Cow dung is the primary source of the beneficial bacteria/fungi. Cow urine is anti-fungal and acts as an electrolyte.",
+        image: "/images/quests/jeevamrutham/step2.jpg"
+      },
+      {
+        title: "Step 2 — The Fuel (The Food)",
+        objective: "Feed the microbes so they multiply rapidly.",
+        subSteps: [
+          "Add Energy: Dissolve the 250g Jaggery in the bucket (This is sugar/carbohydrate energy for the microbes)",
+          "Add Protein: Sprinkle in the 250g Pulse Flour (This provides protein for the microbes to build their bodies)",
+          "The Inoculant: Toss in the Handful of Soil (This introduces native microbes that are already adapted to your local climate)",
+          "Stir: Mix vigorously"
+        ],
+        image: "/images/quests/jeevamrutham/step3.jpg"
+      },
+      {
+        title: "Step 3 — The Fermentation (The Magic)",
+        objective: "Let the culture brew.",
+        subSteps: [
+          "Cover: Tie the breathable cloth over the top of the bucket (This keeps flies out but lets air/oxygen in)",
+          "Place: Store the bucket in the shade (Direct sunlight/UV rays will kill the microbes)",
+          "The Ritual: Stir the mixture clockwise for 1 minute, twice a day (Morning and Evening)",
+          "Wait: Let it ferment for 5 to 7 days"
+        ],
+        tip: "The Clockwise Stir: Stirring creates a vortex that oxygenates the pile, helping aerobic bacteria thrive.",
+        image: "/images/quests/jeevamrutham/step4.jpg"
+      },
+      {
+        title: "Step 4 — Application (The Boost)",
+        objective: "Feed your soil. Status Check: After 5–7 days, the mixture should smell fermented (slightly sour, like yeast/alcohol) and have bubbles on top. It is ready!",
+        subSteps: [
+          "Dilute: Important! Do not use it pure. Dilute this bucket with water at a 1:10 ratio (1 mug of Jeevamrutham to 10 mugs of water)",
+          "Apply: Pour the diluted liquid on moist soil near the root zone of your plants",
+          "Mulch: For best results, cover the wet soil with dry leaves (mulch) immediately after applying",
+          "Note: Use the batch within 7 days of fermentation finishing"
+        ],
+        image: "/images/quests/jeevamrutham/step5.jpg"
+      },
+      {
+        title: "Conclusion & Learning Summary",
+        objective: "Mission Complete! You have successfully created a microbial inoculum.",
+        subSteps: [
+          "It's not a fertilizer: Jeevamrutham is not primarily about N-P-K (Nitrogen/Phosphorus/Potassium). It is a culture.",
+          "Microbes do the work: You introduced millions of microbes into the soil. These microbes eat the biomass (mulch/compost) in your garden and unlock the nutrients for the plants.",
+          "The Symbiosis: The Jaggery was the starter energy; the Flour was the building block; the Dung was the source.",
+          "Shade is Key: You learned that UV light is the enemy of soil microbes, which is why we ferment in the shade and apply near roots."
+        ],
+        image: null
+      }
+    ]
   }
 };
 
