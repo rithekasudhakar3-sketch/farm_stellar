@@ -49,12 +49,14 @@ cd backend
 ## Tech Stack
 
 ### Frontend
+
 - **Framework**: Next.js 16.0.3 with React
 - **Styling**: Tailwind CSS with custom UI components
 - **Icons**: Lucide React
 - **Deployment**: Ready for Vercel/Netlify
 
 ### Backend (Planned)
+
 - **API**: Node.js with Express.js
 - **Database**: MongoDB/PostgreSQL
 - **Authentication**: JWT tokens
@@ -65,6 +67,7 @@ cd backend
 ### Available Scripts
 
 **Frontend:**
+
 - `npm run dev` - Start development server
 - `npm run build` - Build for production
 - `npm run start` - Start production server
@@ -73,6 +76,7 @@ cd backend
 ### Project Components
 
 **Key Components:**
+
 - Quest List with crop-specific pills
 - Authentication flows (farmer/admin)
 - Dashboard with progress tracking
@@ -95,3 +99,5 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 - **Repository**: https://github.com/Bhupesh-S/farmquest
 - **Issues**: https://github.com/Bhupesh-S/farmquest/issues
+
+s
