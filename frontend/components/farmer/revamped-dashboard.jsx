@@ -6,7 +6,7 @@ import { LeaderboardCard } from "./leaderboard-card"
 import { WeatherAlertCard } from "./weather-alert-card"
 import { OngoingQuestsCard } from "./ongoing-quests-card"
 
-export function RevampedDashboard({ userData, onStartQuest, onNavigate }) {
+export function RevampedDashboard({ userData, onStartQuest, onNavigate, t }) {
     const handleResumeQuest = (questId) => {
         if (onStartQuest) {
             onStartQuest(questId)
@@ -26,10 +26,10 @@ export function RevampedDashboard({ userData, onStartQuest, onNavigate }) {
                             <div className="flex items-center gap-2">
                                 <Sun className="w-4 h-4 text-accent" />
                                 <h1 className="text-lg sm:text-xl font-bold text-foreground">
-                                    Good Morning, {userData?.name || "Farmer"}!
+                                    {t('dashboard.goodMorning', { name: userData?.name || "Farmer" }) || `Good Morning, ${userData?.name || "Farmer"}!`}
                                 </h1>
                             </div>
-                            <p className="text-xs text-muted-foreground">Ready to grow your knowledge today? 🌱</p>
+                            <p className="text-xs text-muted-foreground">{t('dashboard.readyToGrow') || "Ready to grow your knowledge today? 🌱"}</p>
                         </div>
                     </div>
                 </div>
@@ -41,42 +41,42 @@ export function RevampedDashboard({ userData, onStartQuest, onNavigate }) {
                     {/* Left Column - Main Content (2/3 width on desktop) */}
                     <div className="lg:col-span-2 space-y-6">
                         {/* User Progress Bar */}
-                        <UserProgressCard userData={userData} />
+                        <UserProgressCard userData={userData} t={t} />
 
                         {/* Weather Alert Widget */}
-                        <WeatherAlertCard location={userData?.location || "Bangalore Rural, Karnataka"} />
+                        <WeatherAlertCard location={userData?.location || "Bangalore Rural, Karnataka"} t={t} />
 
                         {/* Ongoing Quests Section */}
-                        <OngoingQuestsCard onResumeQuest={handleResumeQuest} />
+                        <OngoingQuestsCard onResumeQuest={handleResumeQuest} t={t} />
                     </div>
 
                     {/* Right Column - Leaderboard (1/3 width on desktop) */}
                     <div className="lg:col-span-1">
                         <div className="lg:sticky lg:top-24">
-                            <LeaderboardCard />
+                            <LeaderboardCard t={t} />
                         </div>
                     </div>
                 </div>
 
                 {/* Quick Stats Section */}
                 <div className="mt-8 bg-card border-2 border-border rounded-3xl p-6 shadow-lg">
-                    <h3 className="text-xl font-bold text-foreground mb-6">Your Achievements</h3>
+                    <h3 className="text-xl font-bold text-foreground mb-6">{t('dashboard.yourAchievements') || "Your Achievements"}</h3>
                     <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                         <div className="text-center p-4 bg-gradient-to-br from-primary/10 to-transparent rounded-2xl border border-primary/20 hover:scale-105 transition-transform">
                             <p className="text-3xl font-bold text-primary mb-1">{userData?.completedQuests?.length || 3}</p>
-                            <p className="text-xs text-muted-foreground">Quests Completed</p>
+                            <p className="text-xs text-muted-foreground">{t('dashboard.questsCompleted') || "Quests Completed"}</p>
                         </div>
                         <div className="text-center p-4 bg-gradient-to-br from-accent/10 to-transparent rounded-2xl border border-accent/20 hover:scale-105 transition-transform">
                             <p className="text-3xl font-bold text-accent mb-1">{userData?.badges?.length || 2}</p>
-                            <p className="text-xs text-muted-foreground">Badges Earned</p>
+                            <p className="text-xs text-muted-foreground">{t('dashboard.badgesEarned') || "Badges Earned"}</p>
                         </div>
                         <div className="text-center p-4 bg-gradient-to-br from-secondary/10 to-transparent rounded-2xl border border-secondary/20 hover:scale-105 transition-transform">
                             <p className="text-3xl font-bold text-secondary mb-1">15</p>
-                            <p className="text-xs text-muted-foreground">Hours Learned</p>
+                            <p className="text-xs text-muted-foreground">{t('dashboard.hoursLearned') || "Hours Learned"}</p>
                         </div>
                         <div className="text-center p-4 bg-gradient-to-br from-primary/10 to-transparent rounded-2xl border border-primary/20 hover:scale-105 transition-transform">
                             <p className="text-3xl font-bold text-primary mb-1">92%</p>
-                            <p className="text-xs text-muted-foreground">Success Rate</p>
+                            <p className="text-xs text-muted-foreground">{t('dashboard.successRate') || "Success Rate"}</p>
                         </div>
                     </div>
                 </div>

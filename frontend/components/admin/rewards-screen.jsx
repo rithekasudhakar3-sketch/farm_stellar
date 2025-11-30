@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Slider } from "@/components/ui/slider"
 
-export function AdminRewardsScreen({ onBack }) {
+export function AdminRewardsScreen({ onBack, t }) {
   const [rewards] = useState([
     { id: 1, name: "Seed Packet", points: 100, stock: 45 },
     { id: 2, name: "Organic Fertilizer", points: 200, stock: 23 },
@@ -24,25 +24,25 @@ export function AdminRewardsScreen({ onBack }) {
           <button onClick={onBack} className="p-2 hover:bg-muted rounded-lg transition-colors" aria-label="Go back">
             <ArrowLeft className="w-6 h-6" />
           </button>
-          <h1 className="text-2xl font-bold text-foreground">Rewards Management</h1>
+          <h1 className="text-2xl font-bold text-foreground">{t('admin.manageRewards') || "Rewards Management"}</h1>
         </div>
       </div>
 
       <div className="max-w-6xl mx-auto p-4 space-y-6">
         <Button onClick={() => setShowModal(true)} size="lg">
           <Plus className="w-5 h-5 mr-2" />
-          Add New Reward
+          {t('admin.addNewReward') || "Add New Reward"}
         </Button>
 
         <div className="bg-card rounded-2xl p-6 shadow-sm border border-border">
-          <h2 className="text-lg font-semibold mb-4">Bulk XP Adjustment</h2>
+          <h2 className="text-lg font-semibold mb-4">{t('admin.bulkXPAdjustment') || "Bulk XP Adjustment"}</h2>
           <div className="space-y-4">
             <div>
-              <Label>XP Multiplier</Label>
+              <Label>{t('admin.xpMultiplier') || "XP Multiplier"}</Label>
               <Slider value={xpAdjustment} max={50} min={1} step={1} className="mt-2" onValueChange={setXpAdjustment} />
-              <div className="text-sm text-muted-foreground mt-1">{xpAdjustment}x multiplier</div>
+              <div className="text-sm text-muted-foreground mt-1">{xpAdjustment}x {t('admin.multiplier') || "multiplier"}</div>
             </div>
-            <Button>Apply to All Quests</Button>
+            <Button>{t('admin.applyToAllQuests') || "Apply to All Quests"}</Button>
           </div>
         </div>
 
@@ -54,11 +54,11 @@ export function AdminRewardsScreen({ onBack }) {
               </div>
               <h3 className="font-semibold mb-2">{reward.name}</h3>
               <div className="flex justify-between text-sm text-muted-foreground mb-4">
-                <span>{reward.points} points</span>
-                <span>{reward.stock} in stock</span>
+                <span>{reward.points} {t('common.points') || "points"}</span>
+                <span>{reward.stock} {t('common.inStock') || "in stock"}</span>
               </div>
               <Button variant="outline" className="w-full bg-transparent">
-                Edit Reward
+                {t('admin.editReward') || "Edit Reward"}
               </Button>
             </div>
           ))}
@@ -69,26 +69,26 @@ export function AdminRewardsScreen({ onBack }) {
         <>
           <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-40" onClick={() => setShowModal(false)} />
           <div className="fixed inset-x-4 top-1/2 -translate-y-1/2 max-w-lg mx-auto bg-card rounded-2xl p-6 shadow-xl z-50">
-            <h2 className="text-xl font-bold mb-4">Add New Reward</h2>
+            <h2 className="text-xl font-bold mb-4">{t('admin.addNewReward') || "Add New Reward"}</h2>
             <div className="space-y-4">
               <div>
-                <Label>Reward Name</Label>
-                <Input placeholder="Enter reward name" />
+                <Label>{t('admin.rewardName') || "Reward Name"}</Label>
+                <Input placeholder={t('admin.enterRewardName') || "Enter reward name"} />
               </div>
               <div>
-                <Label>Points Required</Label>
+                <Label>{t('admin.pointsRequired') || "Points Required"}</Label>
                 <Input type="number" placeholder="100" />
               </div>
               <div>
-                <Label>Stock Quantity</Label>
+                <Label>{t('admin.stockQuantity') || "Stock Quantity"}</Label>
                 <Input type="number" placeholder="50" />
               </div>
               <div className="flex gap-2">
                 <Button onClick={() => setShowModal(false)} className="flex-1">
-                  Add Reward
+                  {t('common.add') || "Add Reward"}
                 </Button>
                 <Button onClick={() => setShowModal(false)} variant="outline" className="flex-1">
-                  Cancel
+                  {t('common.cancel') || "Cancel"}
                 </Button>
               </div>
             </div>

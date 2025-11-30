@@ -1,0 +1,169 @@
+{
+    "common": {
+        "welcome": "हमारे मंच पर आपका स्वागत है",
+        "login": "लॉगिन",
+        "hindi": "🇮🇳 हिंदी",
+        "malayalam": "🇮🇳 मलयालम",
+        "marathi": "🇮🇳 मराठी",
+        "platformType": "गेमिफाइड लर्निंग प्लेटफॉर्म",
+        "heroTitle": "खेल के माध्यम से स्थायी खेती में महारत हासिल करें",
+        "dashboard": "Dashboard",
+        "language": "Language",
+        "help": "Help",
+        "menu": "Menu",
+        "level": "स्तर",
+        "yourLevel": "आपका स्तर",
+        "of": "का",
+        "actions": "Actions",
+        "viewDetails": "View Details",
+        "experienceLevel": "Experience Level",
+        "filter": "Filter",
+        "view": "View",
+        "edit": "Edit",
+        "title": "Title",
+        "description": "Description",
+        "add": "Add",
+        "cancel": "Cancel",
+        "points": "Points",
+        "inStock": "in stock",
+        "logout": "Logout",
+        "start": "Start",
+        "next": "Next",
+        "previous": "Previous",
+        "profile": "Profile",
+        "settings": "Settings",
+        "name": "Name",
+        "experience": "Experience",
+        "district": "District",
+        "crops": "Crops",
+        "status": "Status",
+        "loading": "लोड हो रहा है..."
+    },
+    "hero": {
+        "description": "हजारों किसानों के साथ जुड़ें जो इंटरैक्टिव खोजों के माध्यम से आधुनिक कृषि तकनीक सीख रहे हैं, पुरस्कार अर्जित करें और एक स्थायी भविष्य का निर्माण करें।",
+        "startJourney": "अपनी यात्रा शुरू करें",
+        "learnMore": "और जानें"
+    },
+    "stats": {
+        "farmers": "10,000+",
+        "activeFarmers": "सक्रिय किसान",
+        "quests": "50+",
+        "learningQuests": "सीखने की खोजें",
+        "successRate": "95%",
+        "success": "सफलता दर",
+        "totalFarmers": "Total Farmers",
+        "newSignups": "New Signups (This Week)",
+        "activeUsers": "Active Users",
+        "questsCompleted": "Quests Completed",
+        "totalXP": "Total XP",
+        "completions": "completions"
+    },
+    "why": {
+        "title": "फार्मस्टेलर क्यों चुनें?",
+        "subtitle": "कृषि शिक्षा के लिए एक क्रांतिकारी दृष्टिकोण का अनुभव करें"
+    },
+    "feature": {
+        "interactiveQuests": {
+            "title": "इंटरैक्टिव खोजें",
+            "desc": "आकर्षक, कहानी-आधारित खोजों के माध्यम से सीखें जो कृषि शिक्षा को मजेदार और यादगार बनाती हैं।"
+        },
+        "rewards": {
+            "title": "पुरस्कार अर्जित करें",
+            "desc": "अंक, बैज अर्जित करने और उन्नत खेती तकनीकों को अनलॉक करने के लिए खोजें पूरी करें।"
+        },
+        "community": {
+            "title": "सामुदायिक शिक्षा",
+            "desc": "साथी किसानों के साथ जुड़ें, अनुभव साझा करें और एक समुदाय के रूप में एक साथ बढ़ें।"
+        },
+        "progress": {
+            "title": "प्रगति ट्रैक करें",
+            "desc": "विस्तृत विश्लेषण और व्यक्तिगत अंतर्दृष्टि के साथ अपनी सीखने की यात्रा की निगरानी करें।"
+        },
+        "certifications": {
+            "title": "प्रमाणपत्र",
+            "desc": "स्थायी खेती प्रथाओं में महारत हासिल करते हुए मान्यता प्राप्त प्रमाणपत्र अर्जित करें।"
+        },
+        "multilingual": {
+            "title": "बहुभाषी समर्थन",
+            "desc": "कई क्षेत्रीय भाषाओं के समर्थन के साथ अपनी पसंदीदा भाषा में सीखें।"
+        }
+    },
+    "cta": {
+        "ready": "अपनी खेती को बदलने के लिए तैयार हैं?",
+        "join": "आज ही फार्मस्टेलर से जुड़ें और स्थायी, लाभदायक खेती की ओर अपनी यात्रा शुरू करें।",
+        "startLearning": "अब सीखना शुरू करें"
+    },
+    "footer": {
+        "rights": "© 2025 फार्मस्टेलर। सर्वाधिकार सुरक्षित।"
+    },
+    "auth": {
+        "welcomeSubtitle": "इंटरैक्टिव खोजों के माध्यम से स्थायी खेती में महारत हासिल करें और पुरस्कार अर्जित करें",
+        "loginFarmer": "किसान के रूप में लॉगिन करें",
+        "loginAdmin": "एडमिन के रूप में लॉगिन करें",
+        "signupFarmer": "किसान के रूप में साइन अप करें"
+    },
+    "auth1": {
+        "mobileNumber": "मोबाइल नंबर",
+        "invalidPhone": "कृपया एक मान्य 10-अंकीय फोन नंबर दर्ज करें",
+        "sendingOTP": "OTP भेजा जा रहा है...",
+        "continue": "जारी रखें",
+        "backToWelcome": "स्वागत पृष्ठ पर वापस जाएं"
+    },
+    "otpVerification": {
+        "title": "OTP सत्यापित करें",
+        "subtitle": "नीचे दिए गए नंबर पर भेजा गया 6-अंकीय कोड दर्ज करें",
+        "verifyButton": "OTP सत्यापित करें",
+        "verifying": "सत्यापित किया जा रहा है...",
+        "resendTimer": "{{seconds}} सेकंड में OTP पुनः भेजें",
+        "resendButton": "OTP पुनः भेजें",
+        "changePhone": "फोन नंबर बदलें"
+    },
+    "adminLogin": {
+        "title": "Admin Login",
+        "accessTitle": "Admin Access",
+        "accessSubtitle": "Enter your organization credentials",
+        "emailLabel": "Organization Email",
+        "emailPlaceholder": "admin@organization.com",
+        "passkeyLabel": "Passkey",
+        "passkeyPlaceholder": "Enter your passkey",
+        "loginButton": "Login as Admin"
+    },
+    "phoneLogin": {
+        "createAccount": "Create Your Account",
+        "welcomeBack": "Welcome Back",
+        "enterPhoneSignup": "Enter your phone number to get started",
+        "enterPhoneLogin": "Enter your phone number to login",
+        "badgesEarned": "अर्जित बैज",
+        "hoursLearned": "सीखने के घंटे",
+        "successRate": "सफलता दर",
+        "nextMilestone": "अगला पड़ाव",
+        "xpProgress": "XP प्रगति",
+        "toNextLevel": "अगले स्तर तक",
+        "weatherAlert": "मौसम चेतावनी",
+        "humidity": "नमी",
+        "rain": "बारिश",
+        "wind": "हवा",
+        "quickAlert": "त्वरित चेतावनी",
+        "condition": {
+            "partlyCloudy": "आंशिक रूप से बादल छाए रहेंगे"
+        },
+        "alert": {
+            "lightRain": "कल हल्की बारिश की उम्मीद है - रोपण के लिए अच्छा है!"
+        },
+        "ongoingQuests": "चल रहे क्वेस्ट",
+        "continueLearning": "अपनी सीखने की यात्रा जारी रखें",
+        "tasksCompleted": "कार्य पूरे हुए",
+        "tasksRemaining": "कार्य शेष हैं",
+        "resume": "फिर से शुरू करें",
+        "noOngoingQuests": "कोई चल रहा क्वेस्ट नहीं",
+        "startNewQuest": "सीखना शुरू करने के लिए एक नया क्वेस्ट शुरू करें!",
+        "leaderboard": "लीडरबोर्ड",
+        "topFarmers": "इस महीने के शीर्ष किसान",
+        "badges": "बैज",
+        "keepLearning": "रैंक पर चढ़ने के लिए सीखते रहें! 🚀"
+    },
+    "quest": {
+        "soilBasics": "मिट्टी की मूल बातें",
+        "cropSelection": "फसल चयन गाइड"
+    }
+}

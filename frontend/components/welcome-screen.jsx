@@ -1,8 +1,8 @@
 "use client"
 
 import { Leaf, User, UserCog, UserPlus } from "lucide-react"
+export function WelcomeScreen({ onFarmerLogin, onAdminLogin, onSignup, t }) {
 
-export function WelcomeScreen({ onFarmerLogin, onAdminLogin, onSignup }) {
   return (
     <div className="min-h-screen center-flex p-6 relative overflow-hidden">
       {/* Background Image */}
@@ -17,31 +17,32 @@ export function WelcomeScreen({ onFarmerLogin, onAdminLogin, onSignup }) {
           <div className="center-flex w-20 h-20 bg-primary rounded-3xl mb-6 shadow-lg">
             <Leaf className="icon-2xl text-primary-foreground" />
           </div>
-          <h1 className="text-display text-foreground mb-3 text-balance">FarmStellar</h1>
+          <h1 className="text-display text-foreground mb-3 text-balance">{t('auth1.title')}</h1>
           <p className="text-body text-muted-foreground text-balance max-w-md mx-auto">
-            Master sustainable farming through interactive quests and earn rewards
+            {t('auth1.subtitle')}
           </p>
         </div>
 
         <div className="w-full max-w-md space-y-4">
           <button onClick={onFarmerLogin} className="btn-primary w-full center-flex gap-3">
             <User className="icon-sm" />
-            Login as Farmer
+            {t('auth1.loginFarmer')}
           </button>
 
           <button onClick={onAdminLogin} className="btn-secondary w-full center-flex gap-3">
             <UserCog className="icon-sm" />
-            Login as Admin
+            {t('auth1.loginAdmin')}
           </button>
 
           <button onClick={onSignup} className="btn-accent w-full center-flex gap-3">
             <UserPlus className="icon-sm" />
-            Sign Up as Farmer
+            {t('auth1.signupFarmer')}
           </button>
         </div>
 
-        <p className="text-medium text-muted-foreground mt-8 text-center">Learn. Grow. Sustain.</p>
+        <p className="text-medium text-muted-foreground mt-8 text-center">{t('extra.tagline')}</p>
       </div>
     </div>
   )
 }
+

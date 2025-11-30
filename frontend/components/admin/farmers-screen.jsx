@@ -5,7 +5,7 @@ import { ArrowLeft, Search, Filter } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 
-export function AdminFarmersScreen({ onBack }) {
+export function AdminFarmersScreen({ onBack, t }) {
   const [searchQuery, setSearchQuery] = useState("")
   const [farmers] = useState([
     // { id: 1, name: "Raj Kumar", district: "Patiala", xp: 150, level: 3, experience: "Intermediate" },
@@ -23,7 +23,7 @@ export function AdminFarmersScreen({ onBack }) {
           <button onClick={onBack} className="p-2 hover:bg-muted rounded-lg transition-colors" aria-label="Go back">
             <ArrowLeft className="w-6 h-6" />
           </button>
-          <h1 className="text-2xl font-bold text-foreground">Farmers Management</h1>
+          <h1 className="text-2xl font-bold text-foreground">{t('admin.manageFarmers') || "Farmers Management"}</h1>
         </div>
       </div>
 
@@ -34,13 +34,13 @@ export function AdminFarmersScreen({ onBack }) {
             <Input
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search farmers..."
+              placeholder={t('admin.searchFarmers') || "Search farmers..."}
               className="pl-10"
             />
           </div>
           <Button variant="outline">
             <Filter className="w-4 h-4 mr-2" />
-            Filter
+            {t('common.filter') || "Filter"}
           </Button>
         </div>
 
@@ -49,12 +49,12 @@ export function AdminFarmersScreen({ onBack }) {
             <table className="w-full">
               <thead className="bg-muted">
                 <tr>
-                  <th className="text-left p-4 font-semibold">Name</th>
-                  <th className="text-left p-4 font-semibold">District</th>
-                  <th className="text-left p-4 font-semibold">Experience</th>
-                  <th className="text-left p-4 font-semibold">XP</th>
-                  <th className="text-left p-4 font-semibold">Level</th>
-                  <th className="text-left p-4 font-semibold">Actions</th>
+                  <th className="text-left p-4 font-semibold">{t('common.name') || "Name"}</th>
+                  <th className="text-left p-4 font-semibold">{t('common.district') || "District"}</th>
+                  <th className="text-left p-4 font-semibold">{t('common.experience') || "Experience"}</th>
+                  <th className="text-left p-4 font-semibold">{t('stats.totalXP') || "XP"}</th>
+                  <th className="text-left p-4 font-semibold">{t('common.level') || "Level"}</th>
+                  <th className="text-left p-4 font-semibold">{t('common.actions') || "Actions"}</th>
                 </tr>
               </thead>
               <tbody>
@@ -72,10 +72,10 @@ export function AdminFarmersScreen({ onBack }) {
                     <td className="p-4">
                       <div className="flex gap-2">
                         <Button size="sm" variant="outline">
-                          View
+                          {t('common.view') || "View"}
                         </Button>
                         <Button size="sm" variant="ghost">
-                          Edit
+                          {t('common.edit') || "Edit"}
                         </Button>
                       </div>
                     </td>

@@ -4,7 +4,7 @@ import { useState } from "react"
 import { ArrowLeft, Check, X, MessageSquare, ImageIcon, Video, ZoomIn } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
-export function AdminVerificationScreen({ onBack }) {
+export function AdminVerificationScreen({ onBack, t }) {
   const [submissions, setSubmissions] = useState([
     {
       id: 1,
@@ -56,7 +56,7 @@ export function AdminVerificationScreen({ onBack }) {
 
   const handleReject = (id) => {
     if (!feedback.trim()) {
-      alert("Please provide feedback before rejecting")
+      alert(t('admin.provideFeedback') || "Please provide feedback before rejecting")
       return
     }
     setSubmissions(submissions.filter((s) => s.id !== id))
@@ -71,9 +71,9 @@ export function AdminVerificationScreen({ onBack }) {
           <button onClick={onBack} className="p-2 hover:bg-muted rounded-xl transition-colors" aria-label="Go back">
             <ArrowLeft className="w-6 h-6" />
           </button>
-          <h1 className="text-2xl font-bold text-foreground">Verification Queue</h1>
+          <h1 className="text-2xl font-bold text-foreground">{t('admin.verificationQueue') || "Verification Queue"}</h1>
           <span className="ml-auto px-4 py-2 bg-primary text-primary-foreground rounded-xl text-sm font-bold shadow-sm">
-            {submissions.length} Pending
+            {submissions.length} {t('admin.pending') || "Pending"}
           </span>
         </div>
       </div>
@@ -119,21 +119,21 @@ export function AdminVerificationScreen({ onBack }) {
 
                 <div className="flex flex-wrap gap-4 text-sm">
                   <div>
-                    <span className="text-muted-foreground">Farmer:</span>{" "}
+                    <span className="text-muted-foreground">{t('admin.farmer') || "Farmer"}:</span>{" "}
                     <span className="font-medium text-foreground">{submission.farmer}</span>
                   </div>
                   <div>
-                    <span className="text-muted-foreground">Phone:</span>{" "}
+                    <span className="text-muted-foreground">{t('admin.phone') || "Phone"}:</span>{" "}
                     <span className="font-medium text-foreground">{submission.farmerPhone}</span>
                   </div>
                   <div>
-                    <span className="text-muted-foreground">Submitted:</span>{" "}
+                    <span className="text-muted-foreground">{t('admin.submitted') || "Submitted"}:</span>{" "}
                     <span className="font-medium text-foreground">{submission.submitted}</span>
                   </div>
                 </div>
 
                 <div className="bg-muted/50 rounded-xl p-4">
-                  <p className="text-sm font-medium text-muted-foreground mb-1">Farmer's Notes:</p>
+                  <p className="text-sm font-medium text-muted-foreground mb-1">{t('admin.farmersNotes') || "Farmer's Notes"}:</p>
                   <p className="text-sm text-foreground">{submission.description}</p>
                 </div>
 
@@ -144,7 +144,7 @@ export function AdminVerificationScreen({ onBack }) {
                     onClick={() => handleApprove(submission.id)}
                   >
                     <Check className="w-4 h-4 mr-2" />
-                    Approve Submission
+                    {t('admin.approveSubmission') || "Approve Submission"}
                   </Button>
                   <Button
                     size="default"
@@ -153,7 +153,7 @@ export function AdminVerificationScreen({ onBack }) {
                     onClick={() => setSelectedSubmission(submission)}
                   >
                     <X className="w-4 h-4 mr-2" />
-                    Request Resubmission
+                    {t('admin.requestResubmission') || "Request Resubmission"}
                   </Button>
                 </div>
               </div>
@@ -164,12 +164,12 @@ export function AdminVerificationScreen({ onBack }) {
               <div className="mt-6 pt-6 border-t border-border">
                 <label className="block text-sm font-medium text-foreground mb-2">
                   <MessageSquare className="w-4 h-4 inline mr-1" />
-                  Feedback (required for rejection)
+                  {t('admin.feedbackRequired') || "Feedback (required for rejection)"}
                 </label>
                 <textarea
                   value={feedback}
                   onChange={(e) => setFeedback(e.target.value)}
-                  placeholder="Please provide specific feedback on why this submission needs improvement..."
+                  placeholder={t('admin.provideFeedbackPlaceholder') || "Please provide specific feedback on why this submission needs improvement..."}
                   className="w-full p-4 rounded-xl border border-input bg-background text-foreground resize-none focus:outline-none focus:ring-2 focus:ring-ring"
                   rows={4}
                 />
@@ -180,7 +180,7 @@ export function AdminVerificationScreen({ onBack }) {
                     onClick={() => handleReject(submission.id)}
                     disabled={!feedback.trim()}
                   >
-                    Send Feedback & Request Resubmission
+                    {t('admin.sendFeedback') || "Send Feedback & Request Resubmission"}
                   </Button>
                   <Button
                     size="sm"
@@ -190,7 +190,7 @@ export function AdminVerificationScreen({ onBack }) {
                       setFeedback("")
                     }}
                   >
-                    Cancel
+                    {t('common.cancel') || "Cancel"}
                   </Button>
                 </div>
               </div>
@@ -203,8 +203,8 @@ export function AdminVerificationScreen({ onBack }) {
             <div className="w-24 h-24 mx-auto mb-6 bg-accent/10 rounded-full flex items-center justify-center">
               <Check className="w-12 h-12 text-accent" />
             </div>
-            <p className="text-xl font-bold text-foreground mb-2">All Caught Up!</p>
-            <p className="text-sm text-muted-foreground">No pending submissions to verify at the moment.</p>
+            <p className="text-xl font-bold text-foreground mb-2">{t('admin.allCaughtUp') || "All Caught Up!"}</p>
+            <p className="text-sm text-muted-foreground">{t('admin.noPendingSubmissions') || "No pending submissions to verify at the moment."}</p>
           </div>
         )}
       </div>

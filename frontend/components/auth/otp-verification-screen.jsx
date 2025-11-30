@@ -4,8 +4,7 @@ import { useState, useRef, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card } from "@/components/ui/card"
-
-export function OtpVerificationScreen({ phone, onSuccess, onBack }) {
+export function OtpVerificationScreen({ phone, onSuccess, onBack, t }) {
   const [otp, setOtp] = useState(["", "", "", "", "", ""])
   const [isVerifying, setIsVerifying] = useState(false)
   const [resendTimer, setResendTimer] = useState(30)
@@ -72,9 +71,9 @@ export function OtpVerificationScreen({ phone, onSuccess, onBack }) {
               />
             </svg>
           </div>
-          <h2 className="text-2xl font-bold text-foreground mb-2">Verify OTP</h2>
+          <h2 className="text-2xl font-bold text-foreground mb-2">{t('otpVerification.title')}</h2>
           <p className="text-sm text-muted-foreground">
-            Enter the 6-digit code sent to
+            {t('otpVerification.subtitle')}
             <br />
             <span className="font-semibold text-foreground">+91 {phone}</span>
           </p>
@@ -99,21 +98,21 @@ export function OtpVerificationScreen({ phone, onSuccess, onBack }) {
           </div>
 
           <Button type="submit" className="w-full" disabled={otp.some((digit) => !digit) || isVerifying}>
-            {isVerifying ? "Verifying..." : "Verify OTP"}
+            {isVerifying ? t('otpVerification.verifying') : t('otpVerification.verifyButton')}
           </Button>
 
           <div className="text-center">
             {resendTimer > 0 ? (
-              <p className="text-sm text-muted-foreground">Resend OTP in {resendTimer}s</p>
+              <p className="text-sm text-muted-foreground">{t('otpVerification.resendTimer', { seconds: resendTimer })}</p>
             ) : (
               <button type="button" onClick={handleResend} className="text-sm text-primary hover:underline font-medium">
-                Resend OTP
+                {t('otpVerification.resendButton')}
               </button>
             )}
           </div>
 
           <Button type="button" variant="ghost" className="w-full" onClick={onBack}>
-            Change Phone Number
+            {t('otpVerification.changePhone')}
           </Button>
         </form>
       </Card>

@@ -2,12 +2,12 @@
 
 import { Leaf, ArrowRight, CheckCircle2 } from "lucide-react"
 
-export function OngoingQuestsCard({ quests = [], onResumeQuest }) {
+export function OngoingQuestsCard({ quests = [], onResumeQuest, t }) {
     // Mock ongoing quests data
     const ongoingQuests = [
         {
             id: "soil",
-            name: "Soil Basics Quest",
+            name: t('quest.soilBasics') || "Soil Basics Quest",
             progress: 60,
             totalTasks: 5,
             completedTasks: 3,
@@ -17,7 +17,7 @@ export function OngoingQuestsCard({ quests = [], onResumeQuest }) {
         },
         {
             id: "crops",
-            name: "Crop Selection Guide",
+            name: t('quest.cropSelection') || "Crop Selection Guide",
             progress: 25,
             totalTasks: 4,
             completedTasks: 1,
@@ -34,8 +34,8 @@ export function OngoingQuestsCard({ quests = [], onResumeQuest }) {
                     <Leaf className="w-6 h-6 text-primary" />
                 </div>
                 <div>
-                    <h3 className="text-xl font-bold text-foreground">Ongoing Quests</h3>
-                    <p className="text-xs text-muted-foreground">Continue your learning journey</p>
+                    <h3 className="text-xl font-bold text-foreground">{t('dashboard.ongoingQuests') || "Ongoing Quests"}</h3>
+                    <p className="text-xs text-muted-foreground">{t('dashboard.continueLearning') || "Continue your learning journey"}</p>
                 </div>
             </div>
 
@@ -53,7 +53,7 @@ export function OngoingQuestsCard({ quests = [], onResumeQuest }) {
                                     {quest.name}
                                 </h4>
                                 <p className="text-xs text-muted-foreground">
-                                    {quest.completedTasks} of {quest.totalTasks} tasks completed
+                                    {quest.completedTasks} {t('common.of') || "of"} {quest.totalTasks} {t('dashboard.tasksCompleted') || "tasks completed"}
                                 </p>
                             </div>
                             <span className="text-xs font-bold text-accent">{quest.progress}%</span>
@@ -71,13 +71,13 @@ export function OngoingQuestsCard({ quests = [], onResumeQuest }) {
                         <div className="flex items-center justify-between">
                             <div className="flex items-center gap-2 text-xs text-muted-foreground">
                                 <CheckCircle2 className="w-3 h-3" />
-                                <span>{quest.remainingTasks} tasks remaining</span>
+                                <span>{quest.remainingTasks} {t('dashboard.tasksRemaining') || "tasks remaining"}</span>
                             </div>
                             <button
                                 onClick={() => onResumeQuest && onResumeQuest(quest.id)}
                                 className="flex items-center gap-1 text-xs font-semibold text-primary hover:text-accent transition-colors group-hover:gap-2"
                             >
-                                Resume
+                                {t('dashboard.resume') || "Resume"}
                                 <ArrowRight className="w-3 h-3" />
                             </button>
                         </div>
@@ -87,8 +87,8 @@ export function OngoingQuestsCard({ quests = [], onResumeQuest }) {
 
             {ongoingQuests.length === 0 && (
                 <div className="text-center py-8">
-                    <p className="text-sm text-muted-foreground">No ongoing quests</p>
-                    <p className="text-xs text-muted-foreground mt-1">Start a new quest to begin learning!</p>
+                    <p className="text-sm text-muted-foreground">{t('dashboard.noOngoingQuests') || "No ongoing quests"}</p>
+                    <p className="text-xs text-muted-foreground mt-1">{t('dashboard.startNewQuest') || "Start a new quest to begin learning!"}</p>
                 </div>
             )}
         </div>

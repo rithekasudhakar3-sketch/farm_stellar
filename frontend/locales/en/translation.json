@@ -1,0 +1,349 @@
+{
+    "common": {
+        "welcome": "Welcome to our platform",
+        "login": "Login",
+        "questsCompleted": "Quests Completed",
+        "totalXP": "Total XP",
+        "completions": "completions",
+        "logout": "Logout",
+        "start": "Start",
+        "next": "Next",
+        "previous": "Previous",
+        "profile": "Profile",
+        "settings": "Settings",
+        "dashboard": "Dashboard",
+        "language": "Language",
+        "help": "Help",
+        "menu": "Menu",
+        "level": "Level",
+        "yourLevel": "Your Level",
+        "of": "of",
+        "actions": "Actions",
+        "viewDetails": "View Details",
+        "experienceLevel": "Experience Level",
+        "filter": "Filter",
+        "view": "View",
+        "edit": "Edit",
+        "title": "Title",
+        "description": "Description",
+        "add": "Add",
+        "cancel": "Cancel",
+        "points": "Points",
+        "inStock": "in stock",
+        "loading": "Loading..."
+    },
+    "brand": {
+        "name": "FarmStellar",
+        "tagline": "Grow Your Knowledge",
+        "changeLanguage": "Change language",
+        "english": "🇺🇸 English",
+        "malayalam": "🇮🇳 Malayalam",
+        "marathi": "🇮🇳 मराठी",
+        "platformType": "Gamified Learning Platform",
+        "heroTitle": "Master Sustainable Farming Through Play"
+    },
+    "hero": {
+        "description": "Join thousands of farmers learning modern agricultural techniques through interactive quests, earn rewards, and build a sustainable future.",
+        "startJourney": "Start Your Journey",
+        "learnMore": "Learn More"
+    },
+    "stats": {
+        "farmers": "10K+",
+        "activeFarmers": "Active Farmers",
+        "quests": "50+",
+        "learningQuests": "Learning Quests",
+        "successRate": "95%",
+        "success": "Success Rate",
+        "totalFarmers": "Total Farmers",
+        "newSignups": "New Signups (This Week)",
+        "activeUsers": "Active Users",
+        "questsCompleted": "Quests Completed",
+        "totalXP": "Total XP",
+        "completions": "completions"
+    },
+    "why": {
+        "title": "Why Choose FarmStellar?",
+        "subtitle": "Experience a revolutionary approach to agricultural education"
+    },
+    "feature": {
+        "interactiveQuests": {
+            "title": "Interactive Quests",
+            "desc": "Learn through engaging, story-driven quests that make agricultural education fun and memorable."
+        },
+        "rewards": {
+            "title": "Earn Rewards",
+            "desc": "Complete quests to earn points, badges, and unlock advanced farming techniques."
+        },
+        "community": {
+            "title": "Community Learning",
+            "desc": "Connect with fellow farmers, share experiences, and grow together as a community."
+        },
+        "progress": {
+            "title": "Track Progress",
+            "desc": "Monitor your learning journey with detailed analytics and personalized insights."
+        },
+        "certifications": {
+            "title": "Certifications",
+            "desc": "Earn recognized certifications as you master sustainable farming practices."
+        },
+        "multilingual": {
+            "title": "Multilingual Support",
+            "desc": "Learn in your preferred language with support for multiple regional languages."
+        }
+    },
+    "cta": {
+        "ready": "Ready to Transform Your Farming?",
+        "join": "Join FarmStellar today and start your journey towards sustainable, profitable farming.",
+        "startLearning": "Start Learning Now"
+    },
+    "footer": {
+        "rights": "© 2025 FarmStellar. All rights reserved."
+    },
+    "auth": {
+        "welcomeSubtitle": "Master sustainable farming through interactive quests and earn rewards",
+        "loginFarmer": "Login as Farmer",
+        "loginAdmin": "Login as Admin",
+        "signupFarmer": "Sign Up as Farmer"
+    },
+    "auth1": {
+        "title": "FarmStellar",
+        "subtitle": "Master sustainable farming through interactive quests and earn rewards",
+        "loginFarmer": "Login as Farmer",
+        "loginAdmin": "Login as Admin",
+        "signupFarmer": "Sign Up as Farmer"
+    },
+    "adminLogin": {
+        "title": "Admin Login",
+        "accessTitle": "Admin Access",
+        "accessSubtitle": "Enter your organization credentials",
+        "emailLabel": "Organization Email",
+        "emailPlaceholder": "admin@organization.com",
+        "passkeyLabel": "Passkey",
+        "passkeyPlaceholder": "Enter your passkey",
+        "loginButton": "Login as Admin"
+    },
+    "phoneLogin": {
+        "createAccount": "Create Your Account",
+        "welcomeBack": "Welcome Back",
+        "enterPhoneSignup": "Enter your phone number to get started",
+        "enterPhoneLogin": "Enter your phone number to login",
+        "mobileNumber": "Mobile Number",
+        "invalidPhone": "Please enter a valid 10-digit phone number",
+        "sendingOTP": "Sending OTP...",
+        "continue": "Continue",
+        "backToWelcome": "Back to Welcome"
+    },
+    "otpVerification": {
+        "title": "Verify OTP",
+        "subtitle": "Enter the 6-digit code sent to",
+        "verifyButton": "Verify OTP",
+        "verifying": "Verifying...",
+        "resendTimer": "Resend OTP in {{seconds}}s",
+        "resendButton": "Resend OTP",
+        "changePhone": "Change Phone Number"
+    },
+    "admin": {
+        "dashboard": "Dashboard",
+        "farmers": "Farmers",
+        "quests": "Quests",
+        "verification": "Verification",
+        "rewards": "Rewards",
+        "manageFarmers": "Manage Farmers",
+        "viewProfiles": "View and manage farmer profiles",
+        "manageQuests": "Manage Quests",
+        "createContent": "Create and edit quest content",
+        "verifyActivities": "Verify Activities",
+        "reviewSubmissions": "Review farmer quest submissions",
+        "manageRewards": "Manage Rewards",
+        "adjustRewards": "Adjust XP and badge rewards",
+        "registeredFarmers": "Registered Farmers",
+        "searchFarmers": "Search farmers...",
+        "farmerDetails": "Farmer Details",
+        "basicInfo": "Basic Information",
+        "farmDetails": "Farm Details",
+        "farmSize": "Farm Size",
+        "primaryCrops": "Primary Crops",
+        "fertilizers": "Fertilizers",
+        "pesticides": "Pesticides",
+        "questProgress": "Quest Progress",
+        "recentActivity": "Recent Activity",
+        "addNewQuest": "Add New Quest",
+        "questTitle": "Quest Title",
+        "questDescription": "Quest Description",
+        "xpReward": "XP Reward",
+        "addNewReward": "Add New Reward",
+        "bulkXPAdjustment": "Bulk XP Adjustment",
+        "xpMultiplier": "XP Multiplier",
+        "multiplier": "multiplier",
+        "applyToAllQuests": "Apply to All Quests",
+        "editReward": "Edit Reward",
+        "rewardName": "Reward Name",
+        "enterRewardName": "Enter reward name",
+        "pointsRequired": "Points Required",
+        "stockQuantity": "Stock Quantity",
+        "provideFeedback": "Please provide feedback before rejecting",
+        "verificationQueue": "Verification Queue",
+        "pending": "Pending",
+        "farmer": "Farmer",
+        "phone": "Phone",
+        "submitted": "Submitted",
+        "farmersNotes": "Farmer's Notes",
+        "approveSubmission": "Approve Submission",
+        "requestResubmission": "Request Resubmission",
+        "feedbackRequired": "Feedback (required for rejection)",
+        "provideFeedbackPlaceholder": "Please provide specific feedback on why this submission needs improvement...",
+        "sendFeedback": "Send Feedback & Request Resubmission",
+        "allCaughtUp": "All Caught Up!",
+        "noPendingSubmissions": "No pending submissions to verify at the moment."
+    },
+    "dashboard": {
+        "goodMorning": "Good Morning, {{name}}!",
+        "readyToGrow": "Ready to grow your knowledge today? 🌱",
+        "yourAchievements": "Your Achievements",
+        "questsCompleted": "Quests Completed",
+        "badgesEarned": "Badges Earned",
+        "hoursLearned": "Hours Learned",
+        "successRate": "Success Rate",
+        "nextMilestone": "Next Milestone",
+        "xpProgress": "XP Progress",
+        "toNextLevel": "to next level",
+        "weatherAlert": "Weather Alert",
+        "humidity": "Humidity",
+        "rain": "Rain",
+        "wind": "Wind",
+        "quickAlert": "Quick Alert",
+        "condition": {
+            "partlyCloudy": "Partly Cloudy"
+        },
+        "alert": {
+            "lightRain": "Light rain expected tomorrow - Good for planting!"
+        },
+        "ongoingQuests": "Ongoing Quests",
+        "continueLearning": "Continue your learning journey",
+        "tasksCompleted": "tasks completed",
+        "tasksRemaining": "tasks remaining",
+        "resume": "Resume",
+        "noOngoingQuests": "No ongoing quests",
+        "startNewQuest": "Start a new quest to begin learning!",
+        "leaderboard": "Leaderboard",
+        "topFarmers": "Top Farmers This Month",
+        "badges": "badges",
+        "keepLearning": "Keep learning to climb the ranks! 🚀"
+    },
+    "quest": {
+        "soilBasics": "Soil Basics Quest",
+        "cropSelection": "Crop Selection Guide"
+    },
+    "quests": {
+    "title": "Explore Farming Quests",
+    "subtitle": "Master sustainable farming techniques through interactive lessons. Complete quests, earn XP, and become a certified expert.",
+
+    "currentLevel": "Current Level",
+    "totalAvailableXP": "Total Available XP",
+    "totalQuests": "Total Quests",
+    "completionRate": "Completion Rate",
+
+    "searchPlaceholder": "Search quests..."
+    },
+    "filter": {
+      "allCrops": "All Crops",
+      "anyLevel": "Any Level",
+      "beginner": "Beginner",
+      "pro": "Pro"
+    },
+
+    "categories": {
+      "general": "General",
+      "cotton": "Cotton",
+      "coconut": "Coconut",
+      "wheat": "Wheat"
+    },
+
+    "questsList": {
+      "meetTheSoil": {
+        "title": "Meet the Soil",
+        "description": "Analyze the physical health of your garden soil to understand what plants will thrive in it.",
+        "activities": "4 activities",
+        "xp": "+5 XP"
+      },
+      "cropsThatFit": {
+        "title": "Crops that Fit",
+        "description": "Discover the best sustainable crops for your region.",
+        "activities": "3 activities",
+        "xp": "+60 XP"
+      },
+      "soilBooster": {
+        "title": "Soil Booster",
+        "description": "Turn organic waste into nutrient-rich compost.",
+        "activities": "4 activities",
+        "xp": "+45 XP"
+      },
+      "zeroWasteWarrior": {
+        "title": "Zero Waste Warrior",
+        "description": "Learn to segregate waste for eco-friendly farming.",
+        "activities": "3 activities",
+        "xp": "+40 XP"
+      },
+      "miniplotMastery": {
+        "title": "Miniplot Mastery",
+        "description": "Create your first small garden with 5 easy plants.",
+        "activities": "4 activities",
+        "xp": "+55 XP"
+      },
+      "soilShield": {
+        "title": "Soil Shield",
+        "description": "Protect your soil using natural mulch.",
+        "activities": "3 activities",
+        "xp": "+50 XP"
+      },
+      "bollKeeperMastery": {
+        "title": "Boll Keeper Mastery Challenge",
+        "description": "Improve cotton boll retention with simple interventions.",
+        "activities": "3 activities",
+        "xp": "+85 XP"
+      },
+      "buildTheLifeRing": {
+        "title": "Build the Life Ring",
+        "description": "Create water-saving basins around coconut trees.",
+        "activities": "5 activities",
+        "xp": "+85 XP"
+      },
+      "coconutWaterBioElixir": {
+        "title": "Coconut Water Bio-Elixir",
+        "description": "Create a natural bio-enzyme using coconut water.",
+        "activities": "4 activities",
+        "xp": "+35 XP"
+      },
+      "rustShieldChallenge": {
+        "title": "Rust Shield Challenge",
+        "description": "Protect wheat from rust disease using safe practices.",
+        "activities": "4 activities",
+        "xp": "+90 XP"
+      },
+      "biodiversityBloomBar": {
+        "title": "Biodiversity Bloom Bar",
+        "description": "Build a strip of flowering plants to attract beneficial insects.",
+        "activities": "4 activities",
+        "xp": "+45 XP"
+      },
+      "rainwaterHero": {
+        "title": "Rainwater Hero",
+        "description": "Set up a simple rainwater collection system.",
+        "activities": "4 activities",
+        "xp": "+80 XP"
+      },
+      "biocharMastery": {
+        "title": "Biochar Mastery Challenge",
+        "description": "Create biochar using farm waste to enrich soil.",
+        "activities": "4 activities",
+        "xp": "+100 XP"
+      },
+      "jeevamruthamMission": {
+        "title": "Jeevamrutham Mission",
+        "description": "Create Jeevamrutham to boost beneficial soil microbes.",
+        "activities": "4 activities",
+        "xp": ""
+      }
+
+}
+}

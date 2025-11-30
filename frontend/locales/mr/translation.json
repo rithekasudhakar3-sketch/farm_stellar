@@ -1,0 +1,233 @@
+{
+    "common": {
+        "welcome": "आमच्या प्लॅटफॉर्मवर स्वागत आहे",
+        "login": "लॉगिन",
+        "malayalam": "🇮🇳 मल्याळम",
+        "marathi": "🇮🇳 मराठी",
+        "platformType": "गेमिफाइड लर्निंग प्लॅटफॉर्म",
+        "heroTitle": "खेळाद्वारे शाश्वत शेती शिका",
+        "dashboard": "डॅशबोर्ड",
+        "language": "भाषा",
+        "help": "मदत",
+        "menu": "मेनू",
+        "level": "पातळी",
+        "yourLevel": "तुमची पातळी",
+        "of": "चे",
+        "actions": "क्रिया",
+        "viewDetails": "तपशील पहा",
+        "experienceLevel": "अनुभव पातळी",
+        "filter": "फिल्टर",
+        "view": "पहा",
+        "edit": "संपादित करा",
+        "title": "शीर्षक",
+        "description": "वर्णन",
+        "add": "जोडा",
+        "cancel": "रद्द करा",
+        "points": "गुण",
+        "inStock": "स्टॉकमध्ये",
+        "logout": "लॉग आउट",
+        "start": "सुरू करा",
+        "next": "पुढील",
+        "previous": "मागील",
+        "profile": "प्रोफाइल",
+        "settings": "सेटिंग्ज",
+        "name": "नाव",
+        "experience": "अनुभव",
+        "district": "जिल्हा",
+        "crops": "पिके",
+        "status": "स्थिती",
+        "loading": "लोड होत आहे..."
+    },
+    "hero": {
+        "description": "इंटरॅक्टिव्ह क्वेस्टद्वारे आधुनिक शेती तंत्र शिकणाऱ्या हजारो शेतकऱ्यांमध्ये सामील व्हा, बक्षिसे मिळवा आणि शाश्वत भविष्य घडवा.",
+        "startJourney": "तुमचा प्रवास सुरू करा",
+        "learnMore": "अधिक जाणून घ्या"
+    },
+    "stats": {
+        "farmers": "10,000+",
+        "activeFarmers": "सक्रिय शेतकरी",
+        "quests": "50+",
+        "learningQuests": "शिकण्याचे क्वेस्ट",
+        "successRate": "95%",
+        "success": "यश दर",
+        "totalFarmers": "एकूण शेतकरी",
+        "newSignups": "नवीन नोंदणी (या आठवड्यात)",
+        "activeUsers": "सक्रिय वापरकर्ते",
+        "questsCompleted": "पूर्ण केलेले क्वेस्ट",
+        "totalXP": "एकूण XP",
+        "completions": "पूर्ण करणारे"
+    },
+    "why": {
+        "title": "फार्मस्टेलर का निवडावे?",
+        "subtitle": "कृषी शिक्षणासाठी क्रांतिकारी दृष्टिकोन अनुभवा"
+    },
+    "feature": {
+        "interactiveQuests": {
+            "title": "इंटरॅक्टिव्ह क्वेस्ट",
+            "desc": "आकर्षक, कथा-आधारित क्वेस्टद्वारे शिका जे कृषी शिक्षण मनोरंजक आणि संस्मरणीय बनवतात."
+        },
+        "rewards": {
+            "title": "बक्षिसे मिळवा",
+            "desc": "क्वेस्ट पूर्ण करा, गुण आणि बॅज मिळवा आणि प्रगत शेती तंत्र अनलॉक करा."
+        },
+        "community": {
+            "title": "समुदाय शिक्षण",
+            "desc": "सहकारी शेतकऱ्यांशी संपर्क साधा, अनुभव शेअर करा आणि समुदाय म्हणून एकत्र वाढा."
+        },
+        "progress": {
+            "title": "प्रगती ट्रॅक करा",
+            "desc": "तपशीलवार विश्लेषण आणि वैयक्तिक अंतर्दृष्टीसह तुमच्या शिकण्याच्या प्रवासाचे निरीक्षण करा."
+        },
+        "certifications": {
+            "title": "प्रमाणपत्रे",
+            "desc": "शाश्वत शेती पद्धतींमध्ये प्रभुत्व मिळवताना मान्यताप्राप्त प्रमाणपत्रे मिळवा."
+        },
+        "multilingual": {
+            "title": "बहुभाषिक समर्थन",
+            "desc": "अनेक प्रादेशिक भाषांच्या समर्थनासह तुमच्या पसंतीच्या भाषेत शिका."
+        }
+    },
+    "cta": {
+        "ready": "तुमची शेती बदलण्यासाठी तयार आहात?",
+        "join": "आज फार्मस्टेलरमध्ये सामील व्हा आणि शाश्वत, फायदेशीर शेतीच्या दिशेने तुमचा प्रवास सुरू करा.",
+        "startLearning": "आता शिकणे सुरू करा"
+    },
+    "footer": {
+        "rights": "© 2025 फार्मस्टेलर. सर्व हक्क राखीव."
+    },
+    "auth": {
+        "welcomeSubtitle": "इंटरॅक्टिव्ह क्वेस्टद्वारे शाश्वत शेती शिका आणि बक्षिसे मिळवा",
+        "loginFarmer": "शेतकरी म्हणून लॉगिन करा",
+        "loginAdmin": "प्रशासक म्हणून लॉगिन करा",
+        "signupFarmer": "शेतकरी म्हणून साइन अप करा"
+    },
+    "auth1": {
+        "mobileNumber": "मोबाईल नंबर",
+        "invalidPhone": "कृपया वैध 10-अंकी फोन नंबर प्रविष्ट करा",
+        "sendingOTP": "OTP पाठवत आहे...",
+        "continue": "पुढे चालू ठेवा",
+        "backToWelcome": "स्वागत पृष्ठावर परत जा"
+    },
+    "otpVerification": {
+        "title": "OTP सत्यापित करा",
+        "subtitle": "खालील नंबरवर पाठवलेला 6-अंकी कोड प्रविष्ट करा",
+        "verifyButton": "OTP सत्यापित करा",
+        "verifying": "सत्यापित करत आहे...",
+        "resendTimer": "{{seconds}} सेकंदात OTP पुन्हा पाठवा",
+        "resendButton": "OTP पुन्हा पाठवा",
+        "changePhone": "फोन नंबर बदला"
+    },
+    "adminLogin": {
+        "title": "प्रशासक लॉगिन",
+        "accessTitle": "प्रशासक प्रवेश",
+        "accessSubtitle": "तुमची संस्था माहिती प्रविष्ट करा",
+        "emailLabel": "संस्था ईमेल",
+        "emailPlaceholder": "admin@organization.com",
+        "passkeyLabel": "पासकी",
+        "passkeyPlaceholder": "तुमची पासकी प्रविष्ट करा",
+        "loginButton": "प्रशासक म्हणून लॉगिन करा"
+    },
+    "phoneLogin": {
+        "createAccount": "तुमचे खाते तयार करा",
+        "welcomeBack": "पुन्हा स्वागत आहे",
+        "enterPhoneSignup": "सुरू करण्यासाठी तुमचा फोन नंबर प्रविष्ट करा",
+        "enterPhoneLogin": "लॉगिन करण्यासाठी तुमचा फोन नंबर प्रविष्ट करा",
+        "mobileNumber": "मोबाईल नंबर",
+        "invalidPhone": "कृपया वैध 10-अंकी फोन नंबर प्रविष्ट करा",
+        "sendingOTP": "OTP पाठवत आहे...",
+        "continue": "पुढे चालू ठेवा",
+        "backToWelcome": "स्वागत पृष्ठावर परत जा"
+    },
+    "admin": {
+        "dashboard": "डॅशबोर्ड",
+        "farmers": "शेतकरी",
+        "quests": "क्वेस्ट",
+        "verification": "पडताळणी",
+        "rewards": "बक्षिसे",
+        "manageFarmers": "शेतकरी व्यवस्थापित करा",
+        "viewProfiles": "शेतकरी प्रोफाइल पहा आणि व्यवस्थापित करा",
+        "manageQuests": "क्वेस्ट व्यवस्थापित करा",
+        "createContent": "क्वेस्ट सामग्री तयार करा आणि संपादित करा",
+        "verifyActivities": "क्रियाकलाप सत्यापित करा",
+        "reviewSubmissions": "शेतकरी क्वेस्ट सबमिशनचे पुनरावलोकन करा",
+        "manageRewards": "बक्षिसे व्यवस्थापित करा",
+        "adjustRewards": "XP आणि बॅज बक्षिसे समायोजित करा",
+        "registeredFarmers": "नोंदणीकृत शेतकरी",
+        "searchFarmers": "शेतकरी शोधा...",
+        "farmerDetails": "शेतकरी तपशील",
+        "basicInfo": "मूलभूत माहिती",
+        "farmDetails": "शेत तपशील",
+        "farmSize": "शेताचा आकार",
+        "primaryCrops": "प्राथमिक पिके",
+        "fertilizers": "खते",
+        "pesticides": "कीटकनाशके",
+        "questProgress": "क्वेस्ट प्रगती",
+        "recentActivity": "अलीकडील क्रियाकलाप",
+        "addNewQuest": "नवीन क्वेस्ट जोडा",
+        "questTitle": "क्वेस्ट शीर्षक",
+        "questDescription": "क्वेस्ट वर्णन",
+        "xpReward": "XP बक्षीस",
+        "addNewReward": "नवीन बक्षीस जोडा",
+        "bulkXPAdjustment": "मोठ्या प्रमाणात XP समायोजन",
+        "xpMultiplier": "XP गुणक",
+        "multiplier": "गुणक",
+        "applyToAllQuests": "सर्व क्वेस्टना लागू करा",
+        "editReward": "बक्षीस संपादित करा",
+        "rewardName": "बक्षिसाचे नाव",
+        "enterRewardName": "बक्षिसाचे नाव प्रविष्ट करा",
+        "pointsRequired": "आवश्यक गुण",
+        "stockQuantity": "स्टॉक प्रमाण",
+        "provideFeedback": "नाकारण्यापूर्वी कृपया अभिप्राय द्या",
+        "verificationQueue": "पडताळणी रांग",
+        "pending": "प्रलंबित",
+        "farmer": "शेतकरी",
+        "phone": "फोन",
+        "submitted": "सबमिट केले",
+        "farmersNotes": "शेतकऱ्याच्या नोंदी",
+        "approveSubmission": "सबमिशन मंजूर करा",
+        "requestResubmission": "पुन्हा सबमिट करण्याची विनंती करा",
+        "feedbackRequired": "अभिप्राय (नाकारण्यासाठी आवश्यक)",
+        "provideFeedbackPlaceholder": "हे सबमिशन सुधारण्याची आवश्यकता का आहे यावर कृपया विशिष्ट अभिप्राय द्या...",
+        "sendFeedback": "अभिप्राय पाठवा आणि पुन्हा सबमिट करण्याची विनंती करा",
+        "allCaughtUp": "सर्व पूर्ण झाले!",
+        "noPendingSubmissions": "सध्या पडताळणीसाठी कोणतेही प्रलंबित सबमिशन नाहीत."
+    },
+    "dashboard": {
+        "goodMorning": "सुप्रभात, {{name}}!",
+        "readyToGrow": "आज आपले ज्ञान वाढवण्यासाठी तयार आहात? 🌱",
+        "yourAchievements": "तुमची उपलब्धी",
+        "questsCompleted": "पूर्ण केलेले क्वेस्ट",
+        "badgesEarned": "मिळवलेले बॅज",
+        "hoursLearned": "शिकण्याचे तास",
+        "successRate": "यश दर",
+        "nextMilestone": "पुढील टप्पा",
+        "xpProgress": "XP प्रगती",
+        "toNextLevel": "पुढील पातळीवर",
+        "weatherAlert": "हवामान इशारा",
+        "humidity": "आर्द्रता",
+        "rain": "पाऊस",
+        "wind": "वारा",
+        "quickAlert": "त्वरित इशारा",
+        "condition": {
+            "partlyCloudy": "अंशतः ढगाळ"
+        },
+        "alert": {
+            "lightRain": "उद्या हलका पाऊस अपेक्षित आहे - लागवडीसाठी चांगले!"
+        },
+        "ongoingQuests": "चालू क्वेस्ट",
+        "continueLearning": "तुमचा शिकण्याचा प्रवास सुरू ठेवा",
+        "tasksCompleted": "कार्ये पूर्ण",
+        "tasksRemaining": "कार्ये शिल्लक",
+        "resume": "पुन्हा सुरू करा",
+        "noOngoingQuests": "कोणतेही चालू क्वेस्ट नाहीत",
+        "startNewQuest": "शिकणे सुरू करण्यासाठी नवीन क्वेस्ट सुरू करा!",
+        "leaderboard": "लीडरबोर्ड",
+        "topFarmers": "या महिन्यातील शीर्ष शेतकरी",
+        "badges": "बॅज",
+        "keepLearning": "रँकवर चढण्यासाठी शिकत राहा! 🚀"
+    },
+    "quest": {
+        "soilBasics": "मातीची मूलभूत माहिती",
+        "cropSelection": "पीक निवड मार्गदर्शक"
+    }
+}

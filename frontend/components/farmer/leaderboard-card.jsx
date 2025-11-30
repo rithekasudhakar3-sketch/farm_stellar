@@ -2,7 +2,7 @@
 
 import { Trophy, Award, Medal, Crown } from "lucide-react"
 
-export function LeaderboardCard() {
+export function LeaderboardCard({ t }) {
     const leaderboardData = [
         { rank: 1, name: "Priya Sharma", xp: 1250, badges: 8, avatar: "🌟" },
         { rank: 2, name: "Arjun Patel", xp: 1180, badges: 7, avatar: "🏆" },
@@ -31,8 +31,8 @@ export function LeaderboardCard() {
                     <Trophy className="w-6 h-6 text-accent" />
                 </div>
                 <div>
-                    <h3 className="text-xl font-bold text-foreground">Leaderboard</h3>
-                    <p className="text-xs text-muted-foreground">Top Farmers This Month</p>
+                    <h3 className="text-xl font-bold text-foreground">{t('dashboard.leaderboard') || "Leaderboard"}</h3>
+                    <p className="text-xs text-muted-foreground">{t('dashboard.topFarmers') || "Top Farmers This Month"}</p>
                 </div>
             </div>
 
@@ -41,8 +41,8 @@ export function LeaderboardCard() {
                     <div
                         key={user.rank}
                         className={`flex items-center gap-3 p-3 rounded-2xl transition-all hover:scale-[1.02] ${user.rank <= 3
-                                ? "bg-gradient-to-r from-accent/10 to-transparent border border-accent/20"
-                                : "bg-muted/30 hover:bg-muted/50"
+                            ? "bg-gradient-to-r from-accent/10 to-transparent border border-accent/20"
+                            : "bg-muted/30 hover:bg-muted/50"
                             }`}
                     >
                         {/* Rank */}
@@ -65,7 +65,7 @@ export function LeaderboardCard() {
                                 </span>
                                 <span className="flex items-center gap-1">
                                     <Award className="w-3 h-3" />
-                                    {user.badges} badges
+                                    {user.badges} {t('dashboard.badges') || "badges"}
                                 </span>
                             </div>
                         </div>
@@ -75,7 +75,7 @@ export function LeaderboardCard() {
 
             <div className="mt-4 pt-4 border-t border-border text-center">
                 <p className="text-xs text-muted-foreground">
-                    Keep learning to climb the ranks! 🚀
+                    {t('dashboard.keepLearning') || "Keep learning to climb the ranks! 🚀"}
                 </p>
             </div>
         </div>

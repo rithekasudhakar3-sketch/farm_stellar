@@ -10,6 +10,8 @@ export function NavigationMenu({
   onLogout,
   currentScreen,
   onNavigate,
+  userType = "farmer",
+  t,
 }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
 
@@ -24,15 +26,25 @@ export function NavigationMenu({
     }
   }, [isMenuOpen])
 
-  const NAVIGATION_MENU_ITEMS = [
-    { icon: Home, label: "Dashboard", screenId: "farmer-dashboard" },
-    { icon: Leaf, label: "Quests", screenId: "quests-list" },
-    { icon: Users, label: "Community", screenId: "community" },
-    { icon: Gift, label: "Rewards", screenId: "impact-tracker" },
-    { icon: User, label: "Profile", screenId: "farmer-profile" },
-    { icon: Settings, label: "Settings", screenId: "settings" },
-    { icon: HelpCircle, label: "Help", screenId: "farmer-dashboard" },
+  const FARMER_MENU_ITEMS = [
+    { icon: Home, label: t('common.dashboard'), screenId: "farmer-dashboard" },
+    { icon: Leaf, label: t('stats.quests'), screenId: "quests-list" },
+    { icon: Users, label: t('feature.community.title'), screenId: "community" },
+    { icon: Gift, label: t('feature.rewards.title'), screenId: "impact-tracker" },
+    { icon: User, label: t('common.profile'), screenId: "farmer-profile" },
+    { icon: Settings, label: t('common.settings'), screenId: "settings" },
+    { icon: HelpCircle, label: t('common.help') || "Help", screenId: "farmer-dashboard" },
   ]
+
+  const ADMIN_MENU_ITEMS = [
+    { icon: Home, label: t('admin.dashboard'), screenId: "admin-dashboard" },
+    { icon: Users, label: t('admin.farmers'), screenId: "admin-farmers" },
+    { icon: Leaf, label: t('admin.quests'), screenId: "admin-quests" },
+    { icon: Award, label: t('admin.verification'), screenId: "admin-verification" },
+    { icon: Gift, label: t('admin.rewards'), screenId: "admin-rewards" },
+  ]
+
+  const NAVIGATION_MENU_ITEMS = userType === "admin" ? ADMIN_MENU_ITEMS : FARMER_MENU_ITEMS
 
   const handleMenuNavigation = (screenId) => {
     if (onNavigate) {
@@ -73,14 +85,13 @@ export function NavigationMenu({
       )}
 
       <nav
-        className={`fixed top-0 left-0 h-full w-80 bg-background border-r border-border shadow-2xl z-50 transform transition-transform duration-300 ease-out ${
-          isMenuOpen ? "translate-x-0" : "-translate-x-full"
-        }`}
+        className={`fixed top-0 left-0 h-full w-80 bg-background border-r border-border shadow-2xl z-50 transform transition-transform duration-300 ease-out ${isMenuOpen ? "translate-x-0" : "-translate-x-full"
+          }`}
         aria-label="Main navigation"
       >
         <div className="h-full overflow-y-auto">
           <div className="flex items-center justify-between p-6 border-b border-border">
-            <h2 className="text-h3 text-foreground">Menu</h2>
+            <h2 className="text-h3 text-foreground">{t('common.menu') || "Menu"}</h2>
             <button
               onClick={() => setIsMenuOpen(false)}
               className="p-2 hover:bg-muted rounded-lg transition-colors"
@@ -100,7 +111,7 @@ export function NavigationMenu({
                   <h3 className="text-h4 text-foreground leading-tight">{userName}</h3>
                   <div className="flex items-center gap-1 mt-1">
                     <Award className="w-3 h-3 text-accent" />
-                    <span className="text-small font-medium text-accent">Level {userLevel}</span>
+                    <span className="text-small font-medium text-accent">{t('common.level') || "Level"} {userLevel}</span>
                   </div>
                 </div>
               </div>
@@ -120,21 +131,18 @@ export function NavigationMenu({
                   <button
                     key={index}
                     onClick={() => handleMenuNavigation(menuItem.screenId)}
-                    className={`w-full flex items-center gap-4 p-4 rounded-xl transition-all group ${
-                      isActiveScreen ? "bg-primary text-primary-foreground shadow-md" : "hover:bg-muted"
-                    }`}
+                    className={`w-full flex items-center gap-4 p-4 rounded-xl transition-all group ${isActiveScreen ? "bg-primary text-primary-foreground shadow-md" : "hover:bg-muted"
+                      }`}
                   >
                     <div
-                      className={`p-2.5 rounded-lg transition-colors ${
-                        isActiveScreen ? "bg-primary-foreground/20" : "bg-primary/10 group-hover:bg-primary/20"
-                      }`}
+                      className={`p-2.5 rounded-lg transition-colors ${isActiveScreen ? "bg-primary-foreground/20" : "bg-primary/10 group-hover:bg-primary/20"
+                        }`}
                     >
                       <MenuIcon className={`icon-sm ${isActiveScreen ? "text-primary-foreground" : "text-primary"}`} />
                     </div>
                     <span
-                      className={`font-medium group-hover:translate-x-0.5 transition-transform ${
-                        isActiveScreen ? "text-primary-foreground" : "text-foreground"
-                      }`}
+                      className={`font-medium group-hover:translate-x-0.5 transition-transform ${isActiveScreen ? "text-primary-foreground" : "text-foreground"
+                        }`}
                     >
                       {menuItem.label}
                     </span>
@@ -150,7 +158,7 @@ export function NavigationMenu({
                   <LogOut className="icon-sm text-destructive" />
                 </div>
                 <span className="font-medium text-destructive group-hover:translate-x-0.5 transition-transform">
-                  Logout
+                  {t('common.logout')}
                 </span>
               </button>
             </div>
@@ -161,7 +169,7 @@ export function NavigationMenu({
               <p className="text-medium text-muted-foreground text-center">
                 FarmQuest v1.0.0
                 <br />
-                Empowering sustainable farming
+                {t('brand.tagline')}
               </p>
             </div>
           </div>

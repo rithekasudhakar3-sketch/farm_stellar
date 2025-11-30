@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card } from "@/components/ui/card"
 
-export function AdminPasskeyLoginScreen({ onSuccess, onBack }) {
+export function AdminPasskeyLoginScreen({ onSuccess, onBack, t }) {
   const [email, setEmail] = useState("")
   const [passkey, setPasskey] = useState("")
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -33,17 +33,17 @@ export function AdminPasskeyLoginScreen({ onSuccess, onBack }) {
               />
             </svg>
           </div>
-          <h2 className="text-2xl font-bold text-foreground mb-2">Admin Login</h2>
-          <p className="text-sm text-muted-foreground">Enter your organization credentials</p>
+          <h2 className="text-2xl font-bold text-foreground mb-2">{t('adminLogin.title')}</h2>
+          <p className="text-sm text-muted-foreground">{t('adminLogin.accessSubtitle')}</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="space-y-2">
-            <Label htmlFor="email">Organization Email</Label>
+            <Label htmlFor="email">{t('adminLogin.emailLabel')}</Label>
             <Input
               id="email"
               type="email"
-              placeholder="admin@farmquest.org"
+              placeholder={t('adminLogin.emailPlaceholder')}
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
@@ -51,12 +51,12 @@ export function AdminPasskeyLoginScreen({ onSuccess, onBack }) {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="passkey">Passkey</Label>
+            <Label htmlFor="passkey">{t('adminLogin.passkeyLabel')}</Label>
             <div className="relative">
               <Input
                 id="passkey"
                 type={showPasskey ? "text" : "password"}
-                placeholder="Enter your secure passkey"
+                placeholder={t('adminLogin.passkeyPlaceholder')}
                 value={passkey}
                 onChange={(e) => setPasskey(e.target.value)}
                 required
@@ -96,13 +96,14 @@ export function AdminPasskeyLoginScreen({ onSuccess, onBack }) {
           </div>
 
           <Button type="submit" className="w-full" disabled={!email || !passkey || isSubmitting}>
-            {isSubmitting ? "Authenticating..." : "Login as Admin"}
+            {isSubmitting ? "Authenticating..." : t('adminLogin.loginButton')}
           </Button>
 
           <Button type="button" variant="ghost" className="w-full" onClick={onBack}>
-            Back to Welcome
+            {t('phoneLogin.backToWelcome')}
           </Button>
         </form>
+
       </Card>
     </div>
   )

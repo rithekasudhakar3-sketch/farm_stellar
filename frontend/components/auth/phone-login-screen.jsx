@@ -5,8 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card } from "@/components/ui/card"
-
-export function PhoneLoginScreen({ onSuccess, onBack, isSignup = false }) {
+export function PhoneLoginScreen({ onSuccess, onBack, isSignup = false, t }) {
   const [phone, setPhone] = useState("")
   const [isSubmitting, setIsSubmitting] = useState(false)
 
@@ -41,16 +40,16 @@ export function PhoneLoginScreen({ onSuccess, onBack, isSignup = false }) {
             </svg>
           </div>
           <h2 className="text-2xl font-bold text-foreground mb-2">
-            {isSignup ? "Create Your Account" : "Welcome Back"}
+            {isSignup ? t('phoneLogin.createAccount') : t('phoneLogin.welcomeBack')}
           </h2>
           <p className="text-sm text-muted-foreground">
-            {isSignup ? "Enter your phone number to get started" : "Enter your phone number to login"}
+            {isSignup ? t('phoneLogin.enterPhoneSignup') : t('phoneLogin.enterPhoneLogin')}
           </p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="space-y-2">
-            <Label htmlFor="phone">Mobile Number</Label>
+            <Label htmlFor="phone">{t('phoneLogin.mobileNumber')}</Label>
             <div className="relative">
               <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">+91</span>
               <Input
@@ -67,16 +66,16 @@ export function PhoneLoginScreen({ onSuccess, onBack, isSignup = false }) {
               />
             </div>
             {phone.length > 0 && phone.length !== 10 && (
-              <p className="text-xs text-destructive">Please enter a valid 10-digit phone number</p>
+              <p className="text-xs text-destructive">{t('phoneLogin.invalidPhone')}</p>
             )}
           </div>
 
           <Button type="submit" className="w-full" disabled={phone.length !== 10 || isSubmitting}>
-            {isSubmitting ? "Sending OTP..." : "Continue"}
+            {isSubmitting ? t('phoneLogin.sendingOTP') : t('phoneLogin.continue')}
           </Button>
 
           <Button type="button" variant="ghost" className="w-full" onClick={onBack}>
-            Back to Welcome
+            {t('phoneLogin.backToWelcome')}
           </Button>
         </form>
       </Card>
