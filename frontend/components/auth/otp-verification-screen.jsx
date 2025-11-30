@@ -8,6 +8,7 @@ import { Card } from "@/components/ui/card"
 export function OtpVerificationScreen({ phone, onSuccess, onBack }) {
   const [otp, setOtp] = useState(["", "", "", "", "", ""])
   const [isVerifying, setIsVerifying] = useState(false)
+  const [isVerified, setIsVerified] = useState(false)
   const [resendTimer, setResendTimer] = useState(30)
   const inputRefs = useRef([])
 
@@ -19,11 +20,11 @@ export function OtpVerificationScreen({ phone, onSuccess, onBack }) {
   }, [])
 
   useEffect(() => {
-    if (otp.every((digit) => digit !== "") && !isVerifying) {
+    if (otp.every((digit) => digit !== "") && !isVerifying && !isVerified) {
       console.log("[v0] All OTP digits filled - auto-submitting")
       handleSubmit(new Event("submit"))
     }
-  }, [otp, isVerifying])
+  }, [otp, isVerifying, isVerified])
 
   const handleChange = (index, value) => {
     if (!/^\d*$/.test(value)) return
@@ -49,13 +50,75 @@ export function OtpVerificationScreen({ phone, onSuccess, onBack }) {
     if (otp.some((digit) => !digit)) return
 
     setIsVerifying(true)
-    await new Promise((resolve) => setTimeout(resolve, 1500))
-    onSuccess()
+    
+    try {
+      const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:4000"
+      const otpString = otp.join("")
+      
+      console.log('Submitting OTP:', { phone, otpString });
+      
+      const response = await fetch(`${backendUrl}/api/auth/verify-otp`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          phone: phone,
+          otp: otpString
+        })
+      })
+
+      const data = await response.json()
+      console.log('OTP verification response:', data);
+
+      if (response.ok && data.success) {
+        setIsVerified(true)  // Prevent re-verification
+        if (data.token) {
+          // Existing user - store token and proceed
+          localStorage.setItem("token", data.token)
+        }
+        onSuccess(data)
+      } else {
+        console.error('OTP verification failed:', data);
+        alert(data.message || "Invalid OTP. Please try again.")
+        setOtp(["", "", "", "", "", ""])
+        inputRefs.current[0]?.focus()
+      }
+    } catch (error) {
+      console.error("OTP verification error:", error)
+      alert("Failed to verify OTP. Please try again.")
+      setOtp(["", "", "", "", "", ""])
+      inputRefs.current[0]?.focus()
+    } finally {
+      setIsVerifying(false)
+    }
   }
 
-  const handleResend = () => {
-    setResendTimer(30)
-    setOtp(["", "", "", "", "", ""])
+  const handleResend = async () => {
+    try {
+      setIsVerified(false)  // Reset verification state on resend
+      const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:4000"
+      
+      const response = await fetch(`${backendUrl}/api/auth/send-otp`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ phone })
+      })
+
+      if (response.ok) {
+        setResendTimer(30)
+        setOtp(["", "", "", "", "", ""])
+        inputRefs.current[0]?.focus()
+        alert("OTP sent successfully!")
+      } else {
+        alert("Failed to resend OTP. Please try again.")
+      }
+    } catch (error) {
+      console.error("Resend OTP error:", error)
+      alert("Failed to resend OTP. Please try again.")
+    }
   }
 
   return (

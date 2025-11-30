@@ -71,10 +71,10 @@ export function FarmDetailsScreen({ onSuccess, onBack }) {
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="flex items-start space-x-3 p-4 rounded-xl bg-muted/30 border border-border/50">
-            <Checkbox id="noLand" checked={!hasLand} onCheckedChange={handleNoLandToggle} className="mt-0.5" />
+          <div className="flex items-start space-x-3 p-4 rounded-xl bg-muted/30 border-2 border-border/50 hover:border-primary/30 transition-colors">
+            <Checkbox id="noLand" checked={!hasLand} onCheckedChange={handleNoLandToggle} className="mt-1 h-5 w-5 border-2 border-black" />
             <div className="flex-1">
-              <Label htmlFor="noLand" className="text-sm font-medium cursor-pointer leading-relaxed">
+              <Label htmlFor="noLand" className="text-base font-medium cursor-pointer leading-relaxed text-foreground">
                 I am a beginner and don't have a farm yet
               </Label>
               <p className="text-xs text-muted-foreground mt-1">

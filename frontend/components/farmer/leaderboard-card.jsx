@@ -1,15 +1,51 @@
 "use client"
 
 import { Trophy, Award, Medal, Crown } from "lucide-react"
+import { useEffect, useState } from "react"
 
 export function LeaderboardCard() {
-    const leaderboardData = [
-        { rank: 1, name: "Priya Sharma", xp: 1250, badges: 8, avatar: "🌟" },
-        { rank: 2, name: "Arjun Patel", xp: 1180, badges: 7, avatar: "🏆" },
-        { rank: 3, name: "Lakshmi Reddy", xp: 1050, badges: 6, avatar: "⭐" },
-        { rank: 4, name: "Rajesh Kumar", xp: 950, badges: 5, avatar: "🌱" },
-        { rank: 5, name: "Meera Singh", xp: 890, badges: 5, avatar: "🌿" },
-    ]
+    const [leaderboardData, setLeaderboardData] = useState([])
+    const [loading, setLoading] = useState(true)
+    const [error, setError] = useState(null)
+    const [currentUserId, setCurrentUserId] = useState(null)
+
+    useEffect(() => {
+        const fetchLeaderboard = async () => {
+            try {
+                const token = localStorage.getItem("token")
+                const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:4000"
+                
+                // Get current user ID
+                if (token) {
+                    const userRes = await fetch(`${backendUrl}/api/users/me`, {
+                        headers: {
+                            "Authorization": `Bearer ${token}`
+                        }
+                    })
+                    if (userRes.ok) {
+                        const user = await userRes.json()
+                        setCurrentUserId(user._id)
+                    }
+                }
+                
+                const response = await fetch(`${backendUrl}/api/leaderboard?limit=4`)
+                
+                if (!response.ok) {
+                    throw new Error("Failed to fetch leaderboard")
+                }
+
+                const data = await response.json()
+                setLeaderboardData(data)
+                setLoading(false)
+            } catch (err) {
+                console.error("Leaderboard error:", err)
+                setError(err.message)
+                setLoading(false)
+            }
+        }
+
+        fetchLeaderboard()
+    }, [])
 
     const getRankIcon = (rank) => {
         switch (rank) {
@@ -22,6 +58,48 @@ export function LeaderboardCard() {
             default:
                 return <span className="text-sm font-bold text-muted-foreground">#{rank}</span>
         }
+    }
+
+    const getAvatar = (name) => {
+        // Generate consistent emoji based on first letter
+        const firstLetter = name.charAt(0).toUpperCase()
+        const emojis = ["🌟", "🏆", "⭐", "🌱", "🌿", "🌾", "🍀", "🌺", "🌻", "🌼"]
+        const index = firstLetter.charCodeAt(0) % emojis.length
+        return emojis[index]
+    }
+
+    if (loading) {
+        return (
+            <div className="bg-card border-2 border-border rounded-3xl p-6 shadow-lg h-full">
+                <div className="animate-pulse">
+                    <div className="h-6 bg-muted rounded w-1/2 mb-6"></div>
+                    <div className="space-y-3">
+                        {[1, 2, 3, 4, 5].map((i) => (
+                            <div key={i} className="h-16 bg-muted rounded-2xl"></div>
+                        ))}
+                    </div>
+                </div>
+            </div>
+        )
+    }
+
+    if (error || !leaderboardData.length) {
+        return (
+            <div className="bg-card border-2 border-border rounded-3xl p-6 shadow-lg h-full">
+                <div className="flex items-center gap-3 mb-6">
+                    <div className="p-3 bg-accent/10 rounded-2xl">
+                        <Trophy className="w-6 h-6 text-accent" />
+                    </div>
+                    <div>
+                        <h3 className="text-xl font-bold text-foreground">Leaderboard</h3>
+                        <p className="text-xs text-muted-foreground">Top Farmers This Month</p>
+                    </div>
+                </div>
+                <p className="text-sm text-muted-foreground text-center py-8">
+                    {error || "No leaderboard data available"}
+                </p>
+            </div>
+        )
     }
 
     return (
@@ -37,40 +115,59 @@ export function LeaderboardCard() {
             </div>
 
             <div className="space-y-3">
-                {leaderboardData.map((user) => (
-                    <div
-                        key={user.rank}
-                        className={`flex items-center gap-3 p-3 rounded-2xl transition-all hover:scale-[1.02] ${user.rank <= 3
-                                ? "bg-gradient-to-r from-accent/10 to-transparent border border-accent/20"
-                                : "bg-muted/30 hover:bg-muted/50"
+                {leaderboardData.map((user) => {
+                    const isCurrentUser = user._id === currentUserId
+                    return (
+                        <div
+                            key={user.rank}
+                            className={`flex items-center gap-3 p-3 rounded-2xl transition-all hover:scale-[1.02] ${
+                                isCurrentUser
+                                    ? "bg-gradient-to-r from-primary/20 to-primary/5 border-2 border-primary shadow-md"
+                                    : user.rank <= 3
+                                    ? "bg-gradient-to-r from-accent/10 to-transparent border border-accent/20"
+                                    : "bg-muted/30 hover:bg-muted/50"
                             }`}
-                    >
-                        {/* Rank */}
-                        <div className="w-8 h-8 flex items-center justify-center">
-                            {getRankIcon(user.rank)}
-                        </div>
+                        >
+                            {/* Rank */}
+                            <div className="w-8 h-8 flex items-center justify-center">
+                                {getRankIcon(user.rank)}
+                            </div>
 
-                        {/* Avatar */}
-                        <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-xl">
-                            {user.avatar}
-                        </div>
+                            {/* Avatar */}
+                            <div className={`w-10 h-10 rounded-full flex items-center justify-center text-xl ${
+                                isCurrentUser ? "bg-primary/20 ring-2 ring-primary" : "bg-primary/10"
+                            }`}>
+                                {getAvatar(user.name)}
+                            </div>
 
-                        {/* User Info */}
-                        <div className="flex-1 min-w-0">
-                            <p className="font-semibold text-foreground text-sm truncate">{user.name}</p>
-                            <div className="flex items-center gap-3 text-xs text-muted-foreground">
-                                <span className="flex items-center gap-1">
-                                    <Trophy className="w-3 h-3" />
-                                    {user.xp} XP
-                                </span>
-                                <span className="flex items-center gap-1">
-                                    <Award className="w-3 h-3" />
-                                    {user.badges} badges
-                                </span>
+                            {/* User Info */}
+                            <div className="flex-1 min-w-0">
+                                <div className="flex items-center gap-2">
+                                    <p className={`font-semibold text-sm truncate ${
+                                        isCurrentUser ? "text-primary" : "text-foreground"
+                                    }`}>
+                                        {user.name}
+                                    </p>
+                                    {isCurrentUser && (
+                                        <span className="text-xs font-bold text-primary bg-primary/10 px-2 py-0.5 rounded-full">
+                                            You
+                                        </span>
+                                    )}
+                                </div>
+                                <div className="flex items-center gap-3 text-xs text-muted-foreground">
+                                    <span className="flex items-center gap-1">
+                                        <Trophy className="w-3 h-3" />
+                                        {user.xp} XP
+                                    </span>
+                                    <span className="flex items-center gap-1">
+                                        <Award className="w-3 h-3" />
+                                        Level {user.xpLevel}
+                                    </span>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                ))}
+                    )
+                })}
             </div>
 
             <div className="mt-4 pt-4 border-t border-border text-center">

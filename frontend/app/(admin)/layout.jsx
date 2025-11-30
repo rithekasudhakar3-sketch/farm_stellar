@@ -2,27 +2,37 @@
 
 import { NavigationMenu } from "@/components/shared/navigation-menu"
 import { useRouter, usePathname } from "next/navigation"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 
 export default function AdminLayout({ children }) {
     const router = useRouter()
     const pathname = usePathname()
+    const [adminData, setAdminData] = useState({ name: "Admin", organization: "" })
 
     useEffect(() => {
-        const auth = localStorage.getItem("farmquest_auth")
-        if (!auth) {
-            router.push("/welcome")
+        const token = localStorage.getItem("farmquest_admin_token")
+        const adminInfo = localStorage.getItem("farmquest_admin")
+        
+        if (!token || !adminInfo) {
+            router.push("/admin/login")
             return
         }
 
-        const { userType } = JSON.parse(auth)
-        if (userType !== "admin") {
-            router.push("/dashboard")
+        try {
+            const admin = JSON.parse(adminInfo)
+            setAdminData({ 
+                name: admin.name, 
+                organization: admin.organization 
+            })
+        } catch (error) {
+            console.error('Error parsing admin data:', error)
+            router.push("/admin/login")
         }
     }, [router])
 
     const handleLogout = () => {
-        localStorage.removeItem("farmquest_auth")
+        localStorage.removeItem("farmquest_admin_token")
+        localStorage.removeItem("farmquest_admin")
         router.push("/welcome")
     }
 
@@ -47,7 +57,7 @@ export default function AdminLayout({ children }) {
                 currentScreen={pathname}
                 onNavigate={handleNavigate}
                 userType="admin"
-                userData={{ name: "Admin", level: 1, xp: 0 }}
+                userData={{ name: adminData.name, level: 1, xp: 0 }}
             />
             {children}
         </div>
