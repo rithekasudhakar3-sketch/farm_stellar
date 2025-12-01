@@ -3,7 +3,7 @@
 import { CheckCircle2, Sparkles, Brain, Eye, Zap } from "lucide-react"
 import { useState, useEffect } from "react"
 
-export function VerificationScreen({ quest, onContinue }) {
+export function VerificationScreen({ quest, onContinue, isAutoVerified = false }) {
   const [verificationStage, setVerificationStage] = useState(0)
   const [isComplete, setIsComplete] = useState(false)
   const [verificationResults, setVerificationResults] = useState([])
