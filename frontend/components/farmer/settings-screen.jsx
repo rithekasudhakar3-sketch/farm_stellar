@@ -1,13 +1,15 @@
 "use client"
 
 import { useState } from "react"
-import { ArrowLeft, User, Lock, MapPin, Leaf, Globe, Sun, Moon, Monitor, Check, Trash2 } from "lucide-react"
+import { ArrowLeft, User, Lock, MapPin, Leaf, Globe, Sun, Moon, Monitor, Check, Trash2, Trees } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Switch } from "@/components/ui/switch"
+import { usePreferences } from "@/components/preferences-provider"
 
 export function SettingsScreen({ userData, onBack }) {
+  const { theme, setTheme, fontSize, setFontSize } = usePreferences()
   const [settings, setSettings] = useState({
     displayName: userData?.name || "",
     email: userData?.email || "",
@@ -15,23 +17,14 @@ export function SettingsScreen({ userData, onBack }) {
     bio: userData?.bio || "",
     phoneNumber: userData?.phoneNumber || "",
     location: userData?.location || "",
-    app: {
-      language: "english",
-      theme: "auto",
-      fontSize: "medium",
-    },
+    language: "english",
   })
 
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
   const [showToast, setShowToast] = useState(false)
   const [toastMessage, setToastMessage] = useState("")
 
-  const updateSetting = (category, key, value) => {
-    setSettings((prev) => ({ ...prev, [category]: { ...prev[category], [key]: value } }))
-    showSuccessToast("Settings saved")
-  }
-
-  const updateTopLevel = (key, value) => {
+  const updateSetting = (key, value) => {
     setSettings((prev) => ({ ...prev, [key]: value }))
     showSuccessToast("Settings saved")
   }
@@ -52,7 +45,7 @@ export function SettingsScreen({ userData, onBack }) {
       {/* Header */}
       <div className="sticky top-0 z-10 bg-card border-[1.5px] border-border rounded-2xl p-4">
         <div className="flex items-center gap-4 max-w-4xl mx-auto">
-          <button onClick={onBack} className="p-2 hover:bg-primary/10 rounded-2xl" aria-label="Go back">
+          <button onClick={onBack} className="p-2 hover:bg-primary/10 rounded-2xl transition-colors" aria-label="Go back">
             <ArrowLeft className="icon-md" />
           </button>
           <div>
@@ -78,7 +71,7 @@ export function SettingsScreen({ userData, onBack }) {
                 <Label className="text-small text-muted-foreground">Display Name</Label>
                 <Input
                   value={settings.displayName}
-                  onChange={(e) => updateTopLevel("displayName", e.target.value)}
+                  onChange={(e) => updateSetting("displayName", e.target.value)}
                   className="mt-2 rounded-2xl border-2"
                   placeholder="Your name"
                 />
@@ -89,7 +82,7 @@ export function SettingsScreen({ userData, onBack }) {
                 <div className="relative mt-2">
                   <Input
                     value={settings.phoneNumber}
-                    onChange={(e) => updateTopLevel("phoneNumber", e.target.value)}
+                    onChange={(e) => updateSetting("phoneNumber", e.target.value)}
                     className="rounded-2xl border-2 pr-24"
                     placeholder="+91 98765 43210"
                   />
@@ -105,7 +98,7 @@ export function SettingsScreen({ userData, onBack }) {
                   <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 icon-sm text-muted-foreground" />
                   <Input
                     value={settings.location}
-                    onChange={(e) => updateTopLevel("location", e.target.value)}
+                    onChange={(e) => updateSetting("location", e.target.value)}
                     className="rounded-2xl border-2 pl-10"
                     placeholder="Village, District, State"
                   />
@@ -118,14 +111,13 @@ export function SettingsScreen({ userData, onBack }) {
                   <Input
                     type="email"
                     value={settings.email}
-                    onChange={(e) => updateTopLevel("email", e.target.value)}
+                    onChange={(e) => updateSetting("email", e.target.value)}
                     className="rounded-2xl border-2 pr-24"
                     placeholder="your@email.com"
                   />
                   <span
-                    className={`absolute right-3 top-1/2 -translate-y-1/2 text-xs px-2 py-1 rounded-full ${
-                      settings.emailVerified ? "bg-accent/20 text-accent-foreground" : "bg-muted text-muted-foreground"
-                    }`}
+                    className={`absolute right-3 top-1/2 -translate-y-1/2 text-xs px-2 py-1 rounded-full ${settings.emailVerified ? "bg-accent/20 text-accent-foreground" : "bg-muted text-muted-foreground"
+                      }`}
                   >
                     {settings.emailVerified ? "Verified" : "Unverified"}
                   </span>
@@ -136,7 +128,7 @@ export function SettingsScreen({ userData, onBack }) {
                 <Label className="text-small text-muted-foreground">Bio / Description</Label>
                 <textarea
                   value={settings.bio}
-                  onChange={(e) => updateTopLevel("bio", e.target.value)}
+                  onChange={(e) => updateSetting("bio", e.target.value)}
                   className="mt-2 w-full p-3 rounded-2xl border-2 bg-background min-h-[100px] resize-none"
                   placeholder="Tell the community about yourself..."
                 />
@@ -150,13 +142,13 @@ export function SettingsScreen({ userData, onBack }) {
               Login & Security
             </h3>
 
-            <button className="w-full flex items-center justify-between p-4 hover:bg-muted rounded-2xl">
+            <button className="w-full flex items-center justify-between p-4 hover:bg-muted rounded-2xl transition-colors">
               <div className="flex items-center gap-3">
                 <span className="font-medium">Change Password</span>
               </div>
             </button>
 
-            <div className="flex items-center justify-between p-4 hover:bg-muted rounded-2xl">
+            <div className="flex items-center justify-between p-4 hover:bg-muted rounded-2xl transition-colors">
               <div className="flex items-center gap-3">
                 <div>
                   <div className="font-medium">Two-Factor Authentication</div>
@@ -175,7 +167,7 @@ export function SettingsScreen({ userData, onBack }) {
             Application Preferences
           </h2>
 
-          <div className="bg-card border-[1.5px] border-border rounded-2xl p-6 space-y-4">
+          <div className="bg-card border-[1.5px] border-border rounded-2xl p-6 space-y-6">
             <h3 className="text-h4 font-semibold flex items-center gap-2">
               <Globe className="icon-sm text-primary" />
               Display & Language
@@ -184,8 +176,8 @@ export function SettingsScreen({ userData, onBack }) {
             <div>
               <Label className="text-small text-muted-foreground mb-2">Language</Label>
               <select
-                value={settings.app.language}
-                onChange={(e) => updateSetting("app", "language", e.target.value)}
+                value={settings.language}
+                onChange={(e) => updateSetting("language", e.target.value)}
                 className="w-full mt-2 p-3 rounded-2xl border-2 bg-background"
               >
                 <option value="english">English</option>
@@ -199,18 +191,21 @@ export function SettingsScreen({ userData, onBack }) {
 
             <div>
               <Label className="text-small text-muted-foreground mb-2">Theme Preference</Label>
-              <div className="flex gap-2 mt-2">
+              <div className="flex gap-2 mt-2 flex-wrap">
                 {[
                   { value: "light", icon: Sun, label: "Light" },
                   { value: "dark", icon: Moon, label: "Dark" },
-                  { value: "auto", icon: Monitor, label: "Auto" },
+                  { value: "deep-forest", icon: Trees, label: "Deep Forest" },
+                  { value: "system", icon: Monitor, label: "Auto" },
                 ].map((option) => (
                   <button
                     key={option.value}
-                    onClick={() => updateSetting("app", "theme", option.value)}
-                    className={`flex-1 flex flex-col items-center gap-2 py-3 px-4 rounded-2xl border-2 font-medium ${
-                      settings.app.theme === option.value ? "bg-primary text-primary-foreground border-primary" : "border-border"
-                    }`}
+                    onClick={() => {
+                      setTheme(option.value)
+                      showSuccessToast(`Theme changed to ${option.label}`)
+                    }}
+                    className={`flex-1 flex flex-col items-center gap-2 py-3 px-4 rounded-2xl border-2 font-medium min-w-[100px] transition-all ${theme === option.value ? "bg-primary text-primary-foreground border-primary" : "border-border hover:border-primary/50"
+                      }`}
                   >
                     <option.icon className="icon-md" />
                     {option.label}
@@ -222,15 +217,22 @@ export function SettingsScreen({ userData, onBack }) {
             <div>
               <Label className="text-small text-muted-foreground mb-2">Font Size</Label>
               <div className="flex gap-2 mt-2">
-                {["small", "medium", "large"].map((size) => (
+                {[
+                  { value: "small", label: "Small", desc: "14px" },
+                  { value: "medium", label: "Medium", desc: "16px" },
+                  { value: "large", label: "Large", desc: "18px" }
+                ].map((size) => (
                   <button
-                    key={size}
-                    onClick={() => updateSetting("app", "fontSize", size)}
-                    className={`flex-1 py-3 px-4 rounded-2xl border-2 font-medium capitalize ${
-                      settings.app.fontSize === size ? "bg-primary text-primary-foreground border-primary" : "border-border"
-                    }`}
+                    key={size.value}
+                    onClick={() => {
+                      setFontSize(size.value)
+                      showSuccessToast(`Font size changed to ${size.label}`)
+                    }}
+                    className={`flex-1 flex flex-col items-center gap-1 py-3 px-4 rounded-2xl border-2 font-medium transition-all ${fontSize === size.value ? "bg-primary text-primary-foreground border-primary" : "border-border hover:border-primary/50"
+                      }`}
                   >
-                    {size}
+                    <div className="font-semibold">{size.label}</div>
+                    <div className="text-xs opacity-75">{size.desc}</div>
                   </button>
                 ))}
               </div>
