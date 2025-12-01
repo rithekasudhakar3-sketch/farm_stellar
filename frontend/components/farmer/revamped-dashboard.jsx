@@ -61,7 +61,7 @@ export function RevampedDashboard({ userData, onStartQuest, onNavigate }) {
                 {/* Quick Stats Section */}
                 <div className="mt-8 bg-card border-2 border-border rounded-3xl p-6 shadow-lg">
                     <h3 className="text-xl font-bold text-foreground mb-6">Your Achievements</h3>
-                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
                         <div className="text-center p-4 bg-gradient-to-br from-primary/10 to-transparent rounded-2xl border border-primary/20 hover:scale-105 transition-transform">
                             <p className="text-3xl font-bold text-primary mb-1">{userData?.completedQuests?.length || 3}</p>
                             <p className="text-xs text-muted-foreground">Quests Completed</p>
@@ -69,10 +69,6 @@ export function RevampedDashboard({ userData, onStartQuest, onNavigate }) {
                         <div className="text-center p-4 bg-gradient-to-br from-accent/10 to-transparent rounded-2xl border border-accent/20 hover:scale-105 transition-transform">
                             <p className="text-3xl font-bold text-accent mb-1">{userData?.badges?.length || 2}</p>
                             <p className="text-xs text-muted-foreground">Badges Earned</p>
-                        </div>
-                        <div className="text-center p-4 bg-gradient-to-br from-secondary/10 to-transparent rounded-2xl border border-secondary/20 hover:scale-105 transition-transform">
-                            <p className="text-3xl font-bold text-secondary mb-1">15</p>
-                            <p className="text-xs text-muted-foreground">Hours Learned</p>
                         </div>
                         <div className="text-center p-4 bg-gradient-to-br from-primary/10 to-transparent rounded-2xl border border-primary/20 hover:scale-105 transition-transform">
                             <p className="text-3xl font-bold text-primary mb-1">92%</p>
