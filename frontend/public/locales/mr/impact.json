@@ -1,0 +1,24 @@
+{
+    "title": "प्रगती ट्रॅकर",
+    "questsDone": "पूर्ण झालेले क्वेस्ट",
+    "badges": "बॅज",
+    "level": "पातळी",
+    "dailyXPEarned": "दररोज मिळवलेले XP",
+    "totalEarnedThisWeek": "या आठवड्यात एकूण मिळवलेले",
+    "weeklyQuestCompletion": "साप्ताहिक क्वेस्ट पूर्णता",
+    "totalQuestsCompleted": "एकूण पूर्ण झालेले क्वेस्ट",
+    "learningHoursDaily": "शिकण्याचे तास (दररोज)",
+    "totalLearningTime": "या आठवड्यातील एकूण शिकण्याची वेळ",
+    "achievementMilestones": "यशाचे टप्पे",
+    "thisMonthSummary": "या महिन्याचा सारांश",
+    "activeDays": "सक्रिय दिवस",
+    "completionRate": "पूर्ण होण्याचे प्रमाण",
+    "milestones": {
+        "firstQuest": "पहिला क्वेस्ट",
+        "level3": "पातळी 3",
+        "tenQuests": "10 क्वेस्ट",
+        "level5": "पातळी 5"
+    },
+    "inProgress": "प्रगतीपथावर",
+    "locked": "लॉक केलेले"
+}

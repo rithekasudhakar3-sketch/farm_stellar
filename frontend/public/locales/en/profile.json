@@ -1,0 +1,31 @@
+{
+    "title": "Profile",
+    "totalXP": "Total XP",
+    "level": "Level",
+    "quests": "Quests",
+    "personalDetails": "Personal Details",
+    "phoneNumber": "Phone Number",
+    "experienceLevel": "Experience Level",
+    "fieldSize": "Field Size (acres)",
+    "acres": "acres",
+    "primaryCrops": "Primary Crops",
+    "achievementTimeline": "Achievement Timeline",
+    "achievements": {
+        "firstQuest": "Completed first quest 🌱",
+        "level3": "Reached Level 3 ⭐",
+        "fiveQuests": "5 quests completed 🏆"
+    },
+    "sampleProfile": {
+        "experience": "Intermediate",
+        "crops": {
+            "wheat": "Wheat",
+            "rice": "Rice",
+            "sugarcane": "Sugarcane"
+        }
+    },
+    "months": {
+        "march": "March",
+        "april": "April",
+        "may": "May"
+    }
+}

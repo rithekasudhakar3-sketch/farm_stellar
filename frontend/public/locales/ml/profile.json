@@ -1,0 +1,31 @@
+{
+    "title": "പ്രൊഫൈൽ",
+    "totalXP": "ആകെ XP",
+    "level": "നില",
+    "quests": "ക്വസ്റ്റുകൾ",
+    "personalDetails": "വ്യക്തിഗത വിവരങ്ങൾ",
+    "phoneNumber": "ഫോൺ നമ്പർ",
+    "experienceLevel": "പരിചയ നില",
+    "fieldSize": "കൃഷിയിടത്തിന്റെ വലിപ്പം (ഏക്കറിൽ)",
+    "acres": "ഏക്കർ",
+    "primaryCrops": "പ്രധാന വിളകൾ",
+    "achievementTimeline": "നേട്ടങ്ങളുടെ നാഴികക്കല്ലുകൾ",
+    "achievements": {
+        "firstQuest": "ആദ്യ ക്വസ്റ്റ് പൂർത്തിയാക്കി 🌱",
+        "level3": "ലെവൽ 3 ൽ എത്തി ⭐",
+        "fiveQuests": "5 ക്വസ്റ്റുകൾ പൂർത്തിയാക്കി 🏆"
+    },
+    "sampleProfile": {
+        "experience": "ഇടത്തരം",
+        "crops": {
+            "wheat": "ഗോതമ്പ്",
+            "rice": "അരി",
+            "sugarcane": "കരിമ്പ്"
+        }
+    },
+    "months": {
+        "march": "മാർച്ച്",
+        "april": "ഏപ്രിൽ",
+        "may": "മെയ്"
+    }
+}

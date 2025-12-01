@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import { useTranslation } from "react-i18next"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -9,6 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Checkbox } from "@/components/ui/checkbox"
 
 export function FarmDetailsScreen({ onSuccess, onBack }) {
+  const { t } = useTranslation()
   const [hasLand, setHasLand] = useState(true)
 
   const [farmDetails, setFarmDetails] = useState({
@@ -66,8 +68,8 @@ export function FarmDetailsScreen({ onSuccess, onBack }) {
               />
             </svg>
           </div>
-          <h2 className="text-2xl font-bold text-foreground mb-2">Tell Us About Your Farm</h2>
-          <p className="text-sm text-muted-foreground">Help us customize your experience</p>
+          <h2 className="text-2xl font-bold text-foreground mb-2">{t("auth.tellUsAboutFarm")}</h2>
+          <p className="text-sm text-muted-foreground">{t("auth.customizeExperience")}</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -75,10 +77,10 @@ export function FarmDetailsScreen({ onSuccess, onBack }) {
             <Checkbox id="noLand" checked={!hasLand} onCheckedChange={handleNoLandToggle} className="mt-1 h-5 w-5 border-2 border-black" />
             <div className="flex-1">
               <Label htmlFor="noLand" className="text-base font-medium cursor-pointer leading-relaxed text-foreground">
-                I am a beginner and don't have a farm yet
+                {t("auth.noLandCheckbox")}
               </Label>
               <p className="text-xs text-muted-foreground mt-1">
-                Start learning the basics. You can add farm details later from your profile settings.
+                {t("auth.noLandDesc")}
               </p>
             </div>
           </div>
@@ -86,20 +88,20 @@ export function FarmDetailsScreen({ onSuccess, onBack }) {
           {hasLand && (
             <>
               <div className="space-y-2">
-                <Label htmlFor="farmName">Farm Name (Optional)</Label>
+                <Label htmlFor="farmName">{t("auth.farmNameOptional")}</Label>
                 <Input
                   id="farmName"
-                  placeholder="Green Valley Farm"
+                  placeholder={t("auth.farmNamePlaceholder")}
                   value={farmDetails.farmName}
                   onChange={(e) => setFarmDetails({ ...farmDetails, farmName: e.target.value })}
                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="location">Location</Label>
+                <Label htmlFor="location">{t("auth.location")}</Label>
                 <Input
                   id="location"
-                  placeholder="Village, District, State"
+                  placeholder={t("auth.locationPlaceholder")}
                   value={farmDetails.location}
                   onChange={(e) => setFarmDetails({ ...farmDetails, location: e.target.value })}
                   required
@@ -107,7 +109,7 @@ export function FarmDetailsScreen({ onSuccess, onBack }) {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="landSize">Land Size (in acres)</Label>
+                <Label htmlFor="landSize">{t("auth.landSize")}</Label>
                 <Input
                   id="landSize"
                   type="number"
@@ -120,43 +122,43 @@ export function FarmDetailsScreen({ onSuccess, onBack }) {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="soilType">Soil Type</Label>
+                <Label htmlFor="soilType">{t("auth.soilType")}</Label>
                 <Select
                   value={farmDetails.soilType}
                   onValueChange={(value) => setFarmDetails({ ...farmDetails, soilType: value })}
                   required
                 >
                   <SelectTrigger>
-                    <SelectValue placeholder="Select soil type" />
+                    <SelectValue placeholder={t("auth.selectSoilType")} />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="clay">Clay</SelectItem>
-                    <SelectItem value="sandy">Sandy</SelectItem>
-                    <SelectItem value="loamy">Loamy</SelectItem>
-                    <SelectItem value="silty">Silty</SelectItem>
-                    <SelectItem value="peaty">Peaty</SelectItem>
-                    <SelectItem value="chalky">Chalky</SelectItem>
+                    <SelectItem value="clay">{t("quests.soilTypes.Clay")}</SelectItem>
+                    <SelectItem value="sandy">{t("quests.soilTypes.Sandy")}</SelectItem>
+                    <SelectItem value="loamy">{t("quests.soilTypes.Loam")}</SelectItem>
+                    <SelectItem value="silty">{t("quests.soilTypes.Silty")}</SelectItem>
+                    <SelectItem value="peaty">{t("auth.soilTypes.peaty")}</SelectItem>
+                    <SelectItem value="chalky">{t("auth.soilTypes.chalky")}</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="waterSource">Water Source</Label>
+                <Label htmlFor="waterSource">{t("auth.waterSource")}</Label>
                 <Select
                   value={farmDetails.waterSource}
                   onValueChange={(value) => setFarmDetails({ ...farmDetails, waterSource: value })}
                   required
                 >
                   <SelectTrigger>
-                    <SelectValue placeholder="Select water source" />
+                    <SelectValue placeholder={t("auth.selectWaterSource")} />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="well">Well</SelectItem>
-                    <SelectItem value="borewell">Borewell</SelectItem>
-                    <SelectItem value="canal">Canal</SelectItem>
-                    <SelectItem value="river">River</SelectItem>
-                    <SelectItem value="rainwater">Rainwater Harvesting</SelectItem>
-                    <SelectItem value="pond">Pond</SelectItem>
+                    <SelectItem value="well">{t("auth.waterSources.well")}</SelectItem>
+                    <SelectItem value="borewell">{t("auth.waterSources.borewell")}</SelectItem>
+                    <SelectItem value="canal">{t("auth.waterSources.canal")}</SelectItem>
+                    <SelectItem value="river">{t("auth.waterSources.river")}</SelectItem>
+                    <SelectItem value="rainwater">{t("auth.waterSources.rainwater")}</SelectItem>
+                    <SelectItem value="pond">{t("auth.waterSources.pond")}</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -168,10 +170,9 @@ export function FarmDetailsScreen({ onSuccess, onBack }) {
               <div className="flex items-start gap-3">
                 <div className="text-2xl">🌱</div>
                 <div>
-                  <p className="text-sm font-medium text-foreground mb-1">Perfect! Let's start your farming journey</p>
+                  <p className="text-sm font-medium text-foreground mb-1">{t("auth.beginnerJourneyTitle")}</p>
                   <p className="text-xs text-muted-foreground">
-                    You'll access knowledge-based quests and tutorials. When you're ready to start your own farm, you
-                    can add the details anytime from your profile.
+                    {t("auth.beginnerJourneyDesc")}
                   </p>
                 </div>
               </div>
@@ -180,10 +181,10 @@ export function FarmDetailsScreen({ onSuccess, onBack }) {
 
           <div className="flex gap-3 pt-4">
             <Button type="button" variant="outline" onClick={onBack} className="flex-1 bg-transparent">
-              Back
+              {t("common.back")}
             </Button>
             <Button type="submit" className="flex-1">
-              Continue
+              {t("common.continue")}
             </Button>
           </div>
         </form>

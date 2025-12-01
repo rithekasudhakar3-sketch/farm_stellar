@@ -1,12 +1,14 @@
 "use client"
 
 import { useState } from "react"
+import { useTranslation } from "react-i18next"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { Switch } from "@/components/ui/switch"
 import { PERMISSION_TYPES } from "@/constants/app"
 
 export function PermissionsScreen({ onSuccess, onSkip, isLoading = false }) {
+  const { t } = useTranslation()
   const [permissions, setPermissions] = useState({
     [PERMISSION_TYPES.LOCATION]: false,
     [PERMISSION_TYPES.NOTIFICATIONS]: false,
@@ -16,20 +18,20 @@ export function PermissionsScreen({ onSuccess, onSkip, isLoading = false }) {
   const permissionDetails = [
     {
       type: PERMISSION_TYPES.LOCATION,
-      title: "Location Access",
-      description: "Get weather updates and local farming tips for your area",
+      title: t("auth.permissions.location"),
+      description: t("auth.permissions.locationDesc"),
       icon: "📍",
     },
     {
       type: PERMISSION_TYPES.NOTIFICATIONS,
-      title: "Push Notifications",
-      description: "Receive reminders for quests and important farming alerts",
+      title: t("auth.permissions.notifications"),
+      description: t("auth.permissions.notificationsDesc"),
       icon: "🔔",
     },
     {
       type: PERMISSION_TYPES.CAMERA,
-      title: "Camera Access",
-      description: "Upload photos of your farm progress and proof submissions",
+      title: t("auth.permissions.camera"),
+      description: t("auth.permissions.cameraDesc"),
       icon: "📷",
     },
   ]
@@ -52,19 +54,18 @@ export function PermissionsScreen({ onSuccess, onSkip, isLoading = false }) {
               />
             </svg>
           </div>
-          <h2 className="text-2xl font-bold text-foreground mb-2">Enable Permissions</h2>
-          <p className="text-sm text-muted-foreground">Grant access to enhance your FarmQuest experience</p>
+          <h2 className="text-2xl font-bold text-foreground mb-2">{t("auth.enablePermissions")}</h2>
+          <p className="text-sm text-muted-foreground">{t("auth.permissionsDesc")}</p>
         </div>
 
         <div className="space-y-4 mb-6">
           {permissionDetails.map((permission) => (
             <div
               key={permission.type}
-              className={`flex items-start gap-4 p-4 rounded-lg border-2 transition-all cursor-pointer ${
-                permissions[permission.type]
+              className={`flex items-start gap-4 p-4 rounded-lg border-2 transition-all cursor-pointer ${permissions[permission.type]
                   ? 'bg-primary/5 border-primary/30'
                   : 'bg-muted/30 border-border hover:border-primary/20'
-              }`}
+                }`}
               onClick={() => setPermissions({ ...permissions, [permission.type]: !permissions[permission.type] })}
             >
               <span className="text-3xl">{permission.icon}</span>
@@ -83,10 +84,10 @@ export function PermissionsScreen({ onSuccess, onSkip, isLoading = false }) {
 
         <div className="space-y-3">
           <Button onClick={handleContinue} className="w-full" disabled={isLoading}>
-            {isLoading ? "Creating Account..." : "Continue with Selected Permissions"}
+            {isLoading ? t("auth.creatingAccount") : t("auth.continueWithPermissions")}
           </Button>
           <Button variant="ghost" onClick={onSkip} className="w-full" disabled={isLoading}>
-            Skip for Now
+            {t("auth.skipForNow")}
           </Button>
         </div>
       </Card>

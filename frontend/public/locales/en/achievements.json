@@ -1,0 +1,14 @@
+{
+    "title": "Achievements",
+    "subtitle": "Your farming milestones",
+    "noAchievements": "No achievements yet. Keep farming!",
+    "earned": "Earned",
+    "locked": "Locked",
+    "recent": "Recent Achievements",
+    "viewAll": "View All Achievements",
+    "milestones": {
+        "firstQuest": "First Quest Completed",
+        "levelUp": "Level Up",
+        "streak": "Daily Streak"
+    }
+}

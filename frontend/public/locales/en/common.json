@@ -1,0 +1,28 @@
+{
+    "name": "Name",
+    "level": "Level",
+    "location": "Location",
+    "xp": "XP",
+    "quests": "Quests",
+    "actions": "Actions",
+    "beginner": "beginner",
+    "viewDetails": "View Details",
+    "email": "Email",
+    "phone": "Phone",
+    "back": "Back",
+    "continue": "Continue",
+    "days": {
+        "mon": "Mon",
+        "tue": "Tue",
+        "wed": "Wed",
+        "thu": "Thu",
+        "fri": "Fri",
+        "sat": "Sat",
+        "sun": "Sun"
+    },
+    "hrs": "hrs",
+    "kmh": "km/h",
+    "edit": "Edit",
+    "save": "Save",
+    "cancel": "Cancel"
+}

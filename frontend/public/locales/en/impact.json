@@ -1,0 +1,24 @@
+{
+    "title": "Progress Tracker",
+    "questsDone": "Quests Done",
+    "badges": "Badges",
+    "level": "Level",
+    "dailyXPEarned": "Daily XP Earned",
+    "totalEarnedThisWeek": "Total earned this week",
+    "weeklyQuestCompletion": "Weekly Quest Completion",
+    "totalQuestsCompleted": "Total quests completed",
+    "learningHoursDaily": "Learning Hours (Daily)",
+    "totalLearningTime": "Total learning time this week",
+    "achievementMilestones": "Achievement Milestones",
+    "thisMonthSummary": "This Month Summary",
+    "activeDays": "Active Days",
+    "completionRate": "Completion Rate",
+    "milestones": {
+        "firstQuest": "First Quest",
+        "level3": "Level 3",
+        "tenQuests": "10 Quests",
+        "level5": "Level 5"
+    },
+    "inProgress": "In Progress",
+    "locked": "Locked"
+}

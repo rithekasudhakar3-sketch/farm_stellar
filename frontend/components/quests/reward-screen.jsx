@@ -1,8 +1,11 @@
 "use client"
 
 import { Zap, Trophy, Share2, ArrowRight, Users } from "lucide-react"
+import { useTranslation } from "react-i18next"
 
 export function RewardScreen({ quest, onContinue, onNextQuest, onComplete }) {
+  const { t } = useTranslation()
+
   const handleComplete = async () => {
     if (onComplete) {
       await onComplete(quest)
@@ -15,12 +18,12 @@ export function RewardScreen({ quest, onContinue, onNextQuest, onComplete }) {
   const handleShare = () => {
     if (navigator.share) {
       navigator.share({
-        title: `I completed the ${quest.title} Quest!`,
-        text: `I just earned the ${quest.badgeName} badge on Farmstellar! 🌱`,
+        title: t("quests.shareTitle", { title: quest.title }),
+        text: t("quests.shareText", { badge: quest.badgeName }),
         url: window.location.href,
       })
     } else {
-      alert("Sharing is not supported on this browser, but you can take a screenshot!")
+      alert(t("quests.shareNotSupported"))
     }
   }
 
@@ -36,8 +39,8 @@ export function RewardScreen({ quest, onContinue, onNextQuest, onComplete }) {
         {/* Celebration */}
         <div className="text-center space-y-4">
           <div className="flex justify-center text-7xl mb-6 animate-bounce">🎉</div>
-          <h2 className="text-4xl font-black text-foreground text-balance tracking-tight">Quest Complete!</h2>
-          <p className="text-muted-foreground text-lg">Amazing work! You've earned rewards for completing <span className="text-foreground font-bold">{quest.title}</span></p>
+          <h2 className="text-4xl font-black text-foreground text-balance tracking-tight">{t("quests.questComplete")}</h2>
+          <p className="text-muted-foreground text-lg">{t("quests.amazingWork")} <span className="text-foreground font-bold">{quest.title}</span></p>
         </div>
 
         {/* Rewards Card */}
@@ -48,7 +51,7 @@ export function RewardScreen({ quest, onContinue, onNextQuest, onComplete }) {
               <div className="bg-primary/20 p-2 rounded-xl">
                 <Zap className="w-6 h-6 text-primary" />
               </div>
-              <span className="text-sm font-bold text-muted-foreground">XP Earned</span>
+              <span className="text-sm font-bold text-muted-foreground">{t("quests.xpEarned")}</span>
             </div>
             <span className="text-3xl font-black text-primary">+{quest.xpReward}</span>
           </div>
@@ -59,7 +62,7 @@ export function RewardScreen({ quest, onContinue, onNextQuest, onComplete }) {
               <Trophy className="w-8 h-8 text-white" />
             </div>
             <div>
-              <p className="text-xs font-bold text-accent uppercase tracking-wider mb-1">New Badge</p>
+              <p className="text-xs font-bold text-accent uppercase tracking-wider mb-1">{t("quests.newBadge")}</p>
               <h3 className="text-xl font-bold text-foreground">{quest.badgeName}</h3>
             </div>
           </div>
@@ -74,23 +77,23 @@ export function RewardScreen({ quest, onContinue, onNextQuest, onComplete }) {
             className="w-full bg-primary text-primary-foreground font-bold py-4 rounded-xl hover:bg-primary/90 transition-all shadow-lg shadow-primary/20 flex items-center justify-center gap-2 transform active:scale-[0.98]"
           >
             <Trophy className="w-5 h-5" />
-            Complete Quest
+            {t("quests.completeQuest")}
           </button>
 
           {/* Secondary Actions */}
           <div className="flex gap-3">
             <button
-              onClick={() => alert("Shared to Community Feed! (Simulation)")}
+              onClick={() => alert(t("quests.sharedToCommunity"))}
               className="flex-1 bg-accent/10 text-accent font-bold py-3 rounded-xl hover:bg-accent/20 transition-colors flex items-center justify-center gap-2 border border-accent/20"
             >
               <Users className="w-5 h-5" />
-              Share to Community
+              {t("quests.shareToCommunity")}
             </button>
             <button
               onClick={onNextQuest}
               className="flex-1 bg-secondary/50 text-secondary-foreground font-bold py-3 rounded-xl hover:bg-secondary/70 transition-colors flex items-center justify-center gap-2 border border-secondary/20"
             >
-              Next Quest
+              {t("quests.nextQuest")}
               <ArrowRight className="w-4 h-4" />
             </button>
           </div>

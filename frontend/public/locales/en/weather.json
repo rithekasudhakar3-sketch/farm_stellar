@@ -1,0 +1,10 @@
+{
+    "title": "Weather Alert",
+    "expectedTomorrow": "expected tomorrow - Plan accordingly!",
+    "unavailableTitle": "Weather Data Unavailable",
+    "unavailableDesc": "Unable to fetch weather data",
+    "humidity": "Humidity",
+    "rain": "Rain",
+    "wind": "Wind",
+    "quickAlert": "Quick Alert"
+}

@@ -1,12 +1,14 @@
 "use client"
 
 import { useState } from "react"
+import { useTranslation } from "react-i18next"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card } from "@/components/ui/card"
 
 export function AdminPasskeyLoginScreen({ onSuccess, onBack }) {
+  const { t } = useTranslation()
   const [email, setEmail] = useState("")
   const [passkey, setPasskey] = useState("")
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -30,7 +32,7 @@ export function AdminPasskeyLoginScreen({ onSuccess, onBack }) {
       const data = await response.json()
 
       if (!response.ok) {
-        throw new Error(data.message || 'Login failed')
+        throw new Error(data.message || t("auth.loginFailed"))
       }
 
       // Store admin token and data
@@ -40,7 +42,7 @@ export function AdminPasskeyLoginScreen({ onSuccess, onBack }) {
       onSuccess()
     } catch (error) {
       console.error('Admin login error:', error)
-      setError(error.message || 'Invalid credentials. Please try again.')
+      setError(error.message || t("auth.invalidCredentials"))
     } finally {
       setIsSubmitting(false)
     }
@@ -60,8 +62,8 @@ export function AdminPasskeyLoginScreen({ onSuccess, onBack }) {
               />
             </svg>
           </div>
-          <h2 className="text-2xl font-bold text-foreground mb-2">Admin Login</h2>
-          <p className="text-sm text-muted-foreground">Enter your organization credentials</p>
+          <h2 className="text-2xl font-bold text-foreground mb-2">{t("auth.adminLogin")}</h2>
+          <p className="text-sm text-muted-foreground">{t("auth.enterOrgCredentials")}</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
@@ -72,7 +74,7 @@ export function AdminPasskeyLoginScreen({ onSuccess, onBack }) {
           )}
 
           <div className="space-y-2">
-            <Label htmlFor="email">Organization Email</Label>
+            <Label htmlFor="email">{t("auth.orgEmail")}</Label>
             <Input
               id="email"
               type="email"
@@ -84,12 +86,12 @@ export function AdminPasskeyLoginScreen({ onSuccess, onBack }) {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="passkey">Passkey</Label>
+            <Label htmlFor="passkey">{t("auth.passkey")}</Label>
             <div className="relative">
               <Input
                 id="passkey"
                 type={showPasskey ? "text" : "password"}
-                placeholder="Enter your secure passkey"
+                placeholder={t("auth.enterPasskey")}
                 value={passkey}
                 onChange={(e) => setPasskey(e.target.value)}
                 required
@@ -129,11 +131,11 @@ export function AdminPasskeyLoginScreen({ onSuccess, onBack }) {
           </div>
 
           <Button type="submit" className="w-full" disabled={!email || !passkey || isSubmitting}>
-            {isSubmitting ? "Authenticating..." : "Login as Admin"}
+            {isSubmitting ? t("auth.authenticating") : t("auth.loginAsAdmin")}
           </Button>
 
           <Button type="button" variant="ghost" className="w-full" onClick={onBack}>
-            Back to Welcome
+            {t("auth.backToWelcome")}
           </Button>
         </form>
       </Card>

@@ -12,13 +12,18 @@ export default function ProtectedLayout({ children }) {
 
     useEffect(() => {
         const fetchUserData = async () => {
+            // TEMPORARY: Bypass auth for testing i18n
+            /*
             const token = localStorage.getItem("token")
             if (!token) {
                 router.push("/welcome")
                 return
             }
+            */
 
             try {
+                // TEMPORARY: Skip backend calls
+                /*
                 const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:4000"
                 const res = await fetch(`${backendUrl}/api/users/me`, {
                     headers: {
@@ -50,14 +55,29 @@ export default function ProtectedLayout({ children }) {
                 }
 
                 setUserData(mergedData)
+                */
+
+                // Mock user data
+                const mockUser = {
+                    name: "Test Farmer",
+                    level: 3,
+                    xp: 100,
+                    xpLevel: 1,
+                    location: "Test Location"
+                }
+                setUserData(mockUser)
                 setLoading(false)
             } catch (error) {
                 console.error("Error fetching user data:", error)
                 // Clear storage and redirect on error
+                /*
                 localStorage.removeItem("token")
                 localStorage.removeItem("farmquest_auth")
                 localStorage.removeItem("farmquest_userdata")
                 router.push("/welcome")
+                */
+                setUserData({ name: "Test Farmer" })
+                setLoading(false)
             }
         }
 

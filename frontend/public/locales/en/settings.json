@@ -1,0 +1,47 @@
+{
+    "title": "Settings",
+    "subtitle": "Manage your account and preferences",
+    "accountSettings": "Account Settings",
+    "profileInfo": "Profile Information",
+    "displayName": "Display Name",
+    "phoneNumber": "Phone Number",
+    "location": "Location",
+    "email": "Email Address",
+    "bio": "Bio / Description",
+    "verified": "Verified",
+    "unverified": "Unverified",
+    "placeholders": {
+        "name": "Your name",
+        "location": "Village, District, State",
+        "bio": "Tell the community about yourself..."
+    },
+    "loginSecurity": "Login & Security",
+    "changePassword": "Change Password",
+    "twoFactor": "Two-Factor Authentication",
+    "twoFactorDesc": "Add extra security",
+    "appPreferences": "Application Preferences",
+    "displayLanguage": "Display & Language",
+    "language": "Language",
+    "theme": "Theme Preference",
+    "themes": {
+        "light": "Light",
+        "dark": "Dark",
+        "auto": "Auto"
+    },
+    "fontSize": "Font Size",
+    "fontSizes": {
+        "small": "Small",
+        "medium": "Medium",
+        "large": "Large"
+    },
+    "deleteAccount": {
+        "title": "Delete Account?",
+        "subtitle": "This action cannot be undone",
+        "confirm": "All your data will be permanently deleted. Are you sure you want to proceed?",
+        "button": "Delete Account"
+    },
+    "toast": {
+        "saved": "Settings saved",
+        "deletionSent": "Account deletion request sent"
+    }
+}

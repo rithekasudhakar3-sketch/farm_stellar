@@ -1,0 +1,31 @@
+{
+    "title": "प्रोफाइल",
+    "totalXP": "एकूण XP",
+    "level": "पातळी",
+    "quests": "क्वेस्ट",
+    "personalDetails": "वैयक्तिक तपशील",
+    "phoneNumber": "फोन नंबर",
+    "experienceLevel": "अनुभव पातळी",
+    "fieldSize": "शेताचा आकार (एकर)",
+    "acres": "एकर",
+    "primaryCrops": "प्राथमिक पिके",
+    "achievementTimeline": "यशाची टाइमलाइन",
+    "achievements": {
+        "firstQuest": "पहिला क्वेस्ट पूर्ण केला 🌱",
+        "level3": "पातळी 3 वर पोहोचलात ⭐",
+        "fiveQuests": "5 क्वेस्ट पूर्ण केले 🏆"
+    },
+    "sampleProfile": {
+        "experience": "मध्यम",
+        "crops": {
+            "wheat": "गहू",
+            "rice": "तांदूळ",
+            "sugarcane": "ऊस"
+        }
+    },
+    "months": {
+        "march": "मार्च",
+        "april": "एप्रिल",
+        "may": "मे"
+    }
+}

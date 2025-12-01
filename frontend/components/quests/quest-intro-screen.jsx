@@ -1,8 +1,11 @@
 "use client"
 
+import { useTranslation } from "react-i18next"
 import { ChevronLeft, Zap, Trophy, ArrowRight, CheckCircle2 } from "lucide-react"
 
 export function QuestIntroScreen({ quest, onStart, onBack, isCompleted }) {
+  const { t } = useTranslation()
+
   return (
     <div className="h-screen flex flex-col bg-background overflow-hidden relative">
       {/* Background Elements */}
@@ -16,12 +19,12 @@ export function QuestIntroScreen({ quest, onStart, onBack, isCompleted }) {
         </button>
         <div className="flex items-center gap-2">
           <div className="px-3 py-1 rounded-full bg-accent/10 text-accent text-xs font-bold uppercase tracking-wider border border-accent/20">
-            {quest.difficulty} Quest
+            {quest.difficulty} {t("quests.quest")}
           </div>
           {isCompleted && (
             <div className="px-3 py-1 rounded-full bg-emerald-500 text-white text-xs font-bold flex items-center gap-1 shadow-md">
               <CheckCircle2 className="w-3 h-3" />
-              Completed
+              {t("quests.completed")}
             </div>
           )}
         </div>
@@ -49,8 +52,8 @@ export function QuestIntroScreen({ quest, onStart, onBack, isCompleted }) {
                 <Zap className="w-5 h-5 text-primary" />
               </div>
               <div className="text-left">
-                <p className="text-sm font-bold text-foreground">+{quest.xpReward} XP</p>
-                <p className="text-[10px] text-muted-foreground uppercase font-bold">Reward</p>
+                <p className="text-sm font-bold text-foreground">+{quest.xpReward} {t("common.xp")}</p>
+                <p className="text-[10px] text-muted-foreground uppercase font-bold">{t("quests.reward")}</p>
               </div>
             </div>
             <div className="flex items-center gap-3 bg-card/50 backdrop-blur-md border border-border p-3 rounded-2xl shadow-sm">
@@ -59,7 +62,7 @@ export function QuestIntroScreen({ quest, onStart, onBack, isCompleted }) {
               </div>
               <div className="text-left">
                 <p className="text-sm font-bold text-foreground">{quest.badgeName}</p>
-                <p className="text-[10px] text-muted-foreground uppercase font-bold">Badge</p>
+                <p className="text-[10px] text-muted-foreground uppercase font-bold">{t("quests.badge")}</p>
               </div>
             </div>
           </div>
@@ -71,7 +74,7 @@ export function QuestIntroScreen({ quest, onStart, onBack, isCompleted }) {
 
           <h3 className="font-bold text-lg mb-4 flex items-center gap-2">
             <span className="w-1 h-6 bg-primary rounded-full"></span>
-            Mission Brief
+            {t("quests.missionBrief")}
           </h3>
 
           <div className="space-y-3 flex-1 overflow-y-auto pr-2 custom-scrollbar">
@@ -88,20 +91,19 @@ export function QuestIntroScreen({ quest, onStart, onBack, isCompleted }) {
           <button
             onClick={onStart}
             disabled={isCompleted}
-            className={`w-full mt-6 font-bold py-4 rounded-2xl transition-all transform active:scale-[0.98] shadow-lg flex items-center justify-center gap-2 group/btn relative z-10 ${
-              isCompleted 
-                ? 'bg-emerald-500 text-white cursor-default' 
+            className={`w-full mt-6 font-bold py-4 rounded-2xl transition-all transform active:scale-[0.98] shadow-lg flex items-center justify-center gap-2 group/btn relative z-10 ${isCompleted
+                ? 'bg-emerald-500 text-white cursor-default'
                 : 'bg-primary text-primary-foreground hover:bg-primary/90 shadow-primary/20'
-            }`}
+              }`}
           >
             {isCompleted ? (
               <>
                 <CheckCircle2 className="w-5 h-5" />
-                Quest Completed
+                {t("quests.questCompleted")}
               </>
             ) : (
               <>
-                Start Mission
+                {t("quests.startMission")}
                 <ArrowRight className="w-5 h-5 group-hover/btn:translate-x-1 transition-transform" />
               </>
             )}

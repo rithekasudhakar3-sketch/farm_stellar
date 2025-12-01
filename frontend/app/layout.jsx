@@ -1,5 +1,6 @@
 import { Analytics } from "@vercel/analytics/next"
 import { Quicksand, Mali } from "next/font/google"
+import { LanguageSwitcher } from "@/components/language-switcher"
 import "./globals.css"
 
 const _quicksand = Quicksand({ weight: ["400", "600", "700"], subsets: ["latin"] })
@@ -31,6 +32,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={`font-sans antialiased`}>
+        <LanguageSwitcher className="fixed top-4 right-4 z-50" />
         {children}
         <Analytics />
       </body>

@@ -2,8 +2,10 @@
 
 import { CloudRain, Droplets, Wind, AlertTriangle, Sun, Cloud, CloudSnow, CloudDrizzle } from "lucide-react"
 import { useEffect, useState } from "react"
+import { useTranslation } from "react-i18next"
 
 export function WeatherAlertCard({ location }) {
+    const { t } = useTranslation()
     const [weatherData, setWeatherData] = useState(null)
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(null)
@@ -13,40 +15,40 @@ export function WeatherAlertCard({ location }) {
             try {
                 setLoading(true)
                 setError(null)
-                
+
                 const apiKey = "f36aabc0f660437ba1a91516250410"
-                
+
                 // Validate location
                 if (!location || typeof location !== 'string' || !location.trim()) {
                     throw new Error("Location is required")
                 }
-                
+
                 // Parse location - handle different formats
                 const parts = location.trim().split(',').map(part => part.trim()).filter(Boolean)
-                
+
                 if (parts.length === 0) {
                     throw new Error("Invalid location format")
                 }
-                
+
                 // Use the first non-empty part (city/district)
                 let queryLocation = parts[0]
-                
+
                 // If it's coordinates format (lat,lng), throw error
                 if (/^-?\d+\.?\d*$/.test(queryLocation)) {
                     throw new Error("Please provide a city name, not coordinates")
                 }
-                
+
                 // Final validation - ensure we have a valid query
                 if (!queryLocation || queryLocation.length < 2) {
                     throw new Error("Location name is too short")
                 }
-                
+
                 console.log("Fetching weather for:", queryLocation)
-                
+
                 const url = `https://api.weatherapi.com/v1/forecast.json?key=${apiKey}&q=${encodeURIComponent(queryLocation)}&days=2&aqi=no&alerts=yes`
-                
+
                 const response = await fetch(url)
-                
+
                 if (!response.ok) {
                     const errorData = await response.json().catch(() => ({}))
                     console.error("Weather API error:", response.status, errorData)
@@ -55,15 +57,15 @@ export function WeatherAlertCard({ location }) {
 
                 const data = await response.json()
                 console.log("Weather data received for:", data.location.name)
-                
+
                 setWeatherData({
                     temperature: Math.round(data.current.temp_c),
                     condition: data.current.condition.text,
                     humidity: data.current.humidity,
                     rainfall: data.forecast.forecastday[0].day.daily_chance_of_rain,
                     windSpeed: Math.round(data.current.wind_kph),
-                    alert: data.alerts?.alert?.[0]?.headline || 
-                           `${data.forecast.forecastday[1].day.condition.text} expected tomorrow - Plan accordingly!`,
+                    alert: data.alerts?.alert?.[0]?.headline ||
+                        `${data.forecast.forecastday[1].day.condition.text} ${t("weather.expectedTomorrow")}`,
                     icon: data.current.condition.icon,
                     code: data.current.condition.code
                 })
@@ -80,7 +82,7 @@ export function WeatherAlertCard({ location }) {
 
     const getWeatherIcon = () => {
         if (!weatherData) return <Cloud className="w-8 h-8 text-accent" />
-        
+
         const condition = weatherData.condition.toLowerCase()
         if (condition.includes("rain") || condition.includes("drizzle")) {
             return <CloudRain className="w-8 h-8 text-accent" />
@@ -116,8 +118,8 @@ export function WeatherAlertCard({ location }) {
                 <div className="flex items-center gap-3 text-destructive">
                     <AlertTriangle className="w-6 h-6" />
                     <div>
-                        <h3 className="text-lg font-bold">Weather Data Unavailable</h3>
-                        <p className="text-sm text-muted-foreground mt-1">{error || "Unable to fetch weather data"}</p>
+                        <h3 className="text-lg font-bold">{t("weather.unavailableTitle")}</h3>
+                        <p className="text-sm text-muted-foreground mt-1">{error || t("weather.unavailableDesc")}</p>
                     </div>
                 </div>
             </div>
@@ -128,7 +130,7 @@ export function WeatherAlertCard({ location }) {
         <div className="bg-card border-2 border-border rounded-3xl p-6 shadow-lg hover:shadow-xl transition-all">
             <div className="flex items-start justify-between mb-4">
                 <div>
-                    <h3 className="text-xl font-bold text-foreground mb-1">Weather Alert</h3>
+                    <h3 className="text-xl font-bold text-foreground mb-1">{t("weather.title")}</h3>
                     <p className="text-xs text-muted-foreground">{location}</p>
                 </div>
                 <div className="p-3 bg-accent/10 rounded-2xl">
@@ -149,18 +151,18 @@ export function WeatherAlertCard({ location }) {
             <div className="grid grid-cols-3 gap-3 mb-4">
                 <div className="bg-muted/30 rounded-xl p-3 text-center">
                     <Droplets className="w-4 h-4 text-primary mx-auto mb-1" />
-                    <p className="text-xs text-muted-foreground">Humidity</p>
+                    <p className="text-xs text-muted-foreground">{t("weather.humidity")}</p>
                     <p className="text-sm font-bold text-foreground">{weatherData.humidity}%</p>
                 </div>
                 <div className="bg-muted/30 rounded-xl p-3 text-center">
                     <CloudRain className="w-4 h-4 text-accent mx-auto mb-1" />
-                    <p className="text-xs text-muted-foreground">Rain</p>
+                    <p className="text-xs text-muted-foreground">{t("weather.rain")}</p>
                     <p className="text-sm font-bold text-foreground">{weatherData.rainfall}%</p>
                 </div>
                 <div className="bg-muted/30 rounded-xl p-3 text-center">
                     <Wind className="w-4 h-4 text-secondary mx-auto mb-1" />
-                    <p className="text-xs text-muted-foreground">Wind</p>
-                    <p className="text-sm font-bold text-foreground">{weatherData.windSpeed} km/h</p>
+                    <p className="text-xs text-muted-foreground">{t("weather.wind")}</p>
+                    <p className="text-sm font-bold text-foreground">{weatherData.windSpeed} {t("common.kmh")}</p>
                 </div>
             </div>
 
@@ -168,7 +170,7 @@ export function WeatherAlertCard({ location }) {
             <div className="bg-accent/10 border border-accent/30 rounded-2xl p-3 flex items-start gap-3">
                 <AlertTriangle className="w-5 h-5 text-accent flex-shrink-0 mt-0.5" />
                 <div>
-                    <p className="text-xs font-semibold text-accent-foreground mb-1">Quick Alert</p>
+                    <p className="text-xs font-semibold text-accent-foreground mb-1">{t("weather.quickAlert")}</p>
                     <p className="text-xs text-muted-foreground">{weatherData.alert}</p>
                 </div>
             </div>

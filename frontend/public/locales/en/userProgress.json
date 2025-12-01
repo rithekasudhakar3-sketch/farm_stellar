@@ -1,0 +1,8 @@
+{
+    "level": "Level",
+    "nextMilestone": "Next Milestone",
+    "xpProgress": "XP Progress",
+    "toNextLevel": "{{percent}}% to next level",
+    "totalXP": "Total XP",
+    "quests": "Quests"
+}

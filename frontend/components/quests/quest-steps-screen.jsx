@@ -3,6 +3,7 @@
 import { ChevronLeft, CheckCircle2, Circle, ChevronRight, Check, Zap, Trophy } from "lucide-react"
 import { useState, useEffect, useCallback } from "react"
 import { useRouter, useSearchParams, usePathname } from "next/navigation"
+import { useTranslation } from "react-i18next"
 import { QuestCompletionProgress } from "./quest-completion-progress"
 
 export const stepsData = {
@@ -12,46 +13,42 @@ export const stepsData = {
     { icon: "💧", title: "Moisture Check", instruction: "Observe if soil feels dry, moist, or sticky." },
     { icon: "👃", title: "Smell Test", instruction: "Healthy soil has an earthy smell with no foul odor." }
   ],
-
+  // ... (other stepsData remains unchanged as it's data, not UI text, though ideally should be moved to translation files)
+  // For now, I'll focus on the UI components
   crop_quest: [
     { icon: "👀", title: "Explore Crops", instruction: "Browse suggested crops based on your region." },
     { icon: "🌾", title: "Pick Your 3 Crops", instruction: "Select crops that fit your climate & land." },
     { icon: "📅", title: "Check Season", instruction: "Match each crop with the correct planting season." },
     { icon: "💧", title: "Water Needs", instruction: "Confirm whether crops require low, medium, or high water." }
   ],
-
+  // ... keeping other data as is for brevity in this replacement, but in a real app these should be keys
   compost_kickoff: [
     { icon: "📍", title: "Choose Spot", instruction: "Select a shaded spot with good airflow." },
     { icon: "🥬", title: "Add Greens", instruction: "Include kitchen waste like peels & scraps." },
     { icon: "🍂", title: "Add Browns", instruction: "Mix dry leaves, cardboard, or straw." },
     { icon: "🔄", title: "Mix Weekly", instruction: "Turn compost every 7 days to speed decomposition." }
   ],
-
   zero_waste: [
     { icon: "♻️", title: "Segregate Waste", instruction: "Separate organic & non-organic waste at home." },
     { icon: "🍂", title: "Collect Dry Leaves", instruction: "Store leaves for mulching your plants." },
     { icon: "🗑️", title: "Mini Waste Station", instruction: "Set up 2–3 labeled bins for easy segregation." }
   ],
-
   mini_garden: [
     { icon: "🌱", title: "Pick 5 Plants", instruction: "Choose beginner-friendly herbs/veggies." },
     { icon: "🪴", title: "Prepare Patch", instruction: "Loosen top soil in a 1×1m area." },
     { icon: "🌾", title: "Plant Seeds", instruction: "Sow seeds or plant small saplings." },
     { icon: "💧", title: "Water & Mulch", instruction: "Keep soil moist and apply mulch on top." }
   ],
-
   mulch_master: [
     { icon: "🍂", title: "Collect Mulch", instruction: "Gather dry leaves, straw, or grass clippings." },
     { icon: "🌿", title: "Spread Mulch", instruction: "Create a 2–3 inch thick layer around the plant." },
     { icon: "💦", title: "Settle Mulch", instruction: "Water lightly to keep mulch in place." }
   ],
-
   boll_keeper: [
     { icon: "🔍", title: "Inspect Bolls", instruction: "Check for early shedding & pest marks." },
     { icon: "🧪", title: "Nutrient Spray", instruction: "Apply balanced micronutrient foliar spray." },
     { icon: "✂️", title: "Remove Damage", instruction: "Cut off pest-affected bolls to prevent spread." }
   ],
-
   coconut_basin: [
     { icon: "📏", title: "Mark Radius", instruction: "Draw a 1–1.5m circle around the tree." },
     { icon: "⛏️", title: "Dig Basin", instruction: "Create a shallow circular trench." },
@@ -59,42 +56,36 @@ export const stepsData = {
     { icon: "🍂", title: "Add Mulch", instruction: "Fill with dry leaves or coconut husk." },
     { icon: "💧", title: "Water", instruction: "Water gently to help basin settle." }
   ],
-
   coconut_bioenzyme: [
     { icon: "🥥", title: "Collect Water", instruction: "Use leftover coconut water as base." },
     { icon: "🍯", title: "Add Jaggery", instruction: "Mix jaggery to feed microbes." },
     { icon: "🧪", title: "Ferment 7 Days", instruction: "Store sealed and allow natural fermentation." },
     { icon: "💧", title: "Dilute & Apply", instruction: "Mix with water (1:20) and pour around root zone." }
   ],
-
   rust_shield: [
     { icon: "🔍", title: "Spot Symptoms", instruction: "Look for yellow/orange rust patches on leaves." },
     { icon: "✂️", title: "Remove Infected Leaves", instruction: "Cut and discard affected parts safely." },
     { icon: "🌬️", title: "Improve Airflow", instruction: "Ensure proper spacing between plants." },
     { icon: "🧴", title: "Organic Spray", instruction: "Apply safe fungicidal solution weekly." }
   ],
-
   biodiversity_strip: [
     { icon: "🌼", title: "Select Flowers", instruction: "Choose 5 pollinator-friendly plants." },
     { icon: "📏", title: "Mark 1m Strip", instruction: "Prepare a 1-meter planting strip." },
     { icon: "🌱", title: "Cluster Planting", instruction: "Plant flowers in small clusters." },
     { icon: "🍂", title: "Mulch & Water", instruction: "Mulch lightly and water regularly." }
   ],
-
   rainwater_hero: [
     { icon: "🛢️", title: "Place Barrel", instruction: "Set container under roof edge to collect runoff." },
     { icon: "🧵", title: "Add Mesh Filter", instruction: "Install mesh to block debris and insects." },
     { icon: "🚰", title: "Fit Tap", instruction: "Attach outlet tap near bottom of barrel." },
     { icon: "💧", title: "Use Saved Water", instruction: "Water plants using collected rainwater." }
   ],
-
   biochar_maker: [
     { icon: "🪵", title: "Gather Waste Wood", instruction: "Collect dry sticks, branches, and husk pieces." },
     { icon: "🔥", title: "Burn Low-Oxygen", instruction: "Slow-burn in pit while limiting airflow." },
     { icon: "🪨", title: "Crush Charcoal", instruction: "Break cooled biochar into smaller pieces." },
     { icon: "🌱", title: "Mix with Compost", instruction: "Blend biochar into compost before application." }
   ],
-
   jeevamrutham: [
     { icon: "🐄", title: "Mix Dung & Urine", instruction: "Combine fresh cow dung and urine in a drum." },
     { icon: "🍯", title: "Add Jaggery + Flour", instruction: "Add jaggery & gram flour to feed microbes." },
@@ -104,6 +95,7 @@ export const stepsData = {
 };
 
 export function QuestStepsScreen({ quest, onContinue, onBack }) {
+  const { t } = useTranslation()
   // Check if we have detailed steps in the quest object (New Format)
   const detailedSteps = quest.steps
 
@@ -143,7 +135,7 @@ export function QuestStepsScreen({ quest, onContinue, onBack }) {
         <button onClick={onBack} className="p-2 hover:bg-muted rounded-lg transition-colors">
           <ChevronLeft className="w-5 h-5" />
         </button>
-        <h1 className="text-lg font-bold">Quest Steps</h1>
+        <h1 className="text-lg font-bold">{t("quests.questSteps")}</h1>
         <div className="w-9"></div>
       </div>
 
@@ -189,8 +181,8 @@ export function QuestStepsScreen({ quest, onContinue, onBack }) {
             }`}
         >
           {completedCount === steps.length
-            ? "Continue to Proof"
-            : `Complete ${steps.length - completedCount} more steps`}
+            ? t("quests.continueToProof")
+            : t("quests.completeMoreSteps", { count: steps.length - completedCount })}
         </button>
       </div>
     </div>
@@ -198,6 +190,7 @@ export function QuestStepsScreen({ quest, onContinue, onBack }) {
 }
 
 function QuestWizard({ steps, onComplete, onBack, questId }) {
+  const { t } = useTranslation()
   const router = useRouter()
   const pathname = usePathname()
   const searchParams = useSearchParams()
@@ -275,8 +268,8 @@ function QuestWizard({ steps, onComplete, onBack, questId }) {
 
         <div className="flex flex-col items-center gap-2 w-full max-w-xs mx-4">
           <div className="flex justify-between w-full text-xs font-bold text-muted-foreground uppercase tracking-wider">
-            <span>Step {safeIndex + 1}</span>
-            <span>{steps.length} Steps</span>
+            <span>{t("quests.step")} {safeIndex + 1}</span>
+            <span>{steps.length} {t("quests.steps")}</span>
           </div>
           <div className="h-2 w-full bg-muted rounded-full overflow-hidden">
             <div
@@ -305,7 +298,7 @@ function QuestWizard({ steps, onComplete, onBack, questId }) {
                     <div className="bg-gradient-to-br from-primary/5 to-accent/5 p-6 rounded-2xl border border-primary/20">
                       <h3 className="text-xl font-bold text-foreground mb-4 flex items-center gap-2">
                         <Trophy className="w-6 h-6 text-primary" />
-                        What You've Learned
+                        {t("quests.whatYouLearned")}
                       </h3>
                       <div className="space-y-4">
                         {step.subSteps.map((subStep, idx) => (
@@ -325,8 +318,8 @@ function QuestWizard({ steps, onComplete, onBack, questId }) {
                     </div>
 
                     <div className="bg-accent/10 p-6 rounded-2xl border border-accent/20 text-center">
-                      <p className="text-lg font-semibold text-foreground mb-2">🎉 Congratulations!</p>
-                      <p className="text-muted-foreground">You've completed this quest and gained valuable knowledge about soil analysis.</p>
+                      <p className="text-lg font-semibold text-foreground mb-2">🎉 {t("quests.congratulations")}</p>
+                      <p className="text-muted-foreground">{t("quests.questCompletionMessage")}</p>
                     </div>
                   </div>
                 )}
@@ -339,7 +332,7 @@ function QuestWizard({ steps, onComplete, onBack, questId }) {
                 onClick={handleNext}
                 className="w-full bg-primary text-primary-foreground font-bold py-4 rounded-2xl hover:bg-primary/90 transition-all shadow-lg shadow-primary/20 flex items-center justify-center gap-2 transform active:scale-[0.98] text-lg"
               >
-                {isLastStep ? "Complete Mission" : "Next Step"}
+                {isLastStep ? t("quests.completeMission") : t("quests.nextStep")}
                 {!isLastStep && <ChevronRight className="w-5 h-5 stroke-[3]" />}
               </button>
             </div>
@@ -400,7 +393,7 @@ function QuestWizard({ steps, onComplete, onBack, questId }) {
                         <Zap className="w-5 h-5 text-white fill-white" />
                       </div>
                       <div className="flex-1">
-                        <h4 className="font-bold text-amber-900 dark:text-amber-100 mb-2 text-sm uppercase tracking-wide">PRO TIP</h4>
+                        <h4 className="font-bold text-amber-900 dark:text-amber-100 mb-2 text-sm uppercase tracking-wide">{t("quests.proTip")}</h4>
                         <p className="leading-relaxed font-medium">{step.tip || step.reason}</p>
                       </div>
                     </div>
@@ -415,7 +408,7 @@ function QuestWizard({ steps, onComplete, onBack, questId }) {
                 onClick={handleNext}
                 className="w-full bg-primary text-primary-foreground font-bold py-4 rounded-2xl hover:bg-primary/90 transition-all shadow-lg shadow-primary/20 flex items-center justify-center gap-2 transform active:scale-[0.98] text-lg"
               >
-                {isLastStep ? "Complete Mission" : "Next Step"}
+                {isLastStep ? t("quests.completeMission") : t("quests.nextStep")}
                 {!isLastStep && <ChevronRight className="w-5 h-5 stroke-[3]" />}
               </button>
             </div>

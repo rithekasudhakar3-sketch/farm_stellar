@@ -1,0 +1,31 @@
+{
+    "title": "प्रोफ़ाइल",
+    "totalXP": "कुल XP",
+    "level": "स्तर",
+    "quests": "क्वेस्ट",
+    "personalDetails": "व्यक्तिगत विवरण",
+    "phoneNumber": "फ़ोन नंबर",
+    "experienceLevel": "अनुभव स्तर",
+    "fieldSize": "खेत का आकार (एकड़)",
+    "acres": "एकड़",
+    "primaryCrops": "प्राथमिक फसलें",
+    "achievementTimeline": "उपलब्धि समयरेखा",
+    "achievements": {
+        "firstQuest": "पहला क्वेस्ट पूरा किया 🌱",
+        "level3": "स्तर 3 पर पहुँचे ⭐",
+        "fiveQuests": "5 क्वेस्ट पूरे किए 🏆"
+    },
+    "sampleProfile": {
+        "experience": "मध्यम",
+        "crops": {
+            "wheat": "गेहूँ",
+            "rice": "चावल",
+            "sugarcane": "गन्ना"
+        }
+    },
+    "months": {
+        "march": "मार्च",
+        "april": "अप्रैल",
+        "may": "मई"
+    }
+}

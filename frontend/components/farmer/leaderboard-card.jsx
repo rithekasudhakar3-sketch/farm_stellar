@@ -2,8 +2,10 @@
 
 import { Trophy, Award, Medal, Crown } from "lucide-react"
 import { useEffect, useState } from "react"
+import { useTranslation } from "react-i18next"
 
 export function LeaderboardCard() {
+    const { t } = useTranslation()
     const [leaderboardData, setLeaderboardData] = useState([])
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(null)
@@ -14,7 +16,7 @@ export function LeaderboardCard() {
             try {
                 const token = localStorage.getItem("token")
                 const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:4000"
-                
+
                 // Get current user ID
                 if (token) {
                     const userRes = await fetch(`${backendUrl}/api/users/me`, {
@@ -27,9 +29,9 @@ export function LeaderboardCard() {
                         setCurrentUserId(user._id)
                     }
                 }
-                
+
                 const response = await fetch(`${backendUrl}/api/leaderboard?limit=4`)
-                
+
                 if (!response.ok) {
                     throw new Error("Failed to fetch leaderboard")
                 }
@@ -91,12 +93,12 @@ export function LeaderboardCard() {
                         <Trophy className="w-6 h-6 text-accent" />
                     </div>
                     <div>
-                        <h3 className="text-xl font-bold text-foreground">Leaderboard</h3>
-                        <p className="text-xs text-muted-foreground">Top Farmers This Month</p>
+                        <h3 className="text-xl font-bold text-foreground">{t("leaderboard.title")}</h3>
+                        <p className="text-xs text-muted-foreground">{t("leaderboard.subtitle")}</p>
                     </div>
                 </div>
                 <p className="text-sm text-muted-foreground text-center py-8">
-                    {error || "No leaderboard data available"}
+                    {error || t("leaderboard.noData")}
                 </p>
             </div>
         )
@@ -109,8 +111,8 @@ export function LeaderboardCard() {
                     <Trophy className="w-6 h-6 text-accent" />
                 </div>
                 <div>
-                    <h3 className="text-xl font-bold text-foreground">Leaderboard</h3>
-                    <p className="text-xs text-muted-foreground">Top Farmers This Month</p>
+                    <h3 className="text-xl font-bold text-foreground">{t("leaderboard.title")}</h3>
+                    <p className="text-xs text-muted-foreground">{t("leaderboard.subtitle")}</p>
                 </div>
             </div>
 
@@ -120,13 +122,12 @@ export function LeaderboardCard() {
                     return (
                         <div
                             key={user.rank}
-                            className={`flex items-center gap-3 p-3 rounded-2xl transition-all hover:scale-[1.02] ${
-                                isCurrentUser
+                            className={`flex items-center gap-3 p-3 rounded-2xl transition-all hover:scale-[1.02] ${isCurrentUser
                                     ? "bg-gradient-to-r from-primary/20 to-primary/5 border-2 border-primary shadow-md"
                                     : user.rank <= 3
-                                    ? "bg-gradient-to-r from-accent/10 to-transparent border border-accent/20"
-                                    : "bg-muted/30 hover:bg-muted/50"
-                            }`}
+                                        ? "bg-gradient-to-r from-accent/10 to-transparent border border-accent/20"
+                                        : "bg-muted/30 hover:bg-muted/50"
+                                }`}
                         >
                             {/* Rank */}
                             <div className="w-8 h-8 flex items-center justify-center">
@@ -134,34 +135,32 @@ export function LeaderboardCard() {
                             </div>
 
                             {/* Avatar */}
-                            <div className={`w-10 h-10 rounded-full flex items-center justify-center text-xl ${
-                                isCurrentUser ? "bg-primary/20 ring-2 ring-primary" : "bg-primary/10"
-                            }`}>
+                            <div className={`w-10 h-10 rounded-full flex items-center justify-center text-xl ${isCurrentUser ? "bg-primary/20 ring-2 ring-primary" : "bg-primary/10"
+                                }`}>
                                 {getAvatar(user.name)}
                             </div>
 
                             {/* User Info */}
                             <div className="flex-1 min-w-0">
                                 <div className="flex items-center gap-2">
-                                    <p className={`font-semibold text-sm truncate ${
-                                        isCurrentUser ? "text-primary" : "text-foreground"
-                                    }`}>
+                                    <p className={`font-semibold text-sm truncate ${isCurrentUser ? "text-primary" : "text-foreground"
+                                        }`}>
                                         {user.name}
                                     </p>
                                     {isCurrentUser && (
                                         <span className="text-xs font-bold text-primary bg-primary/10 px-2 py-0.5 rounded-full">
-                                            You
+                                            {t("leaderboard.you")}
                                         </span>
                                     )}
                                 </div>
                                 <div className="flex items-center gap-3 text-xs text-muted-foreground">
                                     <span className="flex items-center gap-1">
                                         <Trophy className="w-3 h-3" />
-                                        {user.xp} XP
+                                        {user.xp} {t("common.xp")}
                                     </span>
                                     <span className="flex items-center gap-1">
                                         <Award className="w-3 h-3" />
-                                        Level {user.xpLevel}
+                                        {t("leaderboard.level")} {user.xpLevel}
                                     </span>
                                 </div>
                             </div>
@@ -172,7 +171,7 @@ export function LeaderboardCard() {
 
             <div className="mt-4 pt-4 border-t border-border text-center">
                 <p className="text-xs text-muted-foreground">
-                    Keep learning to climb the ranks! 🚀
+                    {t("leaderboard.footer")} 🚀
                 </p>
             </div>
         </div>

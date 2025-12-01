@@ -2,8 +2,10 @@
 
 import { useState } from "react"
 import { ChevronLeft, Smartphone, Lock } from "lucide-react"
+import { useTranslation } from "react-i18next"
 
 export function FarmerLoginScreen({ onSuccess, onBack }) {
+  const { t } = useTranslation()
   const [step, setStep] = useState("phone")
   const [phone, setPhone] = useState("")
   const [otp, setOtp] = useState("")
@@ -27,7 +29,7 @@ export function FarmerLoginScreen({ onSuccess, onBack }) {
         <button onClick={onBack} className="p-2 hover:bg-muted rounded-xl transition-colors">
           <ChevronLeft className="w-5 h-5" />
         </button>
-        <h1 className="text-lg font-bold">Farmer Login</h1>
+        <h1 className="text-lg font-bold">{t("auth.farmerLogin")}</h1>
         <div className="w-9"></div>
       </div>
 
@@ -40,19 +42,19 @@ export function FarmerLoginScreen({ onSuccess, onBack }) {
                 <div className="inline-flex items-center justify-center w-16 h-16 bg-primary/10 rounded-2xl mb-4">
                   <Smartphone className="w-8 h-8 text-primary" />
                 </div>
-                <h2 className="text-2xl font-bold text-foreground mb-2">Enter Your Phone</h2>
-                <p className="text-sm text-muted-foreground">We'll send you an OTP to verify</p>
+                <h2 className="text-2xl font-bold text-foreground mb-2">{t("auth.enterPhone")}</h2>
+                <p className="text-sm text-muted-foreground">{t("auth.otpDesc")}</p>
               </div>
 
               <div className="bg-card rounded-2xl p-6 border border-border shadow-sm space-y-4">
                 <div>
-                  <label className="text-sm font-medium text-foreground mb-2 block">Phone Number</label>
+                  <label className="text-sm font-medium text-foreground mb-2 block">{t("auth.mobileNumber")}</label>
                   <input
                     type="tel"
                     maxLength="10"
                     value={phone}
                     onChange={(e) => setPhone(e.target.value.replace(/\D/g, ""))}
-                    placeholder="Enter 10 digit number"
+                    placeholder={t("auth.phonePlaceholder")}
                     className="w-full px-4 py-3 rounded-xl border border-input bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
                   />
                 </div>
@@ -62,7 +64,7 @@ export function FarmerLoginScreen({ onSuccess, onBack }) {
                   disabled={phone.length !== 10}
                   className="w-full bg-primary text-primary-foreground font-bold py-3 rounded-xl hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  Send OTP
+                  {t("auth.sendOTP")}
                 </button>
               </div>
             </div>
@@ -74,21 +76,21 @@ export function FarmerLoginScreen({ onSuccess, onBack }) {
                 <div className="inline-flex items-center justify-center w-16 h-16 bg-accent/10 rounded-2xl mb-4">
                   <Lock className="w-8 h-8 text-accent" />
                 </div>
-                <h2 className="text-2xl font-bold text-foreground mb-2">Verify OTP</h2>
+                <h2 className="text-2xl font-bold text-foreground mb-2">{t("auth.verifyOTP")}</h2>
                 <p className="text-sm text-muted-foreground">
-                  Enter the 6-digit code sent to <span className="font-bold text-foreground">{phone}</span>
+                  {t("auth.otpSentTo")} <span className="font-bold text-foreground">{phone}</span>
                 </p>
               </div>
 
               <div className="bg-card rounded-2xl p-6 border border-border shadow-sm space-y-4">
                 <div>
-                  <label className="text-sm font-medium text-foreground mb-2 block">OTP Code</label>
+                  <label className="text-sm font-medium text-foreground mb-2 block">{t("auth.otpCode")}</label>
                   <input
                     type="text"
                     maxLength="6"
                     value={otp}
                     onChange={(e) => setOtp(e.target.value.replace(/\D/g, ""))}
-                    placeholder="Enter 6 digit OTP"
+                    placeholder={t("auth.otpPlaceholder")}
                     className="w-full px-4 py-3 rounded-xl border border-input bg-background text-foreground text-center text-2xl tracking-widest focus:outline-none focus:ring-2 focus:ring-ring"
                   />
                 </div>
@@ -98,14 +100,14 @@ export function FarmerLoginScreen({ onSuccess, onBack }) {
                   disabled={otp.length !== 6}
                   className="w-full bg-primary text-primary-foreground font-bold py-3 rounded-xl hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  Verify OTP
+                  {t("auth.verifyOTPButton")}
                 </button>
 
                 <button
                   onClick={() => setStep("phone")}
                   className="w-full text-sm text-muted-foreground hover:text-foreground transition-colors"
                 >
-                  Resend OTP
+                  {t("auth.resendOTP")}
                 </button>
               </div>
             </div>

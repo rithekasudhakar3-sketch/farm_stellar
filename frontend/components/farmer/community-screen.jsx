@@ -1,21 +1,22 @@
 "use client"
 
 import { useState } from "react"
+import { useTranslation } from "react-i18next"
 import { ArrowLeft, Plus, Heart, MessageCircle, MapPin, Send, ImageIcon, X, Leaf, Flower2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 
 export function CommunityScreen({ onBack }) {
+  const { t } = useTranslation()
   const [posts, setPosts] = useState([
     {
       id: 1,
       author: "Priya Singh",
       district: "Ludhiana",
-      content:
-        "Just completed my first composting quest! The results are amazing. Any tips for faster decomposition? 🌱",
+      content: t("community.samplePosts.post1.content"),
       likes: 12,
       comments: 5,
-      timestamp: "2 hours ago",
+      timestamp: t("community.samplePosts.post1.timestamp"),
       avatar: "PS",
       images: ["/composting-pile-with-organic-waste.jpg"],
     },
@@ -23,20 +24,20 @@ export function CommunityScreen({ onBack }) {
       id: 2,
       author: "Amit Verma",
       district: "Amritsar",
-      content: "Water-saving tip: Try drip irrigation! Reduced my water usage by 40% this season. 💧",
+      content: t("community.samplePosts.post2.content"),
       likes: 24,
       comments: 8,
-      timestamp: "5 hours ago",
+      timestamp: t("community.samplePosts.post2.timestamp"),
       avatar: "AV",
     },
     {
       id: 3,
       author: "Sunita Kaur",
       district: "Jalandhar",
-      content: "Looking for organic pest control methods. What works best for tomatoes? 🍅",
+      content: t("community.samplePosts.post3.content"),
       likes: 8,
       comments: 12,
-      timestamp: "1 day ago",
+      timestamp: t("community.samplePosts.post3.timestamp"),
       avatar: "SK",
       images: ["/tomato-plants-in-garden.jpg", "/organic-pest-control-spray.jpg"],
     },
@@ -48,7 +49,7 @@ export function CommunityScreen({ onBack }) {
   const handleImageUpload = (e) => {
     const files = Array.from(e.target.files)
     if (files.length + uploadedImages.length > 4) {
-      alert("You can upload a maximum of 4 images")
+      alert(t("community.maxImagesAlert"))
       return
     }
 
@@ -75,7 +76,7 @@ export function CommunityScreen({ onBack }) {
           content: newPost,
           likes: 0,
           comments: 0,
-          timestamp: "Just now",
+          timestamp: t("community.justNow"),
           avatar: "RK",
           images: uploadedImages.length > 0 ? uploadedImages : undefined,
         },
@@ -94,7 +95,7 @@ export function CommunityScreen({ onBack }) {
           <button
             onClick={onBack}
             className="p-2 hover:bg-primary/10 rounded-2xl transition-colors"
-            aria-label="Go back"
+            aria-label={t("common.back")}
           >
             <ArrowLeft className="w-6 h-6" />
           </button>
@@ -103,7 +104,7 @@ export function CommunityScreen({ onBack }) {
             style={{ fontFamily: "Mali, cursive" }}
           >
             <Flower2 className="w-6 h-6 text-accent" />
-            Community Garden
+            {t("community.title")}
           </h1>
           <div className="absolute -top-2 right-4 opacity-20">
             <Leaf className="w-8 h-8 text-primary animate-sway" />
@@ -118,7 +119,7 @@ export function CommunityScreen({ onBack }) {
           size="lg"
         >
           <Plus className="w-5 h-5 mr-2" />
-          Share Your Story 🌱
+          {t("community.shareYourStory")} 🌱
         </Button>
 
         {/* Posts Feed */}
@@ -182,13 +183,13 @@ export function CommunityScreen({ onBack }) {
             <div className="flex items-center gap-2 mb-4">
               <Leaf className="w-5 h-5 text-primary" />
               <h2 className="text-xl font-bold" style={{ fontFamily: "Mali, cursive" }}>
-                Share Your Story
+                {t("community.shareYourStory")}
               </h2>
             </div>
             <Textarea
               value={newPost}
               onChange={(e) => setNewPost(e.target.value)}
-              placeholder="Share your farming tips, questions, or experiences... 🌿"
+              placeholder={t("community.postPlaceholder")}
               className="min-h-32 mb-4 rounded-2xl border-2 border-border focus:border-primary resize-none"
             />
 
@@ -204,7 +205,7 @@ export function CommunityScreen({ onBack }) {
                     <button
                       onClick={() => removeImage(idx)}
                       className="absolute top-2 right-2 bg-destructive text-destructive-foreground rounded-full p-1.5 opacity-0 group-hover:opacity-100 transition-opacity shadow-lg"
-                      aria-label="Remove image"
+                      aria-label={t("community.removeImage")}
                     >
                       <X className="w-4 h-4" />
                     </button>
@@ -217,7 +218,7 @@ export function CommunityScreen({ onBack }) {
               <label className="flex items-center justify-center gap-2 p-4 border-2 border-dashed border-primary/30 rounded-2xl cursor-pointer hover:bg-primary/5 transition-colors">
                 <ImageIcon className="w-5 h-5 text-primary" />
                 <span className="text-sm text-muted-foreground font-medium">
-                  Add Photos ({uploadedImages.length}/4) 📸
+                  {t("community.addPhotos", { count: uploadedImages.length })} 📸
                 </span>
                 <input
                   type="file"
@@ -233,7 +234,7 @@ export function CommunityScreen({ onBack }) {
             <div className="flex gap-3">
               <Button onClick={handleCreatePost} className="flex-1 bg-primary hover:bg-primary/90 rounded-2xl h-11">
                 <Send className="w-4 h-4 mr-2" />
-                Post
+                {t("community.post")}
               </Button>
               <Button
                 onClick={() => {
@@ -243,7 +244,7 @@ export function CommunityScreen({ onBack }) {
                 variant="outline"
                 className="flex-1 rounded-2xl h-11 border-2"
               >
-                Cancel
+                {t("common.cancel")}
               </Button>
             </div>
           </div>

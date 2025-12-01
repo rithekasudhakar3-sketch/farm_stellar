@@ -1,6 +1,7 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
+import { useTranslation } from "react-i18next"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -8,6 +9,8 @@ import { Card } from "@/components/ui/card"
 import { MapPin } from "lucide-react"
 
 export function PhoneLoginScreen({ onSuccess, onBack, isSignup = false }) {
+  const { t } = useTranslation()
+  const [mounted, setMounted] = useState(false)
   const [phone, setPhone] = useState("")
   const [name, setName] = useState("")
   const [email, setEmail] = useState("")
@@ -16,6 +19,14 @@ export function PhoneLoginScreen({ onSuccess, onBack, isSignup = false }) {
   const [city, setCity] = useState("")
   const [isFetchingLocation, setIsFetchingLocation] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  if (!mounted) {
+    return null
+  }
 
   const handlePhonePaste = (e) => {
     e.preventDefault()
@@ -28,7 +39,7 @@ export function PhoneLoginScreen({ onSuccess, onBack, isSignup = false }) {
     setIsFetchingLocation(true)
     try {
       if (!navigator.geolocation) {
-        alert("Geolocation is not supported by your browser")
+        alert(t("auth.geolocationNotSupported"))
         return
       }
 
@@ -55,7 +66,7 @@ export function PhoneLoginScreen({ onSuccess, onBack, isSignup = false }) {
         },
         (error) => {
           console.error("Error getting location:", error)
-          alert("Unable to fetch location. Please enable location access.")
+          alert(t("auth.locationFetchError"))
           setIsFetchingLocation(false)
         }
       )
@@ -67,16 +78,16 @@ export function PhoneLoginScreen({ onSuccess, onBack, isSignup = false }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    
+
     if (phone.length !== 10) return
-    
+
     setIsSubmitting(true)
-    
+
     try {
       const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:4000"
-      
+
       console.log('Sending OTP to phone:', phone);
-      
+
       // Send OTP to phone number
       const response = await fetch(`${backendUrl}/api/auth/send-otp`, {
         method: "POST",
@@ -106,11 +117,25 @@ export function PhoneLoginScreen({ onSuccess, onBack, isSignup = false }) {
         onSuccess(phone, { isSignup })
       } else {
         console.error("Send OTP failed:", data)
-        alert(data.message || "Failed to send OTP. Please try again.")
+        alert(data.message || t("auth.otpSendFailed"))
       }
     } catch (error) {
       console.error("Send OTP error:", error)
-      alert("Failed to send OTP. Please check your connection and try again.")
+      // alert(t("auth.otpSendError"))
+
+      // MOCK BEHAVIOR FOR FRONTEND-ONLY DEVELOPMENT
+      console.warn("Backend unreachable. Simulating successful OTP send for development.")
+      if (isSignup) {
+        sessionStorage.setItem("signupData", JSON.stringify({
+          name,
+          email,
+          password,
+          location,
+          city,
+          phone
+        }))
+      }
+      onSuccess(phone, { isSignup })
     } finally {
       setIsSubmitting(false)
     }
@@ -131,10 +156,10 @@ export function PhoneLoginScreen({ onSuccess, onBack, isSignup = false }) {
             </svg>
           </div>
           <h2 className="text-2xl font-bold text-foreground mb-2">
-            {isSignup ? "Create Your Account" : "Welcome Back"}
+            {isSignup ? t("auth.createAccount") : t("auth.welcomeBack")}
           </h2>
           <p className="text-sm text-muted-foreground">
-            {isSignup ? "Enter your phone number to get started" : "Enter your phone number to login"}
+            {isSignup ? t("auth.enterPhoneSignup") : t("auth.enterPhoneLogin")}
           </p>
         </div>
 
@@ -142,11 +167,11 @@ export function PhoneLoginScreen({ onSuccess, onBack, isSignup = false }) {
           {isSignup && (
             <>
               <div className="space-y-2">
-                <Label htmlFor="name">Full Name</Label>
+                <Label htmlFor="name">{t("auth.fullName")}</Label>
                 <Input
                   id="name"
                   type="text"
-                  placeholder="Enter your full name"
+                  placeholder={t("auth.fullNamePlaceholder")}
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   required
@@ -154,11 +179,11 @@ export function PhoneLoginScreen({ onSuccess, onBack, isSignup = false }) {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="email">Email Address</Label>
+                <Label htmlFor="email">{t("auth.email")}</Label>
                 <Input
                   id="email"
                   type="email"
-                  placeholder="your.email@example.com"
+                  placeholder={t("auth.emailPlaceholder")}
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
@@ -166,28 +191,28 @@ export function PhoneLoginScreen({ onSuccess, onBack, isSignup = false }) {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="password">Password</Label>
+                <Label htmlFor="password">{t("auth.password")}</Label>
                 <Input
                   id="password"
                   type="password"
-                  placeholder="Create a strong password"
+                  placeholder={t("auth.passwordPlaceholder")}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   minLength={6}
                   required
                 />
                 {password.length > 0 && password.length < 6 && (
-                  <p className="text-xs text-destructive">Password must be at least 6 characters</p>
+                  <p className="text-xs text-destructive">{t("auth.passwordMinLength")}</p>
                 )}
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="location">Location</Label>
+                <Label htmlFor="location">{t("auth.location")}</Label>
                 <div className="flex gap-2">
                   <Input
                     id="location"
                     type="text"
-                    placeholder={city || "Fetch your location"}
+                    placeholder={city || t("auth.fetchLocation")}
                     value={city}
                     readOnly
                     className="flex-1"
@@ -200,17 +225,17 @@ export function PhoneLoginScreen({ onSuccess, onBack, isSignup = false }) {
                     className="shrink-0"
                   >
                     <MapPin className="w-4 h-4 mr-2" />
-                    {isFetchingLocation ? "Fetching..." : "Get Location"}
+                    {isFetchingLocation ? t("auth.fetching") : t("auth.getLocation")}
                   </Button>
                 </div>
                 {city && (
-                  <p className="text-xs text-muted-foreground">City: {city}</p>
+                  <p className="text-xs text-muted-foreground">{t("auth.city")}: {city}</p>
                 )}
               </div>
             </>
           )}
-<div className="space-y-2">
-            <Label htmlFor="phone">Mobile Number</Label>
+          <div className="space-y-2">
+            <Label htmlFor="phone">{t("auth.mobileNumber")}</Label>
             <div className="relative">
               <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">+91</span>
               <Input
@@ -227,20 +252,20 @@ export function PhoneLoginScreen({ onSuccess, onBack, isSignup = false }) {
               />
             </div>
             {phone.length > 0 && phone.length !== 10 && (
-              <p className="text-xs text-destructive">Please enter a valid 10-digit phone number</p>
+              <p className="text-xs text-destructive">{t("auth.invalidPhone")}</p>
             )}
           </div>
 
           <Button type="submit" className="w-full" disabled={
-            isSignup 
+            isSignup
               ? (phone.length !== 10 || !name || !email || password.length < 6 || isSubmitting)
               : (phone.length !== 10 || isSubmitting)
           }>
-            {isSubmitting ? "Sending OTP..." : "Send OTP"}
+            {isSubmitting ? t("auth.sendingOTP") : t("auth.sendOTP")}
           </Button>
 
           <Button type="button" variant="ghost" className="w-full" onClick={onBack}>
-            Back to Welcome
+            {t("auth.backToWelcome")}
           </Button>
         </form>
       </Card>

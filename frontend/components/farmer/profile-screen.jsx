@@ -2,6 +2,7 @@
 "use client"
 
 import { useState } from "react"
+import { useTranslation } from "react-i18next"
 import { ArrowLeft, Edit2, MapPin, TrendingUp, Award, Leaf } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -9,21 +10,22 @@ import { Label } from "@/components/ui/label"
 import { Slider } from "@/components/ui/slider"
 
 export function FarmerProfileScreen({ onBack }) {
+  const { t } = useTranslation()
   const [isEditing, setIsEditing] = useState(false)
   const [profile, setProfile] = useState({
     name: "Raj Kumar",
     phone: "+91 98765 43210",
     district: "Patiala",
     state: "Punjab",
-    experience: "Intermediate",
+    experience: t("profile.sampleProfile.experience"),
     fieldSize: 5,
-    crops: ["Wheat", "Rice", "Sugarcane"],
+    crops: [t("profile.sampleProfile.crops.wheat"), t("profile.sampleProfile.crops.rice"), t("profile.sampleProfile.crops.sugarcane")],
   })
 
   const achievements = [
-    { date: "March 2024", title: "Completed first quest 🌱", icon: Award },
-    { date: "April 2024", title: "Reached Level 3 ⭐", icon: TrendingUp },
-    { date: "May 2024", title: "5 quests completed 🏆", icon: Award },
+    { date: `${t("profile.months.march")} 2024`, title: t("profile.achievements.firstQuest"), icon: Award },
+    { date: `${t("profile.months.april")} 2024`, title: t("profile.achievements.level3"), icon: TrendingUp },
+    { date: `${t("profile.months.may")} 2024`, title: t("profile.achievements.fiveQuests"), icon: Award },
   ]
 
   return (
@@ -34,7 +36,7 @@ export function FarmerProfileScreen({ onBack }) {
             <button
               onClick={onBack}
               className="p-2 hover:bg-primary/10 rounded-2xl transition-colors"
-              aria-label="Go back"
+              aria-label={t("common.back")}
             >
               <ArrowLeft className="w-6 h-6" />
             </button>
@@ -43,12 +45,12 @@ export function FarmerProfileScreen({ onBack }) {
               style={{ fontFamily: "Mali, cursive" }}
             >
               <Leaf className="w-6 h-6 text-primary" />
-              Profile
+              {t("profile.title")}
             </h1>
           </div>
           <Button variant="ghost" size="sm" onClick={() => setIsEditing(!isEditing)} className="rounded-2xl">
             <Edit2 className="w-4 h-4 mr-2" />
-            {isEditing ? "Save" : "Edit"}
+            {isEditing ? t("common.save") : t("common.edit")}
           </Button>
         </div>
       </div>
@@ -82,15 +84,15 @@ export function FarmerProfileScreen({ onBack }) {
           <div className="grid grid-cols-3 gap-4 pt-5 border-t-2 border-dashed border-primary/20 relative z-10">
             <div className="text-center p-3 bg-white/50 rounded-2xl">
               <div className="text-3xl font-bold text-primary">150</div>
-              <div className="text-sm text-muted-foreground mt-1">Total XP ✨</div>
+              <div className="text-sm text-muted-foreground mt-1">{t("profile.totalXP")} ✨</div>
             </div>
             <div className="text-center p-3 bg-white/50 rounded-2xl">
               <div className="text-3xl font-bold text-accent">3</div>
-              <div className="text-sm text-muted-foreground mt-1">Level 🌱</div>
+              <div className="text-sm text-muted-foreground mt-1">{t("profile.level")} 🌱</div>
             </div>
             <div className="text-center p-3 bg-white/50 rounded-2xl">
               <div className="text-3xl font-bold text-secondary">5</div>
-              <div className="text-sm text-muted-foreground mt-1">Quests 📋</div>
+              <div className="text-sm text-muted-foreground mt-1">{t("profile.quests")} 📋</div>
             </div>
           </div>
         </div>
@@ -99,21 +101,21 @@ export function FarmerProfileScreen({ onBack }) {
         <div className="bg-card border-[1.5px] border-border rounded-2xl p-6 shadow-[0_2px_8px_rgba(107,166,115,0.08),0_1px_3px_rgba(107,166,115,0.04)] hover:shadow-[0_4px_12px_rgba(107,166,115,0.12),0_2px_6px_rgba(107,166,115,0.08)] hover:-translate-y-0.5 transition-all relative before:content-[''] before:absolute before:inset-[-2px] before:border-2 before:border-primary before:rounded-2xl before:opacity-0 hover:before:opacity-20 before:transition-opacity space-y-4">
           <h3 className="text-lg font-semibold mb-4 flex items-center gap-2" style={{ fontFamily: "'Segoe UI', sans-serif" }}>
             <Leaf className="w-5 h-5 text-primary" />
-            Personal Details
+            {t("profile.personalDetails")}
           </h3>
 
           <div>
-            <Label className="text-muted-foreground mb-2">Phone Number</Label>
+            <Label className="text-muted-foreground mb-2">{t("profile.phoneNumber")}</Label>
             <Input value={profile.phone} disabled={!isEditing} className="mt-1 rounded-2xl border-2" />
           </div>
 
           <div>
-            <Label className="text-muted-foreground mb-2">Experience Level</Label>
+            <Label className="text-muted-foreground mb-2">{t("profile.experienceLevel")}</Label>
             <Input value={profile.experience} disabled={!isEditing} className="mt-1 rounded-2xl border-2" />
           </div>
 
           <div>
-            <Label className="text-muted-foreground mb-2">Field Size (acres)</Label>
+            <Label className="text-muted-foreground mb-2">{t("profile.fieldSize")}</Label>
             <Slider
               value={[profile.fieldSize]}
               max={20}
@@ -122,11 +124,11 @@ export function FarmerProfileScreen({ onBack }) {
               className="mt-3"
               onValueChange={(value) => setProfile({ ...profile, fieldSize: value[0] })}
             />
-            <div className="text-sm text-muted-foreground mt-2">{profile.fieldSize} acres 🌾</div>
+            <div className="text-sm text-muted-foreground mt-2">{profile.fieldSize} {t("profile.acres")} 🌾</div>
           </div>
 
           <div>
-            <Label className="text-muted-foreground mb-2">Primary Crops</Label>
+            <Label className="text-muted-foreground mb-2">{t("profile.primaryCrops")}</Label>
             <div className="flex flex-wrap gap-2 mt-2">
               {profile.crops.map((crop) => (
                 <span
@@ -143,7 +145,7 @@ export function FarmerProfileScreen({ onBack }) {
         <div className="bg-card border-[1.5px] border-border rounded-2xl p-6 shadow-[0_2px_8px_rgba(107,166,115,0.08),0_1px_3px_rgba(107,166,115,0.04)] hover:shadow-[0_4px_12px_rgba(107,166,115,0.12),0_2px_6px_rgba(107,166,115,0.08)] hover:-translate-y-0.5 transition-all relative before:content-[''] before:absolute before:inset-[-2px] before:border-2 before:border-primary before:rounded-2xl before:opacity-0 hover:before:opacity-20 before:transition-opacity">
           <h3 className="text-lg font-semibold mb-5 flex items-center gap-2" style={{ fontFamily: "'Segoe UI', sans-serif" }}>
             <Award className="w-5 h-5 text-accent" />
-            Achievement Timeline
+            {t("profile.achievementTimeline")}
           </h3>
           <div className="space-y-4">
             {achievements.map((achievement, index) => (

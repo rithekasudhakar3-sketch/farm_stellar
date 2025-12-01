@@ -1,0 +1,24 @@
+{
+    "title": "Community Garden",
+    "shareYourStory": "Share Your Story",
+    "postPlaceholder": "Share your farming tips, questions, or experiences... 🌿",
+    "maxImagesAlert": "You can upload a maximum of 4 images",
+    "justNow": "Just now",
+    "removeImage": "Remove image",
+    "addPhotos": "Add Photos ({{count}}/4)",
+    "post": "Post",
+    "samplePosts": {
+        "post1": {
+            "content": "Just completed my first composting quest! The results are amazing. Any tips for faster decomposition? 🌱",
+            "timestamp": "2 hours ago"
+        },
+        "post2": {
+            "content": "Water-saving tip: Try drip irrigation! Reduced my water usage by 40% this season. 💧",
+            "timestamp": "5 hours ago"
+        },
+        "post3": {
+            "content": "Looking for organic pest control methods. What works best for tomatoes? 🍅",
+            "timestamp": "1 day ago"
+        }
+    }
+}

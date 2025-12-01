@@ -1,12 +1,14 @@
 "use client"
 
 import { useEffect } from "react"
+import { useTranslation } from "react-i18next"
 import { Leaf, Sprout, Droplets, CloudRain, BarChart3, Flower2, Sun, Trophy, Award, Star, BookOpen } from "lucide-react"
 import { XPProgressBar } from "./xp-progress-bar"
 import { LevelBadge } from "./level-badge"
 //import { StreakTracker } from "./streak-tracker"
 
 export function FarmerDashboardScreen({ onStartQuest, onViewImpact, quests, onNavigate, userData, onShowToast }) {
+  const { t } = useTranslation()
   const availableQuests = Object.values(quests)
   const isFirstLogin = userData?.isFirstLogin
 
@@ -23,21 +25,21 @@ export function FarmerDashboardScreen({ onStartQuest, onViewImpact, quests, onNa
   const WEATHER_DATA = {
     temperature: "24°C",
     humidity: "65%",
-    condition: "Partly Cloudy ☁️",
+    condition: t("dashboard.weather.partlyCloudy"),
   }
 
-  const CROP_SUGGESTIONS = ["Finger Millet (Ragi)", "Paddy (Rice)", "Groundnut"]
+  const CROP_SUGGESTIONS = ["crops.ragi", "crops.paddy", "crops.groundnut"]
 
   const PROGRESS_STATS = [
-    { icon: Trophy, value: `${userData?.completedQuests?.length || 3}`, label: "Quests Completed", color: "accent" },
-    { icon: Award, value: `${userData?.badges?.length || 2}`, label: "Badges Earned", color: "primary" },
-    { icon: BookOpen, value: "8", label: "Modules Learned", color: "secondary" },
+    { icon: Trophy, value: `${userData?.completedQuests?.length || 3}`, label: t("dashboard.stats.questsCompleted"), color: "accent" },
+    { icon: Award, value: `${userData?.badges?.length || 2}`, label: t("dashboard.stats.badgesEarned"), color: "primary" },
+    { icon: BookOpen, value: "8", label: t("dashboard.stats.modulesLearned"), color: "secondary" },
   ]
 
   useEffect(() => {
     if (isFirstLogin && onShowToast) {
       setTimeout(() => {
-        onShowToast("👋 Start with 'Soil Basics' - perfect for beginners!")
+        onShowToast(t("dashboard.welcomeToast"))
       }, 2000)
     }
   }, [isFirstLogin])
@@ -58,10 +60,10 @@ export function FarmerDashboardScreen({ onStartQuest, onViewImpact, quests, onNa
           <div className="flex items-center gap-3 mb-2">
             <Sun className="icon-md text-accent animate-spin-slow" />
             <h2 className="text-h2 text-foreground" style={{ fontFamily: "'Segoe UI', sans-serif" }}>
-              Good Morning, {FARMER_DATA.name}! 🌿
+              {t('dashboard.goodMorning')}, {FARMER_DATA.name}! 🌿
             </h2>
           </div>
-          <p className="text-body text-muted-foreground ml-9">Another beautiful day to grow and learn</p>
+          <p className="text-body text-muted-foreground ml-9">{t('dashboard.greetingSubtitle')}</p>
         </div>
       </div>
 
@@ -75,12 +77,12 @@ export function FarmerDashboardScreen({ onStartQuest, onViewImpact, quests, onNa
               <div className="flex-1">
                 <p className="text-mediun text-muted-foreground mb-1 flex items-center gap-2">
                   <Sprout className="icon-xs" />
-                  Growing Farmer
+                  {t('dashboard.growingFarmer')}
                 </p>
                 <p className="text-h1 text-primary mb-1" style={{ fontFamily: "'Segoe UI', sans-serif" }}>
-                  Level {FARMER_DATA.level}
+                  {t('dashboard.level')} {FARMER_DATA.level}
                 </p>
-                <p className="text-medium text-muted-foreground">Keep nurturing your skills! 🌱</p>
+                <p className="text-medium text-muted-foreground">{t('dashboard.nurtureSkills')}</p>
               </div>
             </div>
             <XPProgressBar
@@ -91,7 +93,7 @@ export function FarmerDashboardScreen({ onStartQuest, onViewImpact, quests, onNa
             />
           </div>
 
-       {/* //   <StreakTracker currentStreak={FARMER_DATA.currentStreak} streakDays={FARMER_DATA.activeDays} /> */}
+          {/* //   <StreakTracker currentStreak={FARMER_DATA.currentStreak} streakDays={FARMER_DATA.activeDays} /> */}
         </div>
 
         {/* Featured Quest */}
@@ -107,19 +109,19 @@ export function FarmerDashboardScreen({ onStartQuest, onViewImpact, quests, onNa
             <div className="flex-1">
               <p className="text-medium text-muted-foreground font-medium mb-1 flex items-center gap-2">
                 <span className="inline-block w-2 h-2 rounded-full bg-accent animate-pulse shadow-lg shadow-accent/50"></span>
-                TODAY'S QUEST
+                {t("dashboard.todaysQuest")}
               </p>
               <h3 className="text-h3 text-foreground mb-2" style={{ fontFamily: "'Segoe UI', sans-serif" }}>
-                Soil Basics Quest
+                {t('dashboard.soilBasicsQuest')}
               </h3>
               <p className="text-small text-muted-foreground mb-4">
-                Learn the fundamentals of healthy soil and understand its role in farming success
+                {t('dashboard.soilBasicsDesc')}
               </p>
               <button
                 onClick={() => onStartQuest("soil")}
                 className="btn-accent text-sm shadow-lg shadow-accent/30 hover:shadow-accent/50"
               >
-                Continue Quest →
+                {t('dashboard.continueQuest')}
               </button>
             </div>
           </div>
@@ -135,16 +137,16 @@ export function FarmerDashboardScreen({ onStartQuest, onViewImpact, quests, onNa
               </div>
               <div className="flex-1">
                 <h3 className="text-h4 text-foreground mb-1" style={{ fontFamily: "'Segoe UI', sans-serif" }}>
-                  Today's Weather
+                  {t("dashboard.todaysWeather")}
                 </h3>
                 <p className="text-medium text-muted-foreground">Bangalore Rural, Karnataka</p>
               </div>
             </div>
             <div className="space-y-3">
               {[
-                { label: "Temperature", value: WEATHER_DATA.temperature },
-                { label: "Humidity", value: WEATHER_DATA.humidity },
-                { label: "Condition", value: WEATHER_DATA.condition, highlight: true },
+                { label: t("dashboard.weather.temperature"), value: WEATHER_DATA.temperature },
+                { label: t("dashboard.weather.humidity"), value: WEATHER_DATA.humidity },
+                { label: t("dashboard.weather.condition"), value: WEATHER_DATA.condition, highlight: true },
               ].map((item, idx) => (
                 <div
                   key={idx}
@@ -167,9 +169,9 @@ export function FarmerDashboardScreen({ onStartQuest, onViewImpact, quests, onNa
               </div>
               <div className="flex-1">
                 <h3 className="text-h4 text-foreground mb-1" style={{ fontFamily: "'Segoe UI', sans-serif" }}>
-                  Crop Suggestions
+                  {t('dashboard.cropSuggestions')}
                 </h3>
-                <p className="text-medium text-muted-foreground">Based on your climate</p>
+                <p className="text-medium text-muted-foreground">{t('dashboard.basedOnClimate')}</p>
               </div>
             </div>
             <div className="space-y-2">
@@ -179,7 +181,7 @@ export function FarmerDashboardScreen({ onStartQuest, onViewImpact, quests, onNa
                   className="flex items-center gap-3 p-3 rounded-xl hover:bg-primary/5 transition-colors group"
                 >
                   <div className="w-3 h-3 rounded-full bg-primary group-hover:scale-125 transition-transform"></div>
-                  <span className="text-small text-foreground">{crop}</span>
+                  <span className="text-small text-foreground">{t(crop)}</span>
                 </div>
               ))}
             </div>
@@ -190,14 +192,14 @@ export function FarmerDashboardScreen({ onStartQuest, onViewImpact, quests, onNa
           <div className="flex items-center justify-between mb-6">
             <h3 className="text-h3 text-foreground flex items-center gap-2" style={{ fontFamily: "'Segoe UI', sans-serif" }}>
               <Star className="icon-md text-accent" />
-              Your Progress
+              {t('dashboard.yourProgress')}
             </h3>
             <button
               onClick={() => onNavigate && onNavigate("impact-tracker")}
               className="text-small text-primary hover:text-primary/80 font-medium flex items-center gap-1 hover:gap-2 transition-all"
             >
               <BarChart3 className="icon-xs" />
-              View Details
+              {t('dashboard.viewDetails')}
             </button>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -221,15 +223,15 @@ export function FarmerDashboardScreen({ onStartQuest, onViewImpact, quests, onNa
               </div>
               <div className="text-center">
                 <p className="text-2xl font-bold text-accent">{userData?.currentXP || 235}</p>
-                <p className="text-medium text-muted-foreground mt-1">Total XP ✨</p>
+                <p className="text-medium text-muted-foreground mt-1">{t('dashboard.totalXP')} ✨</p>
               </div>
               <div className="text-center">
                 <p className="text-2xl font-bold text-primary">15</p>
-                <p className="text-medium text-muted-foreground mt-1">Hours Learned 📚</p>
+                <p className="text-medium text-muted-foreground mt-1">{t('dashboard.hoursLearned')} 📚</p>
               </div>
               <div className="text-center">
                 <p className="text-2xl font-bold text-accent">92%</p>
-                <p className="text-medium text-muted-foreground mt-1">Completion Rate 🎯</p>
+                <p className="text-medium text-muted-foreground mt-1">{t('dashboard.completionRate')} 🎯</p>
               </div>
             </div>
           </div>
@@ -239,7 +241,7 @@ export function FarmerDashboardScreen({ onStartQuest, onViewImpact, quests, onNa
         <div>
           <h3 className="text-h2 text-foreground mb-5 flex items-center gap-2" style={{ fontFamily: "'Segoe UI', sans-serif" }}>
             <Flower2 className="icon-lg text-primary" />
-            Available Quests
+            {t('dashboard.availableQuests')}
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
             {availableQuests.map((quest) => {
@@ -266,8 +268,8 @@ export function FarmerDashboardScreen({ onStartQuest, onViewImpact, quests, onNa
                   </h4>
                   <p className="text-small text-muted-foreground mb-4 line-clamp-2">{quest.description}</p>
                   <div className="flex items-center justify-between pt-4 border-t-2 border-dashed border-border">
-                    <span className="text-medium text-muted-foreground">{quest.activities.length} activities 📋</span>
-                    <span className="text-small font-bold text-accent">+{quest.xpReward} XP ✨</span>
+                    <span className="text-medium text-muted-foreground">{quest.activities.length} {t('dashboard.activities')} 📋</span>
+                    <span className="text-small font-bold text-accent">+{quest.xpReward} {t('common.xp')} ✨</span>
                   </div>
                 </div>
               )

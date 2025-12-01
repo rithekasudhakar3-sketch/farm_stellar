@@ -1,0 +1,24 @@
+{
+    "title": "പുരോഗതി ട്രാക്കർ",
+    "questsDone": "പൂർത്തിയാക്കിയ ക്വസ്റ്റുകൾ",
+    "badges": "ബാഡ്ജുകൾ",
+    "level": "നില",
+    "dailyXPEarned": "ദിവസേന നേടിയ XP",
+    "totalEarnedThisWeek": "ഈ ആഴ്ച നേടിയ ആകെ XP",
+    "weeklyQuestCompletion": "പ്രതിവാര ക്വസ്റ്റ് പൂർത്തീകരണം",
+    "totalQuestsCompleted": "ആകെ പൂർത്തിയാക്കിയ ക്വസ്റ്റുകൾ",
+    "learningHoursDaily": "പഠന സമയം (ദിവസേന)",
+    "totalLearningTime": "ഈ ആഴ്ചയിലെ ആകെ പഠന സമയം",
+    "achievementMilestones": "നേട്ടങ്ങളുടെ നാഴികക്കല്ലുകൾ",
+    "thisMonthSummary": "ഈ മാസത്തെ സംഗ്രഹം",
+    "activeDays": "സജീവ ദിവസങ്ങൾ",
+    "completionRate": "പൂർത്തീകരണ നിരക്ക്",
+    "milestones": {
+        "firstQuest": "ആദ്യ ക്വസ്റ്റ്",
+        "level3": "നില 3",
+        "tenQuests": "10 ക്വസ്റ്റുകൾ",
+        "level5": "നില 5"
+    },
+    "inProgress": "പുരോഗതിയിലാണ്",
+    "locked": "ലോക്ക് ചെയ്തു"
+}

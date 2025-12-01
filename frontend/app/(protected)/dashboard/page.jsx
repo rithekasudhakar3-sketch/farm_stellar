@@ -15,72 +15,41 @@ export default function DashboardPage() {
 
     useEffect(() => {
         const fetchData = async () => {
-            // Check authentication
+            // TEMPORARY: Bypass authentication for testing i18n
+            /*
             const token = localStorage.getItem("token")
             if (!token) {
                 router.push("/welcome")
                 return
             }
+            */
 
             try {
+                // TEMPORARY: Skip backend calls
+                /*
                 const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:4000"
+                // ...
+                */
 
-                // Fetch user data from backend
-                const userRes = await fetch(`${backendUrl}/api/users/me`, {
-                    headers: {
-                        "Authorization": `Bearer ${token}`
-                    }
-                })
-
-                if (!userRes.ok) {
-                    throw new Error("Failed to fetch user data")
+                // Mock user data for testing
+                const mockUser = {
+                    name: "Test Farmer",
+                    xp: 150,
+                    xpLevel: 2,
+                    level: 3,
+                    currentXP: 150,
+                    requiredXP: 200,
+                    location: "Test Village",
+                    city: "Test City",
+                    questsProgress: [],
+                    farmDetails: { name: "Green Farm" },
+                    completedQuests: [],
+                    badges: []
                 }
-
-                const user = await userRes.json()
-
-                // Fetch dashboard data
-                const dashRes = await fetch(`${backendUrl}/api/dashboard`, {
-                    headers: {
-                        "Authorization": `Bearer ${token}`
-                    }
-                })
-
-                if (dashRes.ok) {
-                    const dash = await dashRes.json()
-                    setDashboardData(dash)
-                }
-
-                // Load local storage data for compatibility
-                const localData = JSON.parse(localStorage.getItem("farmquest_userdata") || "{}")
-
-                // Merge backend and local data
-                const mergedData = {
-                    ...localData,
-                    name: user.name,
-                    xp: user.xp || 0,
-                    xpLevel: user.xpLevel || 0,
-                    level: user.level === "pro" ? 5 : 3,
-                    currentXP: user.xp,
-                    requiredXP: (Math.floor(user.xp / 100) + 1) * 100,
-                    location: user.location || localData.location,
-                    city: user.city || localData.city || "Bangalore",
-                    questsProgress: user.questsProgress || [],
-                    farmDetails: user.farm ? {
-                        name: user.farm.name,
-                        address: user.farm.address,
-                        size: user.farm.size,
-                        primaryCrop: user.farm.primaryCrop
-                    } : localData.farmDetails,
-                    completedQuests: user.questsProgress?.filter(q => q.status === "completed") || [],
-                    badges: localData.badges || []
-                }
-
-                setUserData(mergedData)
+                setUserData(mockUser)
             } catch (error) {
                 console.error("Error fetching data:", error)
-                // Fallback to local data
-                const data = JSON.parse(localStorage.getItem("farmquest_userdata") || "{}")
-                setUserData(data)
+                setUserData({})
             } finally {
                 setLoading(false)
             }

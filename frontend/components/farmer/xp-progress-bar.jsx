@@ -2,8 +2,10 @@
 
 import { Sprout, Leaf, TreePine } from "lucide-react"
 import { useState, useEffect } from "react"
+import { useTranslation } from "react-i18next"
 
 export function XPProgressBar({ currentXP, requiredXP, currentLevel, shouldAnimate = false }) {
+  const { t } = useTranslation()
   const [displayedXP, setDisplayedXP] = useState(shouldAnimate ? 0 : currentXP)
   const progressPercentage = Math.min((currentXP / requiredXP) * 100, 100)
 
@@ -29,10 +31,10 @@ export function XPProgressBar({ currentXP, requiredXP, currentLevel, shouldAnima
       <div className="xp-progress-info">
         <div className="xp-progress-info__level">
           {getLevelPlantIcon()}
-          <span className="text-muted-foreground font-medium">Progress to Level {nextLevel}</span>
+          <span className="text-muted-foreground font-medium">{t("xpProgress.progressToLevel", { level: nextLevel })}</span>
         </div>
         <span className="xp-progress-info__points">
-          {displayedXP} / {requiredXP} XP
+          {displayedXP} / {requiredXP} {t("common.xp")}
         </span>
       </div>
 
@@ -55,7 +57,7 @@ export function XPProgressBar({ currentXP, requiredXP, currentLevel, shouldAnima
       </div>
 
       {/* Motivational Message */}
-      {isAlmostComplete && <p className="xp-progress-motivation">🌟 Almost there! Keep growing!</p>}
+      {isAlmostComplete && <p className="xp-progress-motivation">{t("xpProgress.almostThere")}</p>}
 
       <style jsx>{`
         .xp-progress-container {

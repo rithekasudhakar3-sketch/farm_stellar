@@ -6,8 +6,10 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Switch } from "@/components/ui/switch"
+import { useTranslation } from "react-i18next"
 
 export function SettingsScreen({ userData, onBack }) {
+  const { t, i18n } = useTranslation()
   const [settings, setSettings] = useState({
     displayName: userData?.name || "",
     email: userData?.email || "",
@@ -28,12 +30,26 @@ export function SettingsScreen({ userData, onBack }) {
 
   const updateSetting = (category, key, value) => {
     setSettings((prev) => ({ ...prev, [category]: { ...prev[category], [key]: value } }))
-    showSuccessToast("Settings saved")
+
+    if (category === "app" && key === "language") {
+      const langMap = {
+        "english": "en",
+        "hindi": "hi",
+        "Malayalam": "ml",
+        "marathi": "mr",
+        "tamil": "ta",
+        "telugu": "te"
+      }
+      const langCode = langMap[value] || "en"
+      i18n.changeLanguage(langCode)
+    }
+
+    showSuccessToast(t("settings.toast.saved"))
   }
 
   const updateTopLevel = (key, value) => {
     setSettings((prev) => ({ ...prev, [key]: value }))
-    showSuccessToast("Settings saved")
+    showSuccessToast(t("settings.toast.saved"))
   }
 
   const showSuccessToast = (message) => {
@@ -44,7 +60,7 @@ export function SettingsScreen({ userData, onBack }) {
 
   const handleDeleteAccount = () => {
     setShowDeleteConfirm(false)
-    showSuccessToast("Account deletion request sent")
+    showSuccessToast(t("settings.toast.deletionSent"))
   }
 
   return (
@@ -52,12 +68,12 @@ export function SettingsScreen({ userData, onBack }) {
       {/* Header */}
       <div className="sticky top-0 z-10 bg-card border-[1.5px] border-border rounded-2xl p-4">
         <div className="flex items-center gap-4 max-w-4xl mx-auto">
-          <button onClick={onBack} className="p-2 hover:bg-primary/10 rounded-2xl" aria-label="Go back">
+          <button onClick={onBack} className="p-2 hover:bg-primary/10 rounded-2xl" aria-label={t("common.goBack")}>
             <ArrowLeft className="icon-md" />
           </button>
           <div>
-            <h1 className="text-h2">Settings</h1>
-            <p className="text-small text-muted-foreground">Manage your account and preferences</p>
+            <h1 className="text-h2">{t("settings.title")}</h1>
+            <p className="text-small text-muted-foreground">{t("settings.subtitle")}</p>
           </div>
         </div>
       </div>
@@ -67,25 +83,25 @@ export function SettingsScreen({ userData, onBack }) {
         <div className="space-y-4">
           <h2 className="text-h3 font-bold flex items-center gap-2">
             <User className="icon-md text-primary" />
-            Account Settings
+            {t("settings.accountSettings")}
           </h2>
 
           <div className="bg-card border-[1.5px] border-border rounded-2xl p-6 space-y-4">
-            <h3 className="text-h4 font-semibold">Profile Information</h3>
+            <h3 className="text-h4 font-semibold">{t("settings.profileInfo")}</h3>
 
             <div className="space-y-4">
               <div>
-                <Label className="text-small text-muted-foreground">Display Name</Label>
+                <Label className="text-small text-muted-foreground">{t("settings.displayName")}</Label>
                 <Input
                   value={settings.displayName}
                   onChange={(e) => updateTopLevel("displayName", e.target.value)}
                   className="mt-2 rounded-2xl border-2"
-                  placeholder="Your name"
+                  placeholder={t("settings.placeholders.name")}
                 />
               </div>
 
               <div>
-                <Label className="text-small text-muted-foreground">Phone Number</Label>
+                <Label className="text-small text-muted-foreground">{t("settings.phoneNumber")}</Label>
                 <div className="relative mt-2">
                   <Input
                     value={settings.phoneNumber}
@@ -94,26 +110,26 @@ export function SettingsScreen({ userData, onBack }) {
                     placeholder="+91 98765 43210"
                   />
                   <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs px-2 py-1 rounded-full bg-accent/20 text-accent-foreground">
-                    Verified
+                    {t("settings.verified")}
                   </span>
                 </div>
               </div>
 
               <div>
-                <Label className="text-small text-muted-foreground">Location</Label>
+                <Label className="text-small text-muted-foreground">{t("settings.location")}</Label>
                 <div className="relative mt-2">
                   <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 icon-sm text-muted-foreground" />
                   <Input
                     value={settings.location}
                     onChange={(e) => updateTopLevel("location", e.target.value)}
                     className="rounded-2xl border-2 pl-10"
-                    placeholder="Village, District, State"
+                    placeholder={t("settings.placeholders.location")}
                   />
                 </div>
               </div>
 
               <div>
-                <Label className="text-small text-muted-foreground">Email Address</Label>
+                <Label className="text-small text-muted-foreground">{t("settings.email")}</Label>
                 <div className="relative mt-2">
                   <Input
                     type="email"
@@ -123,22 +139,21 @@ export function SettingsScreen({ userData, onBack }) {
                     placeholder="your@email.com"
                   />
                   <span
-                    className={`absolute right-3 top-1/2 -translate-y-1/2 text-xs px-2 py-1 rounded-full ${
-                      settings.emailVerified ? "bg-accent/20 text-accent-foreground" : "bg-muted text-muted-foreground"
-                    }`}
+                    className={`absolute right-3 top-1/2 -translate-y-1/2 text-xs px-2 py-1 rounded-full ${settings.emailVerified ? "bg-accent/20 text-accent-foreground" : "bg-muted text-muted-foreground"
+                      }`}
                   >
-                    {settings.emailVerified ? "Verified" : "Unverified"}
+                    {settings.emailVerified ? t("settings.verified") : t("settings.unverified")}
                   </span>
                 </div>
               </div>
 
               <div>
-                <Label className="text-small text-muted-foreground">Bio / Description</Label>
+                <Label className="text-small text-muted-foreground">{t("settings.bio")}</Label>
                 <textarea
                   value={settings.bio}
                   onChange={(e) => updateTopLevel("bio", e.target.value)}
                   className="mt-2 w-full p-3 rounded-2xl border-2 bg-background min-h-[100px] resize-none"
-                  placeholder="Tell the community about yourself..."
+                  placeholder={t("settings.placeholders.bio")}
                 />
               </div>
             </div>
@@ -147,20 +162,20 @@ export function SettingsScreen({ userData, onBack }) {
           <div className="bg-card border-[1.5px] border-border rounded-2xl p-6 space-y-4">
             <h3 className="text-h4 font-semibold flex items-center gap-2">
               <Lock className="icon-sm text-primary" />
-              Login & Security
+              {t("settings.loginSecurity")}
             </h3>
 
             <button className="w-full flex items-center justify-between p-4 hover:bg-muted rounded-2xl">
               <div className="flex items-center gap-3">
-                <span className="font-medium">Change Password</span>
+                <span className="font-medium">{t("settings.changePassword")}</span>
               </div>
             </button>
 
             <div className="flex items-center justify-between p-4 hover:bg-muted rounded-2xl">
               <div className="flex items-center gap-3">
                 <div>
-                  <div className="font-medium">Two-Factor Authentication</div>
-                  <div className="text-xs text-muted-foreground">Add extra security</div>
+                  <div className="font-medium">{t("settings.twoFactor")}</div>
+                  <div className="text-xs text-muted-foreground">{t("settings.twoFactorDesc")}</div>
                 </div>
               </div>
               <Switch />
@@ -172,17 +187,17 @@ export function SettingsScreen({ userData, onBack }) {
         <div className="space-y-4">
           <h2 className="text-h3 font-bold flex items-center gap-2">
             <Leaf className="icon-md text-primary" />
-            Application Preferences
+            {t("settings.appPreferences")}
           </h2>
 
           <div className="bg-card border-[1.5px] border-border rounded-2xl p-6 space-y-4">
             <h3 className="text-h4 font-semibold flex items-center gap-2">
               <Globe className="icon-sm text-primary" />
-              Display & Language
+              {t("settings.displayLanguage")}
             </h3>
 
             <div>
-              <Label className="text-small text-muted-foreground mb-2">Language</Label>
+              <Label className="text-small text-muted-foreground mb-2">{t("settings.language")}</Label>
               <select
                 value={settings.app.language}
                 onChange={(e) => updateSetting("app", "language", e.target.value)}
@@ -190,7 +205,7 @@ export function SettingsScreen({ userData, onBack }) {
               >
                 <option value="english">English</option>
                 <option value="hindi">Hindi</option>
-                <option value="Malayalam">Malayalan</option>
+                <option value="Malayalam">Malayalam</option>
                 <option value="tamil">Tamil</option>
                 <option value="telugu">Telugu</option>
                 <option value="marathi">Marathi</option>
@@ -198,19 +213,18 @@ export function SettingsScreen({ userData, onBack }) {
             </div>
 
             <div>
-              <Label className="text-small text-muted-foreground mb-2">Theme Preference</Label>
+              <Label className="text-small text-muted-foreground mb-2">{t("settings.theme")}</Label>
               <div className="flex gap-2 mt-2">
                 {[
-                  { value: "light", icon: Sun, label: "Light" },
-                  { value: "dark", icon: Moon, label: "Dark" },
-                  { value: "auto", icon: Monitor, label: "Auto" },
+                  { value: "light", icon: Sun, label: t("settings.themes.light") },
+                  { value: "dark", icon: Moon, label: t("settings.themes.dark") },
+                  { value: "auto", icon: Monitor, label: t("settings.themes.auto") },
                 ].map((option) => (
                   <button
                     key={option.value}
                     onClick={() => updateSetting("app", "theme", option.value)}
-                    className={`flex-1 flex flex-col items-center gap-2 py-3 px-4 rounded-2xl border-2 font-medium ${
-                      settings.app.theme === option.value ? "bg-primary text-primary-foreground border-primary" : "border-border"
-                    }`}
+                    className={`flex-1 flex flex-col items-center gap-2 py-3 px-4 rounded-2xl border-2 font-medium ${settings.app.theme === option.value ? "bg-primary text-primary-foreground border-primary" : "border-border"
+                      }`}
                   >
                     <option.icon className="icon-md" />
                     {option.label}
@@ -220,17 +234,16 @@ export function SettingsScreen({ userData, onBack }) {
             </div>
 
             <div>
-              <Label className="text-small text-muted-foreground mb-2">Font Size</Label>
+              <Label className="text-small text-muted-foreground mb-2">{t("settings.fontSize")}</Label>
               <div className="flex gap-2 mt-2">
                 {["small", "medium", "large"].map((size) => (
                   <button
                     key={size}
                     onClick={() => updateSetting("app", "fontSize", size)}
-                    className={`flex-1 py-3 px-4 rounded-2xl border-2 font-medium capitalize ${
-                      settings.app.fontSize === size ? "bg-primary text-primary-foreground border-primary" : "border-border"
-                    }`}
+                    className={`flex-1 py-3 px-4 rounded-2xl border-2 font-medium capitalize ${settings.app.fontSize === size ? "bg-primary text-primary-foreground border-primary" : "border-border"
+                      }`}
                   >
-                    {size}
+                    {t(`settings.fontSizes.${size}`)}
                   </button>
                 ))}
               </div>
@@ -248,19 +261,19 @@ export function SettingsScreen({ userData, onBack }) {
                 <Trash2 className="icon-md text-destructive" />
               </div>
               <div>
-                <h3 className="text-h4 font-bold">Delete Account?</h3>
-                <p className="text-small text-muted-foreground">This action cannot be undone</p>
+                <h3 className="text-h4 font-bold">{t("settings.deleteAccount.title")}</h3>
+                <p className="text-small text-muted-foreground">{t("settings.deleteAccount.subtitle")}</p>
               </div>
             </div>
 
-            <p className="text-small">All your data will be permanently deleted. Are you sure you want to proceed?</p>
+            <p className="text-small">{t("settings.deleteAccount.confirm")}</p>
 
             <div className="flex gap-3">
               <Button onClick={() => setShowDeleteConfirm(false)} variant="outline" className="flex-1 rounded-2xl">
-                Cancel
+                {t("common.cancel")}
               </Button>
               <Button onClick={handleDeleteAccount} className="flex-1 bg-destructive text-destructive-foreground rounded-2xl">
-                Delete Account
+                {t("settings.deleteAccount.button")}
               </Button>
             </div>
           </div>

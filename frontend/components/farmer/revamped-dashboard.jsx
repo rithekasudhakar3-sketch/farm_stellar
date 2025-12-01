@@ -5,8 +5,10 @@ import { UserProgressCard } from "./user-progress-card"
 import { LeaderboardCard } from "./leaderboard-card"
 import { WeatherAlertCard } from "./weather-alert-card"
 import { OngoingQuestsCard } from "./ongoing-quests-card"
+import { useTranslation } from "react-i18next"
 
 export function RevampedDashboard({ userData, onStartQuest, onNavigate }) {
+    const { t } = useTranslation()
     const handleResumeQuest = (questId) => {
         if (onStartQuest) {
             onStartQuest(questId)
@@ -26,10 +28,10 @@ export function RevampedDashboard({ userData, onStartQuest, onNavigate }) {
                             <div className="flex items-center gap-2">
                                 <Sun className="w-4 h-4 text-accent" />
                                 <h1 className="text-lg sm:text-xl font-bold text-foreground">
-                                    Good Morning, {userData?.name || "Farmer"}!
+                                    {t("dashboard.goodMorning")}, {userData?.name || "Farmer"}!
                                 </h1>
                             </div>
-                            <p className="text-xs text-muted-foreground">Ready to grow your knowledge today? 🌱</p>
+                            <p className="text-xs text-muted-foreground">{t("dashboard.greetingSubtitle")} 🌱</p>
                         </div>
                     </div>
                 </div>
@@ -52,7 +54,7 @@ export function RevampedDashboard({ userData, onStartQuest, onNavigate }) {
                         <div className="sticky top-24 space-y-6">
                             {/* Ongoing Quests Section */}
                             <OngoingQuestsCard onResumeQuest={handleResumeQuest} />
-                            
+
                             {/* Leaderboard - positioned below ongoing quests */}
                             <LeaderboardCard />
                         </div>
@@ -61,15 +63,15 @@ export function RevampedDashboard({ userData, onStartQuest, onNavigate }) {
 
                 {/* Quick Stats Section */}
                 <div className="mt-8 bg-card border-2 border-border rounded-3xl p-6 shadow-lg">
-                    <h3 className="text-xl font-bold text-foreground mb-6">Your Achievements</h3>
+                    <h3 className="text-xl font-bold text-foreground mb-6">{t("dashboard.yourAchievements")}</h3>
                     <div className="grid grid-cols-2 gap-4">
                         <div className="text-center p-4 bg-gradient-to-br from-primary/10 to-transparent rounded-2xl border border-primary/20 hover:scale-105 transition-transform">
                             <p className="text-3xl font-bold text-primary mb-1">{userData?.questsProgress?.filter(q => q.status === "completed")?.length || 0}</p>
-                            <p className="text-xs text-muted-foreground">Quests Completed</p>
+                            <p className="text-xs text-muted-foreground">{t("dashboard.stats.questsCompleted")}</p>
                         </div>
                         <div className="text-center p-4 bg-gradient-to-br from-accent/10 to-transparent rounded-2xl border border-accent/20 hover:scale-105 transition-transform">
                             <p className="text-3xl font-bold text-accent mb-1">{userData?.badges?.length || 0}</p>
-                            <p className="text-xs text-muted-foreground">Badges Earned</p>
+                            <p className="text-xs text-muted-foreground">{t("dashboard.stats.badgesEarned")}</p>
                         </div>
                     </div>
                 </div>
