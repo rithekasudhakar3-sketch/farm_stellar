@@ -4,10 +4,8 @@ import { ChevronLeft, Camera, MessageSquare, CheckCircle2, X, MapPin } from "luc
 import { useState, useRef } from "react"
 
 export function SubmitProofScreen({ quest, onSubmit, onBack }) {
-  const [checkedItems, setCheckedItems] = useState([false, false, false])
   const [notes, setNotes] = useState("")
   const [uploadedImage, setUploadedImage] = useState(null)
-  const [isUploading, setIsUploading] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [location, setLocation] = useState(null)
   const [showCamera, setShowCamera] = useState(false)
@@ -15,13 +13,32 @@ export function SubmitProofScreen({ quest, onSubmit, onBack }) {
   const streamRef = useRef(null)
   const showPhotoOption = quest.id !== "crops"
 
-  const toggleCheck = (index) => {
-    const newChecked = [...checkedItems]
-    newChecked[index] = !newChecked[index]
-    setCheckedItems(newChecked)
+  const canSubmit = uploadedImage !== null
+
+  const startCamera = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: "environment" }, // Use back camera on mobile
+        audio: false
+      })
+      streamRef.current = stream
+      if (videoRef.current) {
+        videoRef.current.srcObject = stream
+      }
+      setIsCameraActive(true)
+    } catch (error) {
+      console.error("Error accessing camera:", error)
+      alert("Unable to access camera. Please check permissions.")
+    }
   }
 
-  const canSubmit = quest.id === "crops" ? checkedItems.some(Boolean) : checkedItems.every(Boolean)
+  const stopCamera = () => {
+    if (streamRef.current) {
+      streamRef.current.getTracks().forEach(track => track.stop())
+      streamRef.current = null
+    }
+    setIsCameraActive(false)
+  }
 
   const startCamera = async () => {
     try {
@@ -321,29 +338,6 @@ export function SubmitProofScreen({ quest, onSubmit, onBack }) {
           </div>
         )}
 
-        {/* Checklist */}
-        <div className="space-y-3">
-          <h3 className="font-bold text-foreground text-sm">Completion Checklist</h3>
-          <div className="space-y-2">
-            {["All steps completed", "Instructions followed correctly", "Quality of work is satisfactory"].map(
-              (item, idx) => (
-                <label
-                  key={idx}
-                  className="flex items-center gap-3 p-3 rounded-lg hover:bg-muted cursor-pointer transition-colors"
-                >
-                  <input
-                    type="checkbox"
-                    checked={checkedItems[idx]}
-                    onChange={() => toggleCheck(idx)}
-                    className="w-5 h-5 accent-primary rounded"
-                  />
-                  <span className="text-sm text-foreground">{item}</span>
-                </label>
-              ),
-            )}
-          </div>
-        </div>
-
         {/* Notes */}
         <div className="space-y-3">
           <h3 className="font-bold text-foreground text-sm">Additional Notes</h3>
@@ -365,11 +359,10 @@ export function SubmitProofScreen({ quest, onSubmit, onBack }) {
         <button
           onClick={handleSubmit}
           disabled={!canSubmit || isSubmitting}
-          className={`w-full font-bold py-4 rounded-2xl transition-all shadow-lg ${
-            canSubmit && !isSubmitting
-              ? "bg-primary text-primary-foreground hover:bg-primary/90 hover:shadow-primary/30 active:scale-95"
-              : "bg-muted text-muted-foreground cursor-not-allowed"
-          }`}
+          className={`w-full font-bold py-4 rounded-2xl transition-all shadow-lg ${canSubmit && !isSubmitting
+            ? "bg-primary text-primary-foreground hover:bg-primary/90 hover:shadow-primary/30 active:scale-95"
+            : "bg-muted text-muted-foreground cursor-not-allowed"
+            }`}
         >
           {isSubmitting ? (
             <span className="flex items-center justify-center gap-2">
