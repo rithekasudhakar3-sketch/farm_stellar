@@ -279,7 +279,7 @@ exports.approveSubmission = async (req, res) => {
           'questsProgress.$[elem].status': 'completed'
         },
         $inc: {
-          xpPoints: xpReward
+          xp: xpReward
         },
         $addToSet: {
           completedQuests: submission.questId
@@ -293,7 +293,7 @@ exports.approveSubmission = async (req, res) => {
 
     // Calculate new level based on XP
     if (user) {
-      const newLevel = Math.floor(user.xpPoints / 100) + 1;
+      const newLevel = Math.floor(user.xp / 100) + 1;
       if (newLevel !== user.xpLevel) {
         await User.findByIdAndUpdate(submission.userId, { xpLevel: newLevel });
       }
