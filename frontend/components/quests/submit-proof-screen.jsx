@@ -1,49 +1,33 @@
 "use client"
 
 import { ChevronLeft, Camera, MessageSquare, CheckCircle2, X, MapPin } from "lucide-react"
-import { useState, useRef } from "react"
+import { useState, useRef, useEffect } from "react"
 
 export function SubmitProofScreen({ quest, onSubmit, onBack }) {
   const [notes, setNotes] = useState("")
-  const [uploadedImage, setUploadedImage] = useState(null)
+  const [uploadedImage, setUploadedImage] = useState(null) // { url, key, preview, location? }
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [isUploading, setIsUploading] = useState(false)
   const [location, setLocation] = useState(null)
-  const [showCamera, setShowCamera] = useState(false)
+  const [isCameraActive, setIsCameraActive] = useState(false)
+
   const videoRef = useRef(null)
   const streamRef = useRef(null)
-  const showPhotoOption = quest.id !== "crops"
+  const showPhotoOption = quest?.id !== "crops"
 
   const canSubmit = uploadedImage !== null
 
-  const startCamera = async () => {
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode: "environment" }, // Use back camera on mobile
-        audio: false
-      })
-      streamRef.current = stream
-      if (videoRef.current) {
-        videoRef.current.srcObject = stream
-      }
-      setIsCameraActive(true)
-    } catch (error) {
-      console.error("Error accessing camera:", error)
-      alert("Unable to access camera. Please check permissions.")
+  useEffect(() => {
+    // cleanup on unmount
+    return () => {
+      stopCamera()
     }
-  }
-
-  const stopCamera = () => {
-    if (streamRef.current) {
-      streamRef.current.getTracks().forEach(track => track.stop())
-      streamRef.current = null
-    }
-    setIsCameraActive(false)
-  }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const startCamera = async () => {
     try {
-      setShowCamera(true)
-      // Get user's location
+      // attempt to get location (best-effort)
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
           (position) => {
@@ -54,68 +38,69 @@ export function SubmitProofScreen({ quest, onSubmit, onBack }) {
             })
           },
           (error) => {
-            console.error("Location error:", error)
-            alert("Unable to get location. Please enable location services.")
-          }
+            console.warn("Location not available:", error)
+            // don't block camera if location fails
+          },
+          { maximumAge: 60_000, timeout: 5000 }
         )
       }
 
-      // Request camera access
       const stream = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode: "environment" }, // Use back camera on mobile
+        video: { facingMode: "environment" },
         audio: false
       })
-      
+
+      streamRef.current = stream
       if (videoRef.current) {
         videoRef.current.srcObject = stream
-        streamRef.current = stream
       }
+      setIsCameraActive(true)
     } catch (error) {
-      console.error("Camera error:", error)
-      alert("Unable to access camera. Please check permissions.")
-      setShowCamera(false)
+      console.error("Error accessing camera:", error)
+      alert("Unable to access camera. Please check camera permissions.")
+      setIsCameraActive(false)
     }
   }
 
   const stopCamera = () => {
     if (streamRef.current) {
-      streamRef.current.getTracks().forEach(track => track.stop())
+      streamRef.current.getTracks().forEach((track) => track.stop())
       streamRef.current = null
     }
-    setShowCamera(false)
+    setIsCameraActive(false)
   }
 
   const capturePhoto = async () => {
     if (!videoRef.current) return
-    
     setIsUploading(true)
-    
+
     try {
-      // Create canvas to capture photo
+      const video = videoRef.current
       const canvas = document.createElement("canvas")
-      canvas.width = videoRef.current.videoWidth
-      canvas.height = videoRef.current.videoHeight
+      canvas.width = video.videoWidth || 1280
+      canvas.height = video.videoHeight || 720
       const ctx = canvas.getContext("2d")
-      ctx.drawImage(videoRef.current, 0, 0)
-      
-      // Convert to blob
-      const blob = await new Promise(resolve => canvas.toBlob(resolve, "image/jpeg", 0.9))
-      
-      // Create preview
+      ctx.drawImage(video, 0, 0, canvas.width, canvas.height)
+
+      // create blob
+      const blob = await new Promise((resolve) => canvas.toBlob(resolve, "image/jpeg", 0.9))
+      if (!blob) throw new Error("Failed to capture image")
+
+      // preview data URL
       const preview = canvas.toDataURL("image/jpeg", 0.9)
-      
-      // Upload to backend
-      const token = localStorage.getItem("token")
-      const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:4000"
-      
+
+      // read blob to base64
       const reader = new FileReader()
       reader.onloadend = async () => {
         try {
+          const token = localStorage.getItem("token")
+          const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:4000"
+
           const uploadRes = await fetch(`${backendUrl}/api/uploads/proxy`, {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
-              "Authorization": `Bearer ${token}`
+              "Authorization": token ? `Bearer ${token}` : ""
             },
             body: JSON.stringify({
               mimeType: "image/jpeg",
@@ -123,25 +108,26 @@ export function SubmitProofScreen({ quest, onSubmit, onBack }) {
               fileData: reader.result
             })
           })
-          
+
           if (!uploadRes.ok) {
-            throw new Error("Failed to upload photo")
+            const errText = await uploadRes.text().catch(() => "")
+            throw new Error(errText || "Failed to upload photo")
           }
-          
-          const { key, url } = await uploadRes.json()
-          
+
+          const { key, url } = await uploadRes.json().catch(() => ({}))
+
           setUploadedImage({
-            url: url,
-            key: key,
-            preview: preview,
-            location: location
+            url: url || preview,
+            key: key || null,
+            preview,
+            location
           })
-          setIsUploading(false)
-          stopCamera()
         } catch (error) {
           console.error("Upload error:", error)
           alert("Failed to upload photo. Please try again.")
+        } finally {
           setIsUploading(false)
+          stopCamera()
         }
       }
       reader.readAsDataURL(blob)
@@ -153,84 +139,86 @@ export function SubmitProofScreen({ quest, onSubmit, onBack }) {
   }
 
   const handleImageUpload = async (e) => {
-    const file = e.target.files[0]
-    if (file) {
-      setIsUploading(true)
-      
-      try {
-        const token = localStorage.getItem("token")
-        const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:4000"
-        
-        // Read file as base64 for preview
-        const reader = new FileReader()
-        reader.onloadend = async () => {
-          try {
-            // Upload through backend proxy (bypasses CORS)
-            const uploadRes = await fetch(`${backendUrl}/api/uploads/proxy`, {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${token}`
-              },
-              body: JSON.stringify({
-                mimeType: file.type,
-                sizeBytes: file.size,
-                fileData: reader.result
-              })
+    const file = e?.target?.files?.[0]
+    if (!file) return
+
+    setIsUploading(true)
+    try {
+      const token = localStorage.getItem("token")
+      const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:4000"
+
+      const reader = new FileReader()
+      reader.onloadend = async () => {
+        try {
+          const uploadRes = await fetch(`${backendUrl}/api/uploads/proxy`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": token ? `Bearer ${token}` : ""
+            },
+            body: JSON.stringify({
+              mimeType: file.type,
+              sizeBytes: file.size,
+              fileData: reader.result
             })
-            
-            if (!uploadRes.ok) {
-              throw new Error("Failed to upload file")
-            }
-            
-            const { key, url } = await uploadRes.json()
-            
-            setUploadedImage({
-              url: url,
-              key: key,
-              preview: reader.result
-            })
-            setIsUploading(false)
-          } catch (error) {
-            console.error("Upload error:", error)
-            alert("Failed to upload image. Please try again.")
-            setIsUploading(false)
+          })
+
+          if (!uploadRes.ok) {
+            const errText = await uploadRes.text().catch(() => "")
+            throw new Error(errText || "Failed to upload file")
           }
+
+          const { key, url } = await uploadRes.json().catch(() => ({}))
+
+          setUploadedImage({
+            url: url || reader.result,
+            key: key || null,
+            preview: reader.result
+          })
+        } catch (error) {
+          console.error("Upload error:", error)
+          alert("Failed to upload image. Please try again.")
+        } finally {
+          setIsUploading(false)
         }
-        reader.readAsDataURL(file)
-      } catch (error) {
-        console.error("Upload error:", error)
-        alert("Failed to upload image. Please try again.")
-        setIsUploading(false)
       }
+      reader.readAsDataURL(file)
+    } catch (error) {
+      console.error("Upload error:", error)
+      alert("Failed to upload image. Please try again.")
+      setIsUploading(false)
     }
   }
 
   const handleSubmit = async () => {
+    if (!onSubmit) return
     setIsSubmitting(true)
-    
+
     try {
       const token = localStorage.getItem("token")
       const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:4000"
-      
-      // Create submission for admin review
+
       const response = await fetch(`${backendUrl}/api/submissions`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`
+          "Authorization": token ? `Bearer ${token}` : ""
         },
         body: JSON.stringify({
-          questId: quest.id,
+          questId: quest?.id,
           proofType: uploadedImage ? "photo" : "text",
           proofUrl: uploadedImage?.url || "",
           description: notes || "Quest completed as per instructions",
           status: "pending",
-          media: uploadedImage ? [{
-            key: uploadedImage.key,
-            mimeType: "image/jpeg",
-            sizeBytes: 0
-          }] : []
+          media: uploadedImage
+            ? [
+                {
+                  key: uploadedImage.key,
+                  mimeType: "image/jpeg",
+                  sizeBytes: uploadedImage.sizeBytes || 0
+                }
+              ]
+            : []
         })
       })
 
@@ -239,6 +227,7 @@ export function SubmitProofScreen({ quest, onSubmit, onBack }) {
         throw new Error(errorData.message || "Failed to submit proof")
       }
 
+      // small delay for UX
       await new Promise((resolve) => setTimeout(resolve, 500))
       onSubmit()
     } catch (error) {
@@ -256,7 +245,7 @@ export function SubmitProofScreen({ quest, onSubmit, onBack }) {
           <ChevronLeft className="w-5 h-5" />
         </button>
         <h1 className="text-lg font-bold">Submit Proof</h1>
-        <div className="w-9"></div>
+        <div className="w-9" />
       </div>
 
       {/* Content */}
@@ -270,7 +259,9 @@ export function SubmitProofScreen({ quest, onSubmit, onBack }) {
         {showPhotoOption && (
           <div className="space-y-3">
             <h3 className="font-bold text-foreground text-sm">Upload Media</h3>
-            {showCamera ? (
+
+            {/* Camera View */}
+            {isCameraActive ? (
               <div className="relative">
                 <video
                   ref={videoRef}
@@ -324,16 +315,30 @@ export function SubmitProofScreen({ quest, onSubmit, onBack }) {
                 )}
               </div>
             ) : (
-              <button
-                onClick={startCamera}
-                className="block w-full cursor-pointer"
-              >
-                <div className="border-2 border-dashed border-border rounded-xl p-6 hover:border-primary hover:bg-primary/5 transition-all text-center">
-                  <Camera className="w-10 h-10 text-primary mx-auto mb-2" />
-                  <p className="text-sm font-medium text-foreground">Take Live Photo 📸</p>
-                  <p className="text-xs text-muted-foreground mt-1">With GPS Location</p>
-                </div>
-              </button>
+              <div className="space-y-2">
+                <button
+                  onClick={startCamera}
+                  className="block w-full cursor-pointer"
+                >
+                  <div className="border-2 border-dashed border-border rounded-xl p-6 hover:border-primary hover:bg-primary/5 transition-all text-center">
+                    <Camera className="w-10 h-10 text-primary mx-auto mb-2" />
+                    <p className="text-sm font-medium text-foreground">Take Live Photo 📸</p>
+                    <p className="text-xs text-muted-foreground mt-1">With GPS Location</p>
+                  </div>
+                </button>
+
+                <label className="block w-full">
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImageUpload}
+                    className="hidden"
+                  />
+                  <div className="mt-2 border border-border rounded-xl p-4 text-center cursor-pointer">
+                    <p className="text-sm text-muted-foreground">Or upload an existing photo</p>
+                  </div>
+                </label>
+              </div>
             )}
           </div>
         )}
