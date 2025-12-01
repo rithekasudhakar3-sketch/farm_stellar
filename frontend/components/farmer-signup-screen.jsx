@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import { ChevronLeft, CreditCard, MapPin, CloudRain, Sprout } from "lucide-react"
+import { useRouter } from "next/navigation"
 
 export function FarmerSignupScreen({ onSuccess, onBack }) {
   const [step, setStep] = useState("aadhaar")
@@ -19,6 +20,8 @@ export function FarmerSignupScreen({ onSuccess, onBack }) {
     pesticide: "",
   })
   const [location, setLocation] = useState(null)
+  const [password, setPassword] = useState("")
+  const router = useRouter()
 
   const handleFetchDetails = () => {
     if (aadhaar.length === 12) {
@@ -47,6 +50,37 @@ export function FarmerSignupScreen({ onSuccess, onBack }) {
       humidity: "65%",
       climate: "Tropical Savanna",
     })
+  }
+
+  const handleSignup = async (e) => {
+    e.preventDefault()
+    const signupData = { name, email, password, location: "Default Location" }
+    const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:4000"
+
+    console.log("Attempting to sign up with data:", signupData)
+    console.log("Sending request to:", `${backendUrl}/api/auth/signup`)
+
+    try {
+      const res = await fetch(`${backendUrl}/api/auth/signup`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(signupData),
+      })
+
+      if (res.ok) {
+        const data = await res.json()
+        localStorage.setItem("token", data.token)
+        router.push("/dashboard")
+      } else {
+        const errorData = await res.json()
+        console.error("Signup failed:", errorData.message)
+        // Here you can add logic to show an error message to the user
+      }
+    } catch (error) {
+      console.error("An error occurred during signup:", error)
+    }
   }
 
   return (

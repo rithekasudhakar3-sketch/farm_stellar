@@ -1,15 +1,18 @@
 "use client"
 
 import { useState } from "react"
-import { Leaf, Sprout, Droplets, Sun, Wheat, TreePine, Bug, Flower2, Search, Filter, ArrowRight, Star, Trophy, ChevronDown } from "lucide-react"
+import { Leaf, Sprout, Droplets, Sun, Wheat, TreePine, Bug, Flower2, Search, Filter, ArrowRight, Star, Trophy, ChevronDown, CheckCircle, Clock } from "lucide-react"
 
-export function RevampedQuestsListScreen({ onStartQuest, quests }) {
+export function RevampedQuestsListScreen({ onStartQuest, quests, userData }) {
     const [searchQuery, setSearchQuery] = useState("")
     const [selectedCrop, setSelectedCrop] = useState("All")
     const [selectedDifficulty, setSelectedDifficulty] = useState("All")
 
     const questList = Object.values(quests)
     const totalXP = questList.reduce((sum, quest) => sum + quest.xpReward, 0)
+    const userLevel = userData?.xpLevel || 0
+    const completedCount = userData?.completedQuests?.length || 0
+    const completionRate = questList.length > 0 ? Math.round((completedCount / questList.length) * 100) : 0
 
     const cropFilters = ["All", "Cotton", "Coconut", "Wheat", "General"]
     const difficultyFilters = ["All", "Beginner", "Pro"]
@@ -58,12 +61,12 @@ export function RevampedQuestsListScreen({ onStartQuest, quests }) {
                     </div>
 
                     {/* Stats Overview */}
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto">
+                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 max-w-6xl mx-auto">
                         <div className="bg-card/80 backdrop-blur-sm border border-border rounded-2xl p-4 shadow-sm hover:shadow-md transition-all text-center group">
                             <div className="w-10 h-10 mx-auto bg-primary/10 rounded-full flex items-center justify-center mb-2 group-hover:scale-110 transition-transform">
                                 <Trophy className="w-5 h-5 text-primary" />
                             </div>
-                            <p className="text-2xl font-bold text-foreground">1</p>
+                            <p className="text-2xl font-bold text-foreground">{userLevel}</p>
                             <p className="text-xs text-muted-foreground">Current Level</p>
                         </div>
                         <div className="bg-card/80 backdrop-blur-sm border border-border rounded-2xl p-4 shadow-sm hover:shadow-md transition-all text-center group">
@@ -81,10 +84,24 @@ export function RevampedQuestsListScreen({ onStartQuest, quests }) {
                             <p className="text-xs text-muted-foreground">Total Quests</p>
                         </div>
                         <div className="bg-card/80 backdrop-blur-sm border border-border rounded-2xl p-4 shadow-sm hover:shadow-md transition-all text-center group">
+                            <div className="w-10 h-10 mx-auto bg-emerald-100 rounded-full flex items-center justify-center mb-2 group-hover:scale-110 transition-transform">
+                                <CheckCircle className="w-5 h-5 text-emerald-600" />
+                            </div>
+                            <p className="text-2xl font-bold text-foreground">{completedCount}</p>
+                            <p className="text-xs text-muted-foreground">Completed Quests</p>
+                        </div>
+                        <div className="bg-card/80 backdrop-blur-sm border border-border rounded-2xl p-4 shadow-sm hover:shadow-md transition-all text-center group">
+                            <div className="w-10 h-10 mx-auto bg-amber-100 rounded-full flex items-center justify-center mb-2 group-hover:scale-110 transition-transform">
+                                <Clock className="w-5 h-5 text-amber-600" />
+                            </div>
+                            <p className="text-2xl font-bold text-foreground">{questList.length - completedCount}</p>
+                            <p className="text-xs text-muted-foreground">Remaining Quests</p>
+                        </div>
+                        <div className="bg-card/80 backdrop-blur-sm border border-border rounded-2xl p-4 shadow-sm hover:shadow-md transition-all text-center group">
                             <div className="w-10 h-10 mx-auto bg-orange-100 rounded-full flex items-center justify-center mb-2 group-hover:scale-110 transition-transform">
                                 <Wheat className="w-5 h-5 text-orange-600" />
                             </div>
-                            <p className="text-2xl font-bold text-foreground">0%</p>
+                            <p className="text-2xl font-bold text-foreground">{completionRate}%</p>
                             <p className="text-xs text-muted-foreground">Completion Rate</p>
                         </div>
                     </div>
@@ -161,11 +178,20 @@ export function RevampedQuestsListScreen({ onStartQuest, quests }) {
                             }
                             const IconComponent = icons[quest.id] || Leaf
 
+                            // Check if quest is completed
+                            const isCompleted = userData?.questsProgress?.some(
+                                q => q.questId === quest.id && q.status === "completed"
+                            ) || false
+
                             return (
                                 <div
                                     key={quest.id}
                                     onClick={() => onStartQuest(quest.id)}
-                                    className="group bg-card rounded-3xl p-6 border border-border shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 cursor-pointer relative overflow-hidden"
+                                    className={`group bg-card rounded-3xl p-6 border shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 cursor-pointer relative overflow-hidden ${
+                                        isCompleted 
+                                            ? 'border-emerald-500/50 bg-emerald-50/5' 
+                                            : 'border-border'
+                                    }`}
                                 >
                                     {/* Decorative background gradient */}
                                     <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-primary/5 to-accent/5 rounded-bl-full -mr-8 -mt-8 transition-transform group-hover:scale-150 duration-500"></div>
@@ -175,12 +201,20 @@ export function RevampedQuestsListScreen({ onStartQuest, quests }) {
                                             <div className="p-3 bg-gradient-to-br from-primary/10 to-primary/5 rounded-2xl group-hover:from-primary/20 group-hover:to-primary/10 transition-colors">
                                                 <IconComponent className="w-8 h-8 text-primary" />
                                             </div>
-                                            <span className={`px-3 py-1 rounded-full text-xs font-bold border ${quest.difficulty === 'Easy' || quest.difficulty === 'Beginner' ? 'bg-green-50 text-green-700 border-green-200' :
-                                                quest.difficulty === 'Medium' ? 'bg-yellow-50 text-yellow-700 border-yellow-200' :
-                                                    'bg-red-50 text-red-700 border-red-200'
-                                                }`}>
-                                                {quest.difficulty}
-                                            </span>
+                                            <div className="flex flex-col items-end gap-2">
+                                                <span className={`px-3 py-1 rounded-full text-xs font-bold border ${quest.difficulty === 'Easy' || quest.difficulty === 'Beginner' ? 'bg-green-50 text-green-700 border-green-200' :
+                                                    quest.difficulty === 'Medium' ? 'bg-yellow-50 text-yellow-700 border-yellow-200' :
+                                                        'bg-red-50 text-red-700 border-red-200'
+                                                    }`}>
+                                                    {quest.difficulty}
+                                                </span>
+                                                {isCompleted && (
+                                                    <span className="bg-emerald-500 text-white px-3 py-1 rounded-full flex items-center gap-1 text-xs font-bold shadow-md">
+                                                        <CheckCircle className="w-3 h-3" />
+                                                        Completed
+                                                    </span>
+                                                )}
+                                            </div>
                                         </div>
 
                                         <h3 className="font-bold text-xl text-foreground mb-2 group-hover:text-primary transition-colors">

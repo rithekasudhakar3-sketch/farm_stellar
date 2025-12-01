@@ -11,12 +11,39 @@ export function AdminPasskeyLoginScreen({ onSuccess, onBack }) {
   const [passkey, setPasskey] = useState("")
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [showPasskey, setShowPasskey] = useState(false)
+  const [error, setError] = useState("")
 
   const handleSubmit = async (e) => {
     e.preventDefault()
     setIsSubmitting(true)
-    await new Promise((resolve) => setTimeout(resolve, 1500))
-    onSuccess()
+    setError("")
+
+    try {
+      const response = await fetch('http://localhost:4000/api/admin/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, passkey }),
+      })
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        throw new Error(data.message || 'Login failed')
+      }
+
+      // Store admin token and data
+      localStorage.setItem('farmquest_admin_token', data.token)
+      localStorage.setItem('farmquest_admin', JSON.stringify(data.admin))
+
+      onSuccess()
+    } catch (error) {
+      console.error('Admin login error:', error)
+      setError(error.message || 'Invalid credentials. Please try again.')
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   return (
@@ -38,6 +65,12 @@ export function AdminPasskeyLoginScreen({ onSuccess, onBack }) {
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
+          {error && (
+            <div className="p-3 rounded-lg bg-destructive/10 border border-destructive/20 text-destructive text-sm">
+              {error}
+            </div>
+          )}
+
           <div className="space-y-2">
             <Label htmlFor="email">Organization Email</Label>
             <Input

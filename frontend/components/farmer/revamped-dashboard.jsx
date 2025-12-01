@@ -44,15 +44,16 @@ export function RevampedDashboard({ userData, onStartQuest, onNavigate }) {
                         <UserProgressCard userData={userData} />
 
                         {/* Weather Alert Widget */}
-                        <WeatherAlertCard location={userData?.location || "Bangalore Rural, Karnataka"} />
-
-                        {/* Ongoing Quests Section */}
-                        <OngoingQuestsCard onResumeQuest={handleResumeQuest} />
+                        <WeatherAlertCard location={userData?.city || "Bangalore"} />
                     </div>
 
-                    {/* Right Column - Leaderboard (1/3 width on desktop) */}
+                    {/* Right Column - Ongoing Quests & Leaderboard (1/3 width on desktop) */}
                     <div className="lg:col-span-1">
-                        <div className="lg:sticky lg:top-24">
+                        <div className="sticky top-24 space-y-6">
+                            {/* Ongoing Quests Section */}
+                            <OngoingQuestsCard onResumeQuest={handleResumeQuest} />
+                            
+                            {/* Leaderboard - positioned below ongoing quests */}
                             <LeaderboardCard />
                         </div>
                     </div>
@@ -61,22 +62,14 @@ export function RevampedDashboard({ userData, onStartQuest, onNavigate }) {
                 {/* Quick Stats Section */}
                 <div className="mt-8 bg-card border-2 border-border rounded-3xl p-6 shadow-lg">
                     <h3 className="text-xl font-bold text-foreground mb-6">Your Achievements</h3>
-                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                    <div className="grid grid-cols-2 gap-4">
                         <div className="text-center p-4 bg-gradient-to-br from-primary/10 to-transparent rounded-2xl border border-primary/20 hover:scale-105 transition-transform">
-                            <p className="text-3xl font-bold text-primary mb-1">{userData?.completedQuests?.length || 3}</p>
+                            <p className="text-3xl font-bold text-primary mb-1">{userData?.questsProgress?.filter(q => q.status === "completed")?.length || 0}</p>
                             <p className="text-xs text-muted-foreground">Quests Completed</p>
                         </div>
                         <div className="text-center p-4 bg-gradient-to-br from-accent/10 to-transparent rounded-2xl border border-accent/20 hover:scale-105 transition-transform">
-                            <p className="text-3xl font-bold text-accent mb-1">{userData?.badges?.length || 2}</p>
+                            <p className="text-3xl font-bold text-accent mb-1">{userData?.badges?.length || 0}</p>
                             <p className="text-xs text-muted-foreground">Badges Earned</p>
-                        </div>
-                        <div className="text-center p-4 bg-gradient-to-br from-secondary/10 to-transparent rounded-2xl border border-secondary/20 hover:scale-105 transition-transform">
-                            <p className="text-3xl font-bold text-secondary mb-1">15</p>
-                            <p className="text-xs text-muted-foreground">Hours Learned</p>
-                        </div>
-                        <div className="text-center p-4 bg-gradient-to-br from-primary/10 to-transparent rounded-2xl border border-primary/20 hover:scale-105 transition-transform">
-                            <p className="text-3xl font-bold text-primary mb-1">92%</p>
-                            <p className="text-xs text-muted-foreground">Success Rate</p>
                         </div>
                     </div>
                 </div>

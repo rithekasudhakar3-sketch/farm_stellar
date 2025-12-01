@@ -6,7 +6,7 @@ import { Card } from "@/components/ui/card"
 import { Switch } from "@/components/ui/switch"
 import { PERMISSION_TYPES } from "@/constants/app"
 
-export function PermissionsScreen({ onSuccess, onSkip }) {
+export function PermissionsScreen({ onSuccess, onSkip, isLoading = false }) {
   const [permissions, setPermissions] = useState({
     [PERMISSION_TYPES.LOCATION]: false,
     [PERMISSION_TYPES.NOTIFICATIONS]: false,
@@ -60,7 +60,12 @@ export function PermissionsScreen({ onSuccess, onSkip }) {
           {permissionDetails.map((permission) => (
             <div
               key={permission.type}
-              className="flex items-start gap-4 p-4 rounded-lg bg-muted/30 border border-border"
+              className={`flex items-start gap-4 p-4 rounded-lg border-2 transition-all cursor-pointer ${
+                permissions[permission.type]
+                  ? 'bg-primary/5 border-primary/30'
+                  : 'bg-muted/30 border-border hover:border-primary/20'
+              }`}
+              onClick={() => setPermissions({ ...permissions, [permission.type]: !permissions[permission.type] })}
             >
               <span className="text-3xl">{permission.icon}</span>
               <div className="flex-1">
@@ -70,16 +75,17 @@ export function PermissionsScreen({ onSuccess, onSkip }) {
               <Switch
                 checked={permissions[permission.type]}
                 onCheckedChange={(checked) => setPermissions({ ...permissions, [permission.type]: checked })}
+                className="mt-1"
               />
             </div>
           ))}
         </div>
 
         <div className="space-y-3">
-          <Button onClick={handleContinue} className="w-full">
-            Continue with Selected Permissions
+          <Button onClick={handleContinue} className="w-full" disabled={isLoading}>
+            {isLoading ? "Creating Account..." : "Continue with Selected Permissions"}
           </Button>
-          <Button variant="ghost" onClick={onSkip} className="w-full">
+          <Button variant="ghost" onClick={onSkip} className="w-full" disabled={isLoading}>
             Skip for Now
           </Button>
         </div>

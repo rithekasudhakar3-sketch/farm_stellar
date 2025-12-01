@@ -1,31 +1,93 @@
 "use client"
 
 import { Leaf, ArrowRight, CheckCircle2 } from "lucide-react"
+import { useEffect, useState } from "react"
 
-export function OngoingQuestsCard({ quests = [], onResumeQuest }) {
-    // Mock ongoing quests data
-    const ongoingQuests = [
-        {
-            id: "soil",
-            name: "Soil Basics Quest",
-            progress: 60,
-            totalTasks: 5,
-            completedTasks: 3,
-            remainingTasks: 2,
-            icon: "🌱",
-            color: "primary",
-        },
-        {
-            id: "crops",
-            name: "Crop Selection Guide",
-            progress: 25,
-            totalTasks: 4,
-            completedTasks: 1,
-            remainingTasks: 3,
-            icon: "🌾",
-            color: "accent",
-        },
-    ]
+export function OngoingQuestsCard({ onResumeQuest }) {
+    const [ongoingQuests, setOngoingQuests] = useState([])
+    const [loading, setLoading] = useState(true)
+
+    useEffect(() => {
+        const fetchOngoingQuests = async () => {
+            try {
+                const token = localStorage.getItem("token")
+                if (!token) {
+                    setLoading(false)
+                    return
+                }
+
+                const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:4000"
+                
+                // Fetch user data to get questsProgress
+                const userRes = await fetch(`${backendUrl}/api/users/me`, {
+                    headers: { "Authorization": `Bearer ${token}` }
+                })
+
+                if (!userRes.ok) {
+                    throw new Error("Failed to fetch user data")
+                }
+
+                const user = await userRes.json()
+                
+                // Fetch all quests
+                const questsRes = await fetch(`${backendUrl}/api/quests`, {
+                    headers: { "Authorization": `Bearer ${token}` }
+                })
+                if (!questsRes.ok) {
+                    throw new Error("Failed to fetch quests")
+                }
+
+                const allQuests = await questsRes.json()
+                
+                // Filter for in-progress quests
+                const inProgressQuests = user.questsProgress
+                    ?.filter(qp => qp.status === "in-progress")
+                    .map(qp => {
+                        const quest = allQuests.find(q => q._id === qp.questId || q._id === qp.questId.toString())
+                        if (!quest) return null
+                        
+                        const totalTasks = quest.stages?.length || 5
+                        const completedTasks = qp.stageIndex || 0
+                        const progress = Math.round((completedTasks / totalTasks) * 100)
+                        
+                        return {
+                            id: quest._id || quest.slug,
+                            name: quest.title,
+                            progress: progress,
+                            totalTasks: totalTasks,
+                            completedTasks: completedTasks,
+                            remainingTasks: totalTasks - completedTasks,
+                            icon: "🌱",
+                            color: "primary"
+                        }
+                    })
+                    .filter(Boolean) || []
+
+                setOngoingQuests(inProgressQuests)
+                setLoading(false)
+            } catch (err) {
+                console.error("Error fetching ongoing quests:", err)
+                setOngoingQuests([])
+                setLoading(false)
+            }
+        }
+
+        fetchOngoingQuests()
+    }, [])
+
+    if (loading) {
+        return (
+            <div className="bg-card border-2 border-border rounded-3xl p-6 shadow-lg">
+                <div className="animate-pulse">
+                    <div className="h-6 bg-muted rounded w-1/2 mb-6"></div>
+                    <div className="space-y-4">
+                        <div className="h-24 bg-muted rounded-2xl"></div>
+                        <div className="h-24 bg-muted rounded-2xl"></div>
+                    </div>
+                </div>
+            </div>
+        )
+    }
 
     return (
         <div className="bg-card border-2 border-border rounded-3xl p-6 shadow-lg hover:shadow-xl transition-all">

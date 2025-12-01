@@ -4,9 +4,9 @@ import { useState, useEffect } from "react"
 import { Home, Leaf, Users, Gift, User, Settings, HelpCircle, LogOut, Menu, X, MapPin, Award } from "lucide-react"
 
 export function NavigationMenu({
-  userName = "Raj Kumar",
-  userLevel = 3,
-  userLocation = "Patiala, Punjab",
+  userName,
+  userLevel,
+  userLocation,
   onLogout,
   currentScreen,
   onNavigate,
@@ -94,10 +94,10 @@ export function NavigationMenu({
             <div className="bg-card rounded-2xl p-4 border border-border shadow-sm">
               <div className="flex items-center gap-4 mb-3">
                 <div className="center-flex w-14 h-14 bg-gradient-to-br from-primary to-secondary rounded-full text-primary-foreground font-bold text-xl">
-                  {userName.charAt(0)}
+                  {userName?.charAt(0) || "F"}
                 </div>
                 <div className="flex-1">
-                  <h3 className="text-h4 text-foreground leading-tight">{userName}</h3>
+                  <h3 className="text-h4 text-foreground leading-tight">{userName || "Farmer"}</h3>
                   <div className="flex items-center gap-1 mt-1">
                     <Award className="w-3 h-3 text-accent" />
                     <span className="text-small font-medium text-accent">Level {userLevel}</span>

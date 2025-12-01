@@ -1,53 +1,59 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Users, UserPlus, Activity, Target, Search, Eye, X, ChevronLeft } from "lucide-react"
 import { SCREENS } from "@/constants/app"
 
 export function AdminDashboardScreen({ onNavigate }) {
   const [selectedFarmer, setSelectedFarmer] = useState(null)
+  const [farmers, setFarmers] = useState([])
+  const [stats, setStats] = useState({
+    totalFarmers: 0,
+    newSignups: 0,
+    activeUsers: 0,
+    totalQuestsCompleted: 0
+  })
+  const [loading, setLoading] = useState(true)
+  const [searchQuery, setSearchQuery] = useState("")
 
-  const farmers = [
-    // {
-    //   id: 1,
-    //   name: "Rajesh Kumar",
-    //   experience: "Intermediate",
-    //   district: "Bangalore Rural",
-    //   crops: "Rice, Wheat",
-    //   status: "Active",
-    //   farmSize: "2.5 acres",
-    //   fertilizers: "Urea, DAP",
-    //   pesticides: "Chlorpyrifos",
-    //   questsCompleted: 12,
-    //   xp: 235,
-    // },
-    {
-      id: 2,
-      name: "Priya Sharma",
-      experience: "Beginner",
-      district: "Mysore",
-      crops: "Finger Millet",
-      status: "Active",
-      farmSize: "1.8 acres",
-      fertilizers: "Organic Compost",
-      pesticides: "None",
-      questsCompleted: 5,
-      xp: 85,
-    },
-    {
-      id: 3,
-      name: "Suresh Reddy",
-      experience: "Pro",
-      district: "Tumkur",
-      crops: "Paddy, Groundnut",
-      status: "Inactive",
-      farmSize: "4.2 acres",
-      fertilizers: "NPK Mix",
-      pesticides: "Cypermethrin",
-      questsCompleted: 24,
-      xp: 520,
-    },
-  ]
+  useEffect(() => {
+    fetchDashboardData()
+  }, [])
+
+  const fetchDashboardData = async () => {
+    try {
+      const token = localStorage.getItem('farmquest_admin_token')
+      const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:4000'
+
+      // Fetch stats
+      const statsRes = await fetch(`${backendUrl}/api/admin/stats`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      })
+      if (statsRes.ok) {
+        const statsData = await statsRes.json()
+        setStats(statsData)
+      }
+
+      // Fetch farmers
+      const farmersRes = await fetch(`${backendUrl}/api/admin/farmers?limit=10`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      })
+      if (farmersRes.ok) {
+        const farmersData = await farmersRes.json()
+        setFarmers(farmersData.farmers || [])
+      }
+
+      setLoading(false)
+    } catch (error) {
+      console.error('Error fetching dashboard data:', error)
+      setLoading(false)
+    }
+  }
+
+  const filteredFarmers = farmers.filter(farmer =>
+    farmer.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    farmer.email?.toLowerCase().includes(searchQuery.toLowerCase())
+  )
 
   return (
     <div className="min-h-screen bg-background">
@@ -116,7 +122,7 @@ export function AdminDashboardScreen({ onNavigate }) {
                 <Users className="w-6 h-6 text-primary" />
               </div>
             </div>
-            <p className="text-3xl font-bold text-foreground">1,248</p>
+            <p className="text-3xl font-bold text-foreground">{loading ? '...' : stats.totalFarmers}</p>
             <p className="text-sm text-muted-foreground mt-1">Total Farmers</p>
           </div>
 
@@ -126,7 +132,7 @@ export function AdminDashboardScreen({ onNavigate }) {
                 <UserPlus className="w-6 h-6 text-accent" />
               </div>
             </div>
-            <p className="text-3xl font-bold text-foreground">48</p>
+            <p className="text-3xl font-bold text-foreground">{loading ? '...' : stats.newSignups}</p>
             <p className="text-sm text-muted-foreground mt-1">New Signups (This Week)</p>
           </div>
 
@@ -136,7 +142,7 @@ export function AdminDashboardScreen({ onNavigate }) {
                 <Activity className="w-6 h-6 text-secondary" />
               </div>
             </div>
-            <p className="text-3xl font-bold text-foreground">892</p>
+            <p className="text-3xl font-bold text-foreground">{loading ? '...' : stats.activeUsers}</p>
             <p className="text-sm text-muted-foreground mt-1">Active Users</p>
           </div>
 
@@ -146,7 +152,7 @@ export function AdminDashboardScreen({ onNavigate }) {
                 <Target className="w-6 h-6 text-accent" />
               </div>
             </div>
-            <p className="text-3xl font-bold text-foreground">4,267</p>
+            <p className="text-3xl font-bold text-foreground">{loading ? '...' : stats.totalQuestsCompleted}</p>
             <p className="text-sm text-muted-foreground mt-1">Quests Completed</p>
           </div>
         </div>
@@ -161,6 +167,8 @@ export function AdminDashboardScreen({ onNavigate }) {
                 <input
                   type="text"
                   placeholder="Search farmers..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
                   className="pl-10 pr-4 py-2 rounded-xl border border-input bg-background text-sm focus:outline-none focus:ring-2 focus:ring-ring"
                 />
               </div>
@@ -173,50 +181,59 @@ export function AdminDashboardScreen({ onNavigate }) {
               <thead className="bg-muted/50">
                 <tr>
                   <th className="text-left text-xs font-medium text-muted-foreground uppercase p-4">Name</th>
-                  <th className="text-left text-xs font-medium text-muted-foreground uppercase p-4">Experience</th>
-                  <th className="text-left text-xs font-medium text-muted-foreground uppercase p-4">District</th>
-                  <th className="text-left text-xs font-medium text-muted-foreground uppercase p-4">Crops</th>
-                  <th className="text-left text-xs font-medium text-muted-foreground uppercase p-4">Status</th>
+                  <th className="text-left text-xs font-medium text-muted-foreground uppercase p-4">Level</th>
+                  <th className="text-left text-xs font-medium text-muted-foreground uppercase p-4">Location</th>
+                  <th className="text-left text-xs font-medium text-muted-foreground uppercase p-4">XP</th>
+                  <th className="text-left text-xs font-medium text-muted-foreground uppercase p-4">Quests</th>
                   <th className="text-left text-xs font-medium text-muted-foreground uppercase p-4">Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-border">
-                {farmers.map((farmer) => (
-                  <tr key={farmer.id} className="hover:bg-muted/30 transition-colors">
-                    <td className="p-4">
-                      <p className="font-medium text-foreground">{farmer.name}</p>
-                    </td>
-                    <td className="p-4">
-                      <span className="inline-block text-xs bg-accent/20 text-primary px-2 py-1 rounded-full font-medium">
-                        {farmer.experience}
-                      </span>
-                    </td>
-                    <td className="p-4">
-                      <p className="text-sm text-foreground">{farmer.district}</p>
-                    </td>
-                    <td className="p-4">
-                      <p className="text-sm text-foreground">{farmer.crops}</p>
-                    </td>
-                    <td className="p-4">
-                      <span
-                        className={`inline-block text-xs px-2 py-1 rounded-full font-medium ${
-                          farmer.status === "Active" ? "bg-accent/20 text-accent" : "bg-muted text-muted-foreground"
-                        }`}
-                      >
-                        {farmer.status}
-                      </span>
-                    </td>
-                    <td className="p-4">
-                      <button
-                        onClick={() => setSelectedFarmer(farmer)}
-                        className="text-primary hover:text-primary/80 font-medium text-sm flex items-center gap-1"
-                      >
-                        <Eye className="w-4 h-4" />
-                        View Details
-                      </button>
+                {loading ? (
+                  <tr>
+                    <td colSpan="6" className="p-8 text-center text-muted-foreground">
+                      Loading farmers...
                     </td>
                   </tr>
-                ))}
+                ) : filteredFarmers.length === 0 ? (
+                  <tr>
+                    <td colSpan="6" className="p-8 text-center text-muted-foreground">
+                      No farmers found
+                    </td>
+                  </tr>
+                ) : (
+                  filteredFarmers.map((farmer) => (
+                    <tr key={farmer._id} className="hover:bg-muted/30 transition-colors">
+                      <td className="p-4">
+                        <p className="font-medium text-foreground">{farmer.name}</p>
+                        <p className="text-xs text-muted-foreground">{farmer.email}</p>
+                      </td>
+                      <td className="p-4">
+                        <span className="inline-block text-xs bg-accent/20 text-primary px-2 py-1 rounded-full font-medium">
+                          {farmer.level || 'beginner'}
+                        </span>
+                      </td>
+                      <td className="p-4">
+                        <p className="text-sm text-foreground">{farmer.city || farmer.location || 'N/A'}</p>
+                      </td>
+                      <td className="p-4">
+                        <p className="text-sm font-medium text-foreground">{farmer.xp || 0} XP</p>
+                      </td>
+                      <td className="p-4">
+                        <p className="text-sm text-foreground">{farmer.questsProgress?.filter(q => q.status === 'completed').length || 0}</p>
+                      </td>
+                      <td className="p-4">
+                        <button
+                          onClick={() => setSelectedFarmer(farmer)}
+                          className="text-primary hover:text-primary/80 font-medium text-sm flex items-center gap-1"
+                        >
+                          <Eye className="w-4 h-4" />
+                          View Details
+                        </button>
+                      </td>
+                    </tr>
+                  ))
+                )}
               </tbody>
             </table>
           </div>
@@ -247,22 +264,20 @@ export function AdminDashboardScreen({ onNavigate }) {
                     <span className="text-sm font-medium text-foreground">{selectedFarmer.name}</span>
                   </div>
                   <div className="flex justify-between">
+                    <span className="text-sm text-muted-foreground">Email</span>
+                    <span className="text-sm font-medium text-foreground">{selectedFarmer.email || 'N/A'}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-sm text-muted-foreground">Phone</span>
+                    <span className="text-sm font-medium text-foreground">{selectedFarmer.phone || 'N/A'}</span>
+                  </div>
+                  <div className="flex justify-between">
                     <span className="text-sm text-muted-foreground">Experience Level</span>
-                    <span className="text-sm font-medium text-foreground">{selectedFarmer.experience}</span>
+                    <span className="text-sm font-medium text-foreground">{selectedFarmer.level || 'beginner'}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-sm text-muted-foreground">District</span>
-                    <span className="text-sm font-medium text-foreground">{selectedFarmer.district}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-sm text-muted-foreground">Status</span>
-                    <span
-                      className={`text-sm font-medium ${
-                        selectedFarmer.status === "Active" ? "text-accent" : "text-muted-foreground"
-                      }`}
-                    >
-                      {selectedFarmer.status}
-                    </span>
+                    <span className="text-sm text-muted-foreground">Location</span>
+                    <span className="text-sm font-medium text-foreground">{selectedFarmer.city || selectedFarmer.location || 'N/A'}</span>
                   </div>
                 </div>
               </div>
@@ -272,20 +287,12 @@ export function AdminDashboardScreen({ onNavigate }) {
                 <h4 className="font-bold text-foreground mb-3">Farm Details</h4>
                 <div className="bg-muted/50 rounded-xl p-4 space-y-2">
                   <div className="flex justify-between">
-                    <span className="text-sm text-muted-foreground">Farm Size</span>
-                    <span className="text-sm font-medium text-foreground">{selectedFarmer.farmSize}</span>
+                    <span className="text-sm text-muted-foreground">Farm Name</span>
+                    <span className="text-sm font-medium text-foreground">{selectedFarmer.farm?.name || 'N/A'}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-sm text-muted-foreground">Primary Crops</span>
-                    <span className="text-sm font-medium text-foreground">{selectedFarmer.crops}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-sm text-muted-foreground">Fertilizers</span>
-                    <span className="text-sm font-medium text-foreground">{selectedFarmer.fertilizers}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-sm text-muted-foreground">Pesticides</span>
-                    <span className="text-sm font-medium text-foreground">{selectedFarmer.pesticides}</span>
+                    <span className="text-sm text-muted-foreground">Joined Date</span>
+                    <span className="text-sm font-medium text-foreground">{selectedFarmer.createdAt ? new Date(selectedFarmer.createdAt).toLocaleDateString() : 'N/A'}</span>
                   </div>
                 </div>
               </div>
@@ -296,30 +303,14 @@ export function AdminDashboardScreen({ onNavigate }) {
                 <div className="bg-gradient-to-br from-accent/10 to-primary/5 rounded-xl p-4">
                   <div className="grid grid-cols-2 gap-4">
                     <div className="text-center">
-                      <p className="text-3xl font-bold text-foreground">{selectedFarmer.questsCompleted}</p>
+                      <p className="text-3xl font-bold text-foreground">{selectedFarmer.questsProgress?.filter(q => q.status === 'completed').length || 0}</p>
                       <p className="text-xs text-muted-foreground mt-1">Quests Completed</p>
                     </div>
                     <div className="text-center">
-                      <p className="text-3xl font-bold text-accent">{selectedFarmer.xp}</p>
+                      <p className="text-3xl font-bold text-accent">{selectedFarmer.xp || 0}</p>
                       <p className="text-xs text-muted-foreground mt-1">Total XP</p>
                     </div>
                   </div>
-                </div>
-              </div>
-
-              {/* Activity Log */}
-              <div>
-                <h4 className="font-bold text-foreground mb-3">Recent Activity</h4>
-                <div className="space-y-2">
-                  {["Completed 'Soil Basics Quest'", "Started 'Compost Starter Quest'", "Updated farm details"].map(
-                    (activity, idx) => (
-                      <div key={idx} className="flex items-center gap-3 p-3 bg-muted/50 rounded-xl">
-                        <div className="w-2 h-2 rounded-full bg-accent"></div>
-                        <p className="text-sm text-foreground flex-1">{activity}</p>
-                        <span className="text-xs text-muted-foreground">{idx + 1}d ago</span>
-                      </div>
-                    ),
-                  )}
                 </div>
               </div>
             </div>

@@ -1,8 +1,51 @@
 "use client"
 
 import { Menu, X, Home, BookOpen, Trophy, Settings } from "lucide-react"
+import Link from "next/link"
+import { Button } from "@/components/ui/button"
+import { SheetTrigger, SheetContent, Sheet } from "@/components/ui/sheet"
+import { useRouter } from "next/navigation"
+import { useEffect, useState } from "react"
 
 export function Sidebar({ open, onToggle, onNavigate }) {
+  const router = useRouter()
+  const [userData, setUserData] = useState({ level: 1, xp: 0 })
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      const token = localStorage.getItem("token")
+      if (!token) return
+
+      try {
+        const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:4000"
+        const res = await fetch(`${backendUrl}/api/users/me`, {
+          headers: {
+            "Authorization": `Bearer ${token}`
+          }
+        })
+
+        if (res.ok) {
+          const user = await res.json()
+          setUserData({
+            level: user.level === "pro" ? 5 : 3,
+            xp: user.xp
+          })
+        }
+      } catch (error) {
+        console.error("Error fetching user data:", error)
+      }
+    }
+
+    fetchUserData()
+  }, [])
+
+  const handleLogout = () => {
+    localStorage.removeItem("token")
+    localStorage.removeItem("farmquest_auth")
+    localStorage.removeItem("farmquest_userdata")
+    router.push("/welcome")
+  }
+
   return (
     <>
       {/* Mobile Toggle Button */}
@@ -39,16 +82,22 @@ export function Sidebar({ open, onToggle, onNavigate }) {
           <NavItem icon={Settings} label="Settings" />
         </nav>
 
+        <div className="mt-auto p-4">
+          <Button className="w-full" variant="outline" onClick={handleLogout}>
+            Logout
+          </Button>
+        </div>
+
         {/* Footer Stats */}
         <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-border bg-muted/50">
           <div className="space-y-2">
             <div className="flex justify-between text-sm">
               <span className="text-muted-foreground">Level</span>
-              <span className="font-bold text-foreground">1</span>
+              <span className="font-bold text-foreground">{userData.level}</span>
             </div>
             <div className="flex justify-between text-sm">
               <span className="text-muted-foreground">Total XP</span>
-              <span className="font-bold text-accent">155</span>
+              <span className="font-bold text-accent">{userData.xp}</span>
             </div>
           </div>
         </div>
