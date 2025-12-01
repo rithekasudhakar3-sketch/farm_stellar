@@ -1,36 +1,54 @@
 "use client"
 
-import { ChevronLeft, Upload, MessageSquare, CheckCircle2, X } from "lucide-react"
-import { useState } from "react"
+import { ChevronLeft, MessageSquare, CheckCircle2, X, Camera } from "lucide-react"
+import { useState, useRef } from "react"
 
 export function SubmitProofScreen({ quest, onSubmit, onBack }) {
-  const [checkedItems, setCheckedItems] = useState([false, false, false])
   const [notes, setNotes] = useState("")
   const [uploadedImage, setUploadedImage] = useState(null)
-  const [isUploading, setIsUploading] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [isCameraActive, setIsCameraActive] = useState(false)
+  const videoRef = useRef(null)
+  const streamRef = useRef(null)
   const showPhotoOption = quest.id !== "crops"
 
-  const toggleCheck = (index) => {
-    const newChecked = [...checkedItems]
-    newChecked[index] = !newChecked[index]
-    setCheckedItems(newChecked)
+  const canSubmit = uploadedImage !== null
+
+  const startCamera = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: "environment" }, // Use back camera on mobile
+        audio: false
+      })
+      streamRef.current = stream
+      if (videoRef.current) {
+        videoRef.current.srcObject = stream
+      }
+      setIsCameraActive(true)
+    } catch (error) {
+      console.error("Error accessing camera:", error)
+      alert("Unable to access camera. Please check permissions.")
+    }
   }
 
-  const canSubmit = quest.id === "crops" ? checkedItems.some(Boolean) : checkedItems.every(Boolean)
+  const stopCamera = () => {
+    if (streamRef.current) {
+      streamRef.current.getTracks().forEach(track => track.stop())
+      streamRef.current = null
+    }
+    setIsCameraActive(false)
+  }
 
-  const handleImageUpload = (e) => {
-    const file = e.target.files[0]
-    if (file) {
-      setIsUploading(true)
-      const reader = new FileReader()
-      reader.onloadend = () => {
-        setTimeout(() => {
-          setUploadedImage(reader.result)
-          setIsUploading(false)
-        }, 800) // Simulate upload delay for feedback
-      }
-      reader.readAsDataURL(file)
+  const capturePhoto = () => {
+    if (videoRef.current) {
+      const canvas = document.createElement('canvas')
+      canvas.width = videoRef.current.videoWidth
+      canvas.height = videoRef.current.videoHeight
+      const ctx = canvas.getContext('2d')
+      ctx.drawImage(videoRef.current, 0, 0)
+      const imageData = canvas.toDataURL('image/jpeg')
+      setUploadedImage(imageData)
+      stopCamera()
     }
   }
 
@@ -62,7 +80,33 @@ export function SubmitProofScreen({ quest, onSubmit, onBack }) {
         {showPhotoOption && (
           <div className="space-y-3">
             <h3 className="font-bold text-foreground text-sm">Upload Media</h3>
-            {uploadedImage ? (
+
+            {/* Camera View */}
+            {isCameraActive ? (
+              <div className="relative">
+                <video
+                  ref={videoRef}
+                  autoPlay
+                  playsInline
+                  className="w-full h-64 object-cover rounded-2xl border-2 border-primary"
+                />
+                <div className="absolute bottom-4 left-0 right-0 flex justify-center gap-3">
+                  <button
+                    onClick={capturePhoto}
+                    className="bg-primary text-primary-foreground px-6 py-3 rounded-full shadow-lg hover:scale-110 transition-transform font-bold flex items-center gap-2"
+                  >
+                    <Camera className="w-5 h-5" />
+                    Capture
+                  </button>
+                  <button
+                    onClick={stopCamera}
+                    className="bg-destructive text-destructive-foreground px-6 py-3 rounded-full shadow-lg hover:scale-110 transition-transform font-bold"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            ) : uploadedImage ? (
               <div className="relative">
                 <img
                   src={uploadedImage || "/placeholder.svg"}
@@ -82,49 +126,17 @@ export function SubmitProofScreen({ quest, onSubmit, onBack }) {
                 </div>
               </div>
             ) : (
-              <label className="block w-full cursor-pointer">
-                <div className="border-2 border-dashed border-border rounded-xl p-6 hover:border-primary hover:bg-primary/5 transition-all text-center">
-                  {isUploading ? (
-                    <>
-                      <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-2"></div>
-                      <p className="text-sm font-medium text-primary">Uploading...</p>
-                    </>
-                  ) : (
-                    <>
-                      <Upload className="w-8 h-8 text-muted-foreground mx-auto mb-2" />
-                      <p className="text-sm font-medium text-foreground">Tap to Upload Photo 📸</p>
-                      <p className="text-xs text-muted-foreground mt-1">JPG, PNG up to 10MB</p>
-                    </>
-                  )}
-                </div>
-                <input type="file" accept="image/*" onChange={handleImageUpload} className="hidden" />
-              </label>
+              <button
+                onClick={startCamera}
+                className="w-full border-2 border-dashed border-primary bg-primary/5 rounded-xl p-6 hover:bg-primary/10 transition-all text-center"
+              >
+                <Camera className="w-8 h-8 text-primary mx-auto mb-2" />
+                <p className="text-sm font-bold text-primary">Open Live Camera 📷</p>
+                <p className="text-xs text-muted-foreground mt-1">Take photo in real-time</p>
+              </button>
             )}
           </div>
         )}
-
-        {/* Checklist */}
-        <div className="space-y-3">
-          <h3 className="font-bold text-foreground text-sm">Completion Checklist</h3>
-          <div className="space-y-2">
-            {["All steps completed", "Instructions followed correctly", "Quality of work is satisfactory"].map(
-              (item, idx) => (
-                <label
-                  key={idx}
-                  className="flex items-center gap-3 p-3 rounded-lg hover:bg-muted cursor-pointer transition-colors"
-                >
-                  <input
-                    type="checkbox"
-                    checked={checkedItems[idx]}
-                    onChange={() => toggleCheck(idx)}
-                    className="w-5 h-5 accent-primary rounded"
-                  />
-                  <span className="text-sm text-foreground">{item}</span>
-                </label>
-              ),
-            )}
-          </div>
-        </div>
 
         {/* Notes */}
         <div className="space-y-3">
@@ -147,11 +159,10 @@ export function SubmitProofScreen({ quest, onSubmit, onBack }) {
         <button
           onClick={handleSubmit}
           disabled={!canSubmit || isSubmitting}
-          className={`w-full font-bold py-4 rounded-2xl transition-all shadow-lg ${
-            canSubmit && !isSubmitting
-              ? "bg-primary text-primary-foreground hover:bg-primary/90 hover:shadow-primary/30 active:scale-95"
-              : "bg-muted text-muted-foreground cursor-not-allowed"
-          }`}
+          className={`w-full font-bold py-4 rounded-2xl transition-all shadow-lg ${canSubmit && !isSubmitting
+            ? "bg-primary text-primary-foreground hover:bg-primary/90 hover:shadow-primary/30 active:scale-95"
+            : "bg-muted text-muted-foreground cursor-not-allowed"
+            }`}
         >
           {isSubmitting ? (
             <span className="flex items-center justify-center gap-2">

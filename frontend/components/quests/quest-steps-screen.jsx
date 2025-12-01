@@ -354,7 +354,7 @@ function QuestWizard({ steps, onComplete, onBack, questId }) {
               <img
                 src={step.image}
                 alt={step.title}
-                className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
+                className="w-full h-full object-contain"
               />
             )}
           </div>
