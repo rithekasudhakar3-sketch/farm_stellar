@@ -3,7 +3,7 @@
 import { CheckCircle2, Sparkles, Brain, Eye, Zap } from "lucide-react"
 import { useState, useEffect } from "react"
 
-export function VerificationScreen({ quest, onContinue }) {
+export function VerificationScreen({ quest, onContinue, isAutoVerified = false }) {
   const [verificationStage, setVerificationStage] = useState(0)
   const [isComplete, setIsComplete] = useState(false)
   const [verificationResults, setVerificationResults] = useState([])
@@ -62,13 +62,13 @@ export function VerificationScreen({ quest, onContinue }) {
 
           {/* Status Text */}
           <div>
-            <h2 className="text-3xl font-black text-foreground mb-3 bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-              {isComplete ? "AI Verification Complete! ✓" : "AI Analyzing Your Work"}
+            <h2 className="text-3xl font-bold text-foreground mb-3 text-balance">
+              {isAutoVerified ? "Verification Successful! ✓" : "Submission Received!"}
             </h2>
             <p className="text-muted-foreground text-sm leading-relaxed">
-              {isComplete
-                ? "Our AI has successfully verified your quest completion!"
-                : stages[verificationStage]?.text}
+              {isAutoVerified
+                ? `Your crop selections have been automatically verified. You're ready to claim your rewards!`
+                : `Your submission has been sent for admin review. You'll receive XP and rewards once approved. Check back within 24 hours!`}
             </p>
           </div>
 
@@ -135,7 +135,7 @@ export function VerificationScreen({ quest, onContinue }) {
           {!isComplete && (
             <div className="bg-primary/5 border border-primary/20 rounded-lg p-4 text-left">
               <p className="text-xs text-muted-foreground">
-                <strong className="text-primary">AI-Powered Verification:</strong> Our advanced AI analyzes your submission in real-time, checking for completion criteria, image quality, and authenticity.
+                <strong>What's Next?</strong> Our admin team will review your submission and approve it if all requirements are met. You'll see the quest marked as "Completed" in your quest list once approved.
               </p>
             </div>
           )}
@@ -152,7 +152,7 @@ export function VerificationScreen({ quest, onContinue }) {
               : "bg-muted text-muted-foreground cursor-not-allowed"
             }`}
         >
-          {isComplete ? "Continue to Rewards 🎁" : "Verifying..."}
+          {isAutoVerified ? "Claim Rewards" : "Back to Quests"}
         </button>
       </div>
     </div>

@@ -8,20 +8,85 @@ import { useEffect, useState } from "react"
 export default function DashboardPage() {
     const router = useRouter()
     const [userData, setUserData] = useState(null)
+    const [dashboardData, setDashboardData] = useState(null)
     const [showToast, setShowToast] = useState(false)
     const [toastMessage, setToastMessage] = useState("")
+    const [loading, setLoading] = useState(true)
 
     useEffect(() => {
-        // Check authentication
-        const auth = localStorage.getItem("farmquest_auth")
-        if (!auth) {
-            router.push("/welcome")
-            return
+        const fetchData = async () => {
+            // Check authentication
+            const token = localStorage.getItem("token")
+            if (!token) {
+                router.push("/welcome")
+                return
+            }
+
+            try {
+                const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:4000"
+
+                // Fetch user data from backend
+                const userRes = await fetch(`${backendUrl}/api/users/me`, {
+                    headers: {
+                        "Authorization": `Bearer ${token}`
+                    }
+                })
+
+                if (!userRes.ok) {
+                    throw new Error("Failed to fetch user data")
+                }
+
+                const user = await userRes.json()
+
+                // Fetch dashboard data
+                const dashRes = await fetch(`${backendUrl}/api/dashboard`, {
+                    headers: {
+                        "Authorization": `Bearer ${token}`
+                    }
+                })
+
+                if (dashRes.ok) {
+                    const dash = await dashRes.json()
+                    setDashboardData(dash)
+                }
+
+                // Load local storage data for compatibility
+                const localData = JSON.parse(localStorage.getItem("farmquest_userdata") || "{}")
+
+                // Merge backend and local data
+                const mergedData = {
+                    ...localData,
+                    name: user.name,
+                    xp: user.xp || 0,
+                    xpLevel: user.xpLevel || 0,
+                    level: user.level === "pro" ? 5 : 3,
+                    currentXP: user.xp,
+                    requiredXP: (Math.floor(user.xp / 100) + 1) * 100,
+                    location: user.location || localData.location,
+                    city: user.city || localData.city || "Bangalore",
+                    questsProgress: user.questsProgress || [],
+                    farmDetails: user.farm ? {
+                        name: user.farm.name,
+                        address: user.farm.address,
+                        size: user.farm.size,
+                        primaryCrop: user.farm.primaryCrop
+                    } : localData.farmDetails,
+                    completedQuests: user.questsProgress?.filter(q => q.status === "completed") || [],
+                    badges: localData.badges || []
+                }
+
+                setUserData(mergedData)
+            } catch (error) {
+                console.error("Error fetching data:", error)
+                // Fallback to local data
+                const data = JSON.parse(localStorage.getItem("farmquest_userdata") || "{}")
+                setUserData(data)
+            } finally {
+                setLoading(false)
+            }
         }
 
-        // Load user data
-        const data = JSON.parse(localStorage.getItem("farmquest_userdata") || "{}")
-        setUserData(data)
+        fetchData()
     }, [router])
 
     const showSuccessToast = (message) => {
@@ -49,7 +114,7 @@ export default function DashboardPage() {
         }
     }
 
-    if (!userData) {
+    if (loading || !userData) {
         return <div className="min-h-screen flex items-center justify-center">Loading...</div>
     }
 

@@ -8,15 +8,9 @@ export default function AdminDashboardPage() {
     const router = useRouter()
 
     useEffect(() => {
-        const auth = localStorage.getItem("farmquest_auth")
-        if (!auth) {
-            router.push("/welcome")
-            return
-        }
-
-        const { userType } = JSON.parse(auth)
-        if (userType !== "admin") {
-            router.push("/dashboard")
+        const token = localStorage.getItem("farmquest_admin_token")
+        if (!token) {
+            router.push("/admin/login")
         }
     }, [router])
 
