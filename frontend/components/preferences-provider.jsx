@@ -34,6 +34,17 @@ export function PreferencesProvider({ children, ...props }) {
     React.useEffect(() => {
         setMounted(true)
 
+        // Ensure light theme is default if no preference exists
+        try {
+            const storedTheme = localStorage.getItem("farmquest_theme")
+            if (!storedTheme) {
+                // Set light as default theme for first-time users
+                localStorage.setItem("farmquest_theme", "light")
+            }
+        } catch (error) {
+            console.error("Error initializing theme preference:", error)
+        }
+
         try {
             const storedFontSize = localStorage.getItem("farmquest_fontsize")
             if (storedFontSize && ["small", "medium", "large"].includes(storedFontSize)) {
@@ -80,7 +91,7 @@ export function PreferencesProvider({ children, ...props }) {
     return (
         <NextThemesProvider
             attribute="class"
-            defaultTheme="system"
+            defaultTheme="light"
             enableSystem
             themes={["light", "dark"]}
             storageKey="farmquest_theme"

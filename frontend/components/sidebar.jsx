@@ -1,15 +1,11 @@
 "use client"
 
-<<<<<<< HEAD
 import { Menu, X, Home, BookOpen, Trophy, Settings } from "lucide-react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { SheetTrigger, SheetContent, Sheet } from "@/components/ui/sheet"
 import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
-=======
-import { Menu, X, Home, BookOpen, Trophy } from "lucide-react"
->>>>>>> 25935f6 (UI changes)
 
 export function Sidebar({ open, onToggle, onNavigate }) {
   const router = useRouter()

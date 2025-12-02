@@ -583,8 +583,8 @@
     @apply grid gap-8;
   }
 }
+
 /* Enhanced dark mode gradients */
 .dark .watercolor-bg {
   background: linear-gradient(135deg, oklch(0.24 0.05 145) 0%, oklch(0.28 0.06 145) 50%, oklch(0.26 0.05 145) 100%);
 }
-
