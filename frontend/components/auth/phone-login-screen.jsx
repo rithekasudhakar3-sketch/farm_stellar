@@ -75,7 +75,9 @@ export function PhoneLoginScreen({ onSuccess, onBack, isSignup = false }) {
     try {
       const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:4000"
       
+      const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:4000"
       console.log('Sending OTP to phone:', phone);
+      console.log('Using backendUrl:', backendUrl);
       
       // Send OTP to phone number
       const response = await fetch(`${backendUrl}/api/auth/send-otp`, {

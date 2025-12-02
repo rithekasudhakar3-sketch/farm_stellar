@@ -2,6 +2,7 @@
 
 import { Zap, Trophy, Share2, ArrowRight, Users } from "lucide-react"
 
+<<<<<<< HEAD
 export function RewardScreen({ quest, onContinue, onNextQuest, onComplete }) {
   const handleComplete = async () => {
     if (onComplete) {
@@ -12,6 +13,9 @@ export function RewardScreen({ quest, onContinue, onNextQuest, onComplete }) {
     }
   }
 
+=======
+export function RewardScreen({ quest, userData, onComplete, onContinue, onNextQuest }) {
+>>>>>>> cdf0c25189fd57a41f7fb8ced7d58bfd3e999d2c
   const handleShare = () => {
     if (navigator.share) {
       navigator.share({

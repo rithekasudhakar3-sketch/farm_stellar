@@ -1,5 +1,6 @@
 "use client"
 
+<<<<<<< HEAD
 import { ChevronLeft, Camera, MessageSquare, CheckCircle2, X, MapPin } from "lucide-react"
 import { useState, useRef, useEffect } from "react"
 
@@ -50,6 +51,28 @@ export function SubmitProofScreen({ quest, onSubmit, onBack }) {
         audio: false
       })
 
+=======
+import { ChevronLeft, MessageSquare, CheckCircle2, X, Camera } from "lucide-react"
+import { useState, useRef } from "react"
+
+export function SubmitProofScreen({ quest, onSubmit, onBack }) {
+  const [notes, setNotes] = useState("")
+  const [uploadedImage, setUploadedImage] = useState(null)
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [isCameraActive, setIsCameraActive] = useState(false)
+  const videoRef = useRef(null)
+  const streamRef = useRef(null)
+  const showPhotoOption = quest.id !== "crops"
+
+  const canSubmit = uploadedImage !== null
+
+  const startCamera = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: "environment" }, // Use back camera on mobile
+        audio: false
+      })
+>>>>>>> cdf0c25189fd57a41f7fb8ced7d58bfd3e999d2c
       streamRef.current = stream
       if (videoRef.current) {
         videoRef.current.srcObject = stream
@@ -57,19 +80,28 @@ export function SubmitProofScreen({ quest, onSubmit, onBack }) {
       setIsCameraActive(true)
     } catch (error) {
       console.error("Error accessing camera:", error)
+<<<<<<< HEAD
       alert("Unable to access camera. Please check camera permissions.")
       setIsCameraActive(false)
+=======
+      alert("Unable to access camera. Please check permissions.")
+>>>>>>> cdf0c25189fd57a41f7fb8ced7d58bfd3e999d2c
     }
   }
 
   const stopCamera = () => {
     if (streamRef.current) {
+<<<<<<< HEAD
       streamRef.current.getTracks().forEach((track) => track.stop())
+=======
+      streamRef.current.getTracks().forEach(track => track.stop())
+>>>>>>> cdf0c25189fd57a41f7fb8ced7d58bfd3e999d2c
       streamRef.current = null
     }
     setIsCameraActive(false)
   }
 
+<<<<<<< HEAD
   const capturePhoto = async () => {
     if (!videoRef.current) return
     setIsUploading(true)
@@ -187,6 +219,18 @@ export function SubmitProofScreen({ quest, onSubmit, onBack }) {
       console.error("Upload error:", error)
       alert("Failed to upload image. Please try again.")
       setIsUploading(false)
+=======
+  const capturePhoto = () => {
+    if (videoRef.current) {
+      const canvas = document.createElement('canvas')
+      canvas.width = videoRef.current.videoWidth
+      canvas.height = videoRef.current.videoHeight
+      const ctx = canvas.getContext('2d')
+      ctx.drawImage(videoRef.current, 0, 0)
+      const imageData = canvas.toDataURL('image/jpeg')
+      setUploadedImage(imageData)
+      stopCamera()
+>>>>>>> cdf0c25189fd57a41f7fb8ced7d58bfd3e999d2c
     }
   }
 
@@ -267,6 +311,7 @@ export function SubmitProofScreen({ quest, onSubmit, onBack }) {
                   ref={videoRef}
                   autoPlay
                   playsInline
+<<<<<<< HEAD
                   className="w-full h-96 object-cover rounded-2xl border-2 border-primary"
                 />
                 <div className="absolute top-2 left-2 bg-primary text-primary-foreground px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1">
@@ -286,6 +331,23 @@ export function SubmitProofScreen({ quest, onSubmit, onBack }) {
                     className="bg-primary text-primary-foreground px-8 py-3 rounded-full font-bold shadow-lg hover:scale-105 transition-transform disabled:opacity-50"
                   >
                     {isUploading ? "Uploading..." : "📸 Capture"}
+=======
+                  className="w-full h-64 object-cover rounded-2xl border-2 border-primary"
+                />
+                <div className="absolute bottom-4 left-0 right-0 flex justify-center gap-3">
+                  <button
+                    onClick={capturePhoto}
+                    className="bg-primary text-primary-foreground px-6 py-3 rounded-full shadow-lg hover:scale-110 transition-transform font-bold flex items-center gap-2"
+                  >
+                    <Camera className="w-5 h-5" />
+                    Capture
+                  </button>
+                  <button
+                    onClick={stopCamera}
+                    className="bg-destructive text-destructive-foreground px-6 py-3 rounded-full shadow-lg hover:scale-110 transition-transform font-bold"
+                  >
+                    Cancel
+>>>>>>> cdf0c25189fd57a41f7fb8ced7d58bfd3e999d2c
                   </button>
                 </div>
               </div>
@@ -315,6 +377,7 @@ export function SubmitProofScreen({ quest, onSubmit, onBack }) {
                 )}
               </div>
             ) : (
+<<<<<<< HEAD
               <div className="space-y-2">
                 <button
                   onClick={startCamera}
@@ -339,6 +402,16 @@ export function SubmitProofScreen({ quest, onSubmit, onBack }) {
                   </div>
                 </label>
               </div>
+=======
+              <button
+                onClick={startCamera}
+                className="w-full border-2 border-dashed border-primary bg-primary/5 rounded-xl p-6 hover:bg-primary/10 transition-all text-center"
+              >
+                <Camera className="w-8 h-8 text-primary mx-auto mb-2" />
+                <p className="text-sm font-bold text-primary">Open Live Camera 📷</p>
+                <p className="text-xs text-muted-foreground mt-1">Take photo in real-time</p>
+              </button>
+>>>>>>> cdf0c25189fd57a41f7fb8ced7d58bfd3e999d2c
             )}
           </div>
         )}
