@@ -25,5 +25,61 @@
     "kmh": "കി.മീ/മണിക്കൂർ",
     "edit": "എഡിറ്റ്",
     "save": "സേവ്",
-    "cancel": "റദ്ദാക്കുക"
+    "cancel": "റദ്ദാക്കുക",
+    "landing": {
+        "title": "FarmStellar",
+        "subtitle": "Grow Your Knowledge",
+        "signIn": "Sign In",
+        "getStarted": "Get Started",
+        "goToDashboard": "Go to Dashboard",
+        "hero": {
+            "badge": "Gamified Learning Platform",
+            "title": "Master <1>Sustainable Farming</1> Through Play",
+            "description": "Join thousands of farmers learning modern agricultural techniques through interactive quests, earn rewards, and build a sustainable future.",
+            "startJourney": "Start Your Journey",
+            "learnMore": "Learn More",
+            "stats": {
+                "activeFarmers": "Active Farmers",
+                "learningQuests": "Learning Quests",
+                "successRate": "Success Rate"
+            }
+        },
+        "features": {
+            "title": "Why Choose FarmStellar?",
+            "subtitle": "Experience a revolutionary approach to agricultural education",
+            "interactiveQuests": {
+                "title": "Interactive Quests",
+                "description": "Learn through engaging, story-driven quests that make agricultural education fun and memorable."
+            },
+            "earnRewards": {
+                "title": "Earn Rewards",
+                "description": "Complete quests to earn points, badges, and unlock advanced farming techniques."
+            },
+            "communityLearning": {
+                "title": "Community Learning",
+                "description": "Connect with fellow farmers, share experiences, and grow together as a community."
+            },
+            "trackProgress": {
+                "title": "Track Progress",
+                "description": "Monitor your learning journey with detailed analytics and personalized insights."
+            },
+            "certifications": {
+                "title": "Certifications",
+                "description": "Earn recognized certifications as you master sustainable farming practices."
+            },
+            "multilingualSupport": {
+                "title": "Multilingual Support",
+                "description": "Learn in your preferred language with support for multiple regional languages."
+            }
+        },
+        "cta": {
+            "title": "Ready to Transform Your Farming?",
+            "description": "Join FarmStellar today and start your journey towards sustainable, profitable farming.",
+            "button": "Start Learning Now"
+        },
+        "footer": {
+            "rights": "© 2025 FarmStellar. All rights reserved.",
+            "tagline": "Empowering farmers through gamified learning"
+        }
+    }
 }

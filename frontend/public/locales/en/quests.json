@@ -455,226 +455,30 @@
                     "instruction": "Break cooled biochar into smaller pieces."
                 },
                 "3": {
-                    "2": {
-                        "title": "Mini Waste Station",
-                        "instruction": "Set up 2–3 labeled bins for easy segregation."
-                    }
+                    "title": "Mix with Compost",
+                    "instruction": "Blend biochar into compost before application."
                 }
-            },
-            "mini_garden": {
-                "title": "Miniplot Mastery",
-                "description": "Build your first small garden with 5 simple plants.",
-                "steps": {
-                    "0": {
-                        "title": "Pick 5 Plants",
-                        "instruction": "Choose beginner-friendly herbs/veggies."
-                    },
-                    "1": {
-                        "title": "Prepare Patch",
-                        "instruction": "Loosen top soil in a 1×1m area."
-                    },
-                    "2": {
-                        "title": "Plant Seeds",
-                        "instruction": "Sow seeds or plant small saplings."
-                    },
-                    "3": {
-                        "title": "Water & Mulch",
-                        "instruction": "Keep soil moist and apply mulch on top."
-                    }
-                }
-            },
-            "mulch_master": {
-                "title": "Soil Shield",
-                "description": "Protect your soil using natural mulching.",
-                "steps": {
-                    "0": {
-                        "title": "Collect Mulch",
-                        "instruction": "Gather dry leaves, straw, or grass clippings."
-                    },
-                    "1": {
-                        "title": "Spread Mulch",
-                        "instruction": "Create a 2–3 inch thick layer around the plant."
-                    },
-                    "2": {
-                        "title": "Settle Mulch",
-                        "instruction": "Water lightly to keep mulch in place."
-                    }
-                }
-            },
-            "boll_keeper": {
-                "title": "Boll Keeper Mastery Challenge",
-                "description": "Prevent cotton boll shedding with simple interventions.",
-                "steps": {
-                    "0": {
-                        "title": "Inspect Bolls",
-                        "instruction": "Check for early shedding & pest marks."
-                    },
-                    "1": {
-                        "title": "Nutrient Spray",
-                        "instruction": "Apply balanced micronutrient foliar spray."
-                    },
-                    "2": {
-                        "title": "Remove Damage",
-                        "instruction": "Cut off pest-affected bolls to prevent spread."
-                    }
-                }
-            },
-            "coconut_basin": {
-                "title": "Build a Life Ring",
-                "description": "Create water-saving basins around coconut trees.",
-                "steps": {
-                    "0": {
-                        "title": "Mark Radius",
-                        "instruction": "Draw a 1–1.5m circle around the tree."
-                    },
-                    "1": {
-                        "title": "Dig Basin",
-                        "instruction": "Create a shallow circular trench."
-                    },
-                    "2": {
-                        "title": "Level Soil",
-                        "instruction": "Flatten inner area for even watering."
-                    },
-                    "3": {
-                        "title": "Add Mulch",
-                        "instruction": "Fill with dry leaves or coconut husk."
-                    },
-                    "4": {
-                        "title": "Water",
-                        "instruction": "Water gently to help basin settle."
-                    }
-                }
-            },
-            "coconut_bioenzyme": {
-                "title": "Coconut Water Bio-Elixir",
-                "description": "Make a natural bio-enzyme using coconut water.",
-                "steps": {
-                    "0": {
-                        "title": "Collect Water",
-                        "instruction": "Use leftover coconut water as base."
-                    },
-                    "1": {
-                        "title": "Add Jaggery",
-                        "instruction": "Mix jaggery to feed microbes."
-                    },
-                    "2": {
-                        "title": "Ferment 7 Days",
-                        "instruction": "Store sealed and allow natural fermentation."
-                    },
-                    "3": {
-                        "title": "Dilute & Apply",
-                        "instruction": "Mix with water (1:20) and pour around root zone."
-                    }
-                }
-            },
-            "rust_shield": {
-                "title": "Rust Shield Challenge",
-                "description": "Protect wheat from rust disease using safe methods.",
-                "steps": {
-                    "0": {
-                        "title": "Spot Symptoms",
-                        "instruction": "Look for yellow/orange rust patches on leaves."
-                    },
-                    "1": {
-                        "title": "Remove Infected Leaves",
-                        "instruction": "Cut and discard affected parts safely."
-                    },
-                    "2": {
-                        "title": "Improve Airflow",
-                        "instruction": "Ensure proper spacing between plants."
-                    },
-                    "3": {
-                        "title": "Organic Spray",
-                        "instruction": "Apply safe fungicidal solution weekly."
-                    }
-                }
-            },
-            "biodiversity_strip": {
-                "title": "Biodiversity Bloom Bar",
-                "description": "Plant a strip of flowering plants to attract beneficial insects.",
-                "steps": {
-                    "0": {
-                        "title": "Select Flowers",
-                        "instruction": "Choose 5 pollinator-friendly plants."
-                    },
-                    "1": {
-                        "title": "Mark 1m Strip",
-                        "instruction": "Prepare a 1-meter planting strip."
-                    },
-                    "2": {
-                        "title": "Cluster Planting",
-                        "instruction": "Plant flowers in small clusters."
-                    },
-                    "3": {
-                        "title": "Mulch & Water",
-                        "instruction": "Mulch lightly and water regularly."
-                    }
-                }
-            },
-            "rainwater_hero": {
-                "title": "Rainwater Hero",
-                "description": "Set up a simple rainwater harvesting system.",
-                "steps": {
-                    "0": {
-                        "title": "Place Barrel",
-                        "instruction": "Set container under roof edge to collect runoff."
-                    },
-                    "1": {
-                        "title": "Add Mesh Filter",
-                        "instruction": "Install mesh to block debris and insects."
-                    },
-                    "2": {
-                        "title": "Fit Tap",
-                        "instruction": "Attach outlet tap near bottom of barrel."
-                    },
-                    "3": {
-                        "title": "Use Saved Water",
-                        "instruction": "Water plants using collected rainwater."
-                    }
-                }
-            },
-            "biochar_maker": {
-                "title": "Biochar Mastery Challenge",
-                "description": "Make biochar using farm waste to enrich soil.",
-                "steps": {
-                    "0": {
-                        "title": "Gather Waste Wood",
-                        "instruction": "Collect dry sticks, branches, and husk pieces."
-                    },
-                    "1": {
-                        "title": "Burn Low-Oxygen",
-                        "instruction": "Slow-burn in pit while limiting airflow."
-                    },
-                    "2": {
-                        "title": "Crush Charcoal",
-                        "instruction": "Break cooled biochar into smaller pieces."
-                    },
-                    "3": {
-                        "title": "Mix with Compost",
-                        "instruction": "Blend biochar into compost before application."
-                    }
-                }
-            },
-            "jeevamrutham": {
-                "title": "Jeevamrutham Mission",
-                "description": "Prepare Jeevamrutham to boost beneficial soil microbes.",
-                "steps": {
-                    "0": {
-                        "title": "Mix Dung & Urine",
-                        "instruction": "Combine fresh cow dung and urine in a drum."
-                    },
-                    "1": {
-                        "title": "Add Jaggery + Flour",
-                        "instruction": "Add jaggery & gram flour to feed microbes."
-                    },
-                    "2": {
-                        "title": "Ferment 5–7 Days",
-                        "instruction": "Stir daily and allow microbial growth."
-                    },
-                    "3": {
-                        "title": "Apply to Soil",
-                        "instruction": "Pour near root zone for microbial boost."
-                    }
+            }
+        },
+        "jeevamrutham": {
+            "title": "Jeevamrutham Mission",
+            "description": "Prepare Jeevamrutham to boost beneficial soil microbes.",
+            "steps": {
+                "0": {
+                    "title": "Mix Dung & Urine",
+                    "instruction": "Combine fresh cow dung and urine in a drum."
+                },
+                "1": {
+                    "title": "Add Jaggery + Flour",
+                    "instruction": "Add jaggery & gram flour to feed microbes."
+                },
+                "2": {
+                    "title": "Ferment 5–7 Days",
+                    "instruction": "Stir daily and allow microbial growth."
+                },
+                "3": {
+                    "title": "Apply to Soil",
+                    "instruction": "Pour near root zone for microbial boost."
                 }
             }
         }

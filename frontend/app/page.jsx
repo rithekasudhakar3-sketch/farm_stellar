@@ -2,13 +2,14 @@
 
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
+import { useTranslation, Trans } from "react-i18next"
 import { Button } from "@/components/ui/button"
-import { 
-  Sprout, 
-  Trophy, 
-  Users, 
-  BookOpen, 
-  Sparkles, 
+import {
+  Sprout,
+  Trophy,
+  Users,
+  BookOpen,
+  Sparkles,
   ArrowRight,
   Leaf,
   Sun,
@@ -20,6 +21,7 @@ import {
 
 export default function LandingPage() {
   const router = useRouter()
+  const { t } = useTranslation("common")
   const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
 
@@ -50,7 +52,7 @@ export default function LandingPage() {
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
-          <p className="text-muted-foreground">Loading...</p>
+          <p className="text-muted-foreground">{t('loading')}</p>
         </div>
       </div>
     )
@@ -74,28 +76,28 @@ export default function LandingPage() {
             </div>
             <div>
               <h1 className="text-2xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-                FarmStellar
+                {t('landing.title')}
               </h1>
-              <p className="text-xs text-muted-foreground">Grow Your Knowledge</p>
+              <p className="text-xs text-muted-foreground">{t('landing.subtitle')}</p>
             </div>
           </div>
-          
+
           {isAuthenticated ? (
             <Button onClick={handleGetStarted} className="btn-primary">
-              Go to Dashboard
+              {t('landing.goToDashboard')}
               <ArrowRight className="ml-2 w-4 h-4" />
             </Button>
           ) : (
             <div className="flex gap-3">
-              <Button 
-                variant="outline" 
+              <Button
+                variant="outline"
                 onClick={() => router.push("/welcome")}
                 className="border-2 hover:bg-secondary/20"
               >
-                Sign In
+                {t('landing.signIn')}
               </Button>
               <Button onClick={handleGetStarted} className="btn-primary">
-                Get Started
+                {t('landing.getStarted')}
               </Button>
             </div>
           )}
@@ -110,39 +112,36 @@ export default function LandingPage() {
             <div className="space-y-8">
               <div className="inline-flex items-center gap-2 bg-accent/20 text-accent-foreground px-4 py-2 rounded-full border border-accent/30">
                 <Sparkles className="w-4 h-4" />
-                <span className="text-sm font-semibold">Gamified Learning Platform</span>
+                <span className="text-sm font-semibold">{t('landing.hero.badge')}</span>
               </div>
-              
+
               <div className="space-y-4">
                 <h1 className="text-5xl lg:text-6xl font-bold leading-tight">
-                  Master{" "}
-                  <span className="bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent animate-shimmer">
-                    Sustainable Farming
-                  </span>
-                  {" "}Through Play
+                  <Trans i18nKey="landing.hero.title">
+                    Master <span className="bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent animate-shimmer">Sustainable Farming</span> Through Play
+                  </Trans>
                 </h1>
                 <p className="text-xl text-muted-foreground leading-relaxed">
-                  Join thousands of farmers learning modern agricultural techniques through 
-                  interactive quests, earn rewards, and build a sustainable future.
+                  {t('landing.hero.description')}
                 </p>
               </div>
 
               <div className="flex flex-wrap gap-4">
-                <Button 
-                  onClick={handleGetStarted} 
+                <Button
+                  onClick={handleGetStarted}
                   size="lg"
                   className="btn-primary text-lg px-8 py-6 shadow-xl hover:shadow-2xl"
                 >
-                  Start Your Journey
+                  {t('landing.hero.startJourney')}
                   <ArrowRight className="ml-2 w-5 h-5" />
                 </Button>
-                <Button 
-                  variant="outline" 
+                <Button
+                  variant="outline"
                   size="lg"
                   onClick={() => document.getElementById('features').scrollIntoView({ behavior: 'smooth' })}
                   className="border-2 text-lg px-8 py-6"
                 >
-                  Learn More
+                  {t('landing.hero.learnMore')}
                 </Button>
               </div>
 
@@ -150,15 +149,15 @@ export default function LandingPage() {
               <div className="grid grid-cols-3 gap-6 pt-8">
                 <div className="space-y-1">
                   <div className="text-3xl font-bold text-primary">10K+</div>
-                  <div className="text-sm text-muted-foreground">Active Farmers</div>
+                  <div className="text-sm text-muted-foreground">{t('landing.hero.stats.activeFarmers')}</div>
                 </div>
                 <div className="space-y-1">
                   <div className="text-3xl font-bold text-accent">50+</div>
-                  <div className="text-sm text-muted-foreground">Learning Quests</div>
+                  <div className="text-sm text-muted-foreground">{t('landing.hero.stats.learningQuests')}</div>
                 </div>
                 <div className="space-y-1">
                   <div className="text-3xl font-bold text-secondary">95%</div>
-                  <div className="text-sm text-muted-foreground">Success Rate</div>
+                  <div className="text-sm text-muted-foreground">{t('landing.hero.stats.successRate')}</div>
                 </div>
               </div>
             </div>
@@ -168,7 +167,7 @@ export default function LandingPage() {
               <div className="relative w-full aspect-square max-w-lg mx-auto">
                 {/* Central Circle */}
                 <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-accent/20 rounded-full blur-3xl animate-pulse"></div>
-                
+
                 {/* Floating Icons */}
                 <div className="absolute inset-0 flex items-center justify-center">
                   <div className="relative w-64 h-64">
@@ -203,9 +202,9 @@ export default function LandingPage() {
         <div className="container mx-auto px-6">
           <div className="max-w-6xl mx-auto">
             <div className="text-center mb-16">
-              <h2 className="text-4xl font-bold mb-4">Why Choose FarmStellar?</h2>
+              <h2 className="text-4xl font-bold mb-4">{t('landing.features.title')}</h2>
               <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-                Experience a revolutionary approach to agricultural education
+                {t('landing.features.subtitle')}
               </p>
             </div>
 
@@ -215,9 +214,9 @@ export default function LandingPage() {
                 <div className="w-14 h-14 bg-primary/10 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-primary group-hover:scale-110 transition-all">
                   <BookOpen className="w-7 h-7 text-primary group-hover:text-white transition-colors" />
                 </div>
-                <h3 className="text-2xl font-bold mb-3">Interactive Quests</h3>
+                <h3 className="text-2xl font-bold mb-3">{t('landing.features.interactiveQuests.title')}</h3>
                 <p className="text-muted-foreground leading-relaxed">
-                  Learn through engaging, story-driven quests that make agricultural education fun and memorable.
+                  {t('landing.features.interactiveQuests.description')}
                 </p>
               </div>
 
@@ -226,9 +225,9 @@ export default function LandingPage() {
                 <div className="w-14 h-14 bg-accent/10 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-accent group-hover:scale-110 transition-all">
                   <Trophy className="w-7 h-7 text-accent group-hover:text-accent-foreground transition-colors" />
                 </div>
-                <h3 className="text-2xl font-bold mb-3">Earn Rewards</h3>
+                <h3 className="text-2xl font-bold mb-3">{t('landing.features.earnRewards.title')}</h3>
                 <p className="text-muted-foreground leading-relaxed">
-                  Complete quests to earn points, badges, and unlock advanced farming techniques.
+                  {t('landing.features.earnRewards.description')}
                 </p>
               </div>
 
@@ -237,9 +236,9 @@ export default function LandingPage() {
                 <div className="w-14 h-14 bg-secondary/10 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-secondary group-hover:scale-110 transition-all">
                   <Users className="w-7 h-7 text-secondary group-hover:text-white transition-colors" />
                 </div>
-                <h3 className="text-2xl font-bold mb-3">Community Learning</h3>
+                <h3 className="text-2xl font-bold mb-3">{t('landing.features.communityLearning.title')}</h3>
                 <p className="text-muted-foreground leading-relaxed">
-                  Connect with fellow farmers, share experiences, and grow together as a community.
+                  {t('landing.features.communityLearning.description')}
                 </p>
               </div>
 
@@ -248,9 +247,9 @@ export default function LandingPage() {
                 <div className="w-14 h-14 bg-primary/10 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-primary group-hover:scale-110 transition-all">
                   <TrendingUp className="w-7 h-7 text-primary group-hover:text-white transition-colors" />
                 </div>
-                <h3 className="text-2xl font-bold mb-3">Track Progress</h3>
+                <h3 className="text-2xl font-bold mb-3">{t('landing.features.trackProgress.title')}</h3>
                 <p className="text-muted-foreground leading-relaxed">
-                  Monitor your learning journey with detailed analytics and personalized insights.
+                  {t('landing.features.trackProgress.description')}
                 </p>
               </div>
 
@@ -259,9 +258,9 @@ export default function LandingPage() {
                 <div className="w-14 h-14 bg-accent/10 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-accent group-hover:scale-110 transition-all">
                   <Award className="w-7 h-7 text-accent group-hover:text-accent-foreground transition-colors" />
                 </div>
-                <h3 className="text-2xl font-bold mb-3">Certifications</h3>
+                <h3 className="text-2xl font-bold mb-3">{t('landing.features.certifications.title')}</h3>
                 <p className="text-muted-foreground leading-relaxed">
-                  Earn recognized certifications as you master sustainable farming practices.
+                  {t('landing.features.certifications.description')}
                 </p>
               </div>
 
@@ -270,9 +269,9 @@ export default function LandingPage() {
                 <div className="w-14 h-14 bg-secondary/10 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-secondary group-hover:scale-110 transition-all">
                   <Globe className="w-7 h-7 text-secondary group-hover:text-white transition-colors" />
                 </div>
-                <h3 className="text-2xl font-bold mb-3">Multilingual Support</h3>
+                <h3 className="text-2xl font-bold mb-3">{t('landing.features.multilingualSupport.title')}</h3>
                 <p className="text-muted-foreground leading-relaxed">
-                  Learn in your preferred language with support for multiple regional languages.
+                  {t('landing.features.multilingualSupport.description')}
                 </p>
               </div>
             </div>
@@ -294,18 +293,18 @@ export default function LandingPage() {
 
               <div className="relative z-10 space-y-6">
                 <h2 className="text-4xl md:text-5xl font-bold text-white">
-                  Ready to Transform Your Farming?
+                  {t('landing.cta.title')}
                 </h2>
                 <p className="text-xl text-white/90 max-w-2xl mx-auto">
-                  Join FarmStellar today and start your journey towards sustainable, profitable farming.
+                  {t('landing.cta.description')}
                 </p>
                 <div className="pt-4">
-                  <Button 
+                  <Button
                     onClick={handleGetStarted}
                     size="lg"
                     className="bg-white text-primary hover:bg-white/90 text-lg px-10 py-7 shadow-xl hover:shadow-2xl hover:scale-105 transition-all"
                   >
-                    Start Learning Now
+                    {t('landing.cta.button')}
                     <ArrowRight className="ml-2 w-5 h-5" />
                   </Button>
                 </div>
@@ -325,17 +324,17 @@ export default function LandingPage() {
                   <Sprout className="w-6 h-6 text-white" />
                 </div>
                 <div>
-                  <h3 className="font-bold text-lg">FarmStellar</h3>
-                  <p className="text-sm text-muted-foreground">Grow Your Knowledge</p>
+                  <h3 className="font-bold text-lg">{t('landing.title')}</h3>
+                  <p className="text-sm text-muted-foreground">{t('landing.subtitle')}</p>
                 </div>
               </div>
-              
+
               <div className="text-center md:text-right">
                 <p className="text-sm text-muted-foreground">
-                  © 2025 FarmStellar. All rights reserved.
+                  {t('landing.footer.rights')}
                 </p>
                 <p className="text-xs text-muted-foreground mt-1">
-                  Empowering farmers through gamified learning
+                  {t('landing.footer.tagline')}
                 </p>
               </div>
             </div>
