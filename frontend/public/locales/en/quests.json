@@ -86,5 +86,597 @@
     "completeQuest": "Complete Quest",
     "sharedToCommunity": "Shared to Community Feed! (Simulation)",
     "shareToCommunity": "Share to Community",
-    "nextQuest": "Next Quest"
+    "nextQuest": "Next Quest",
+    "exploreQuests": "Explore Farming Quests",
+    "exploreDesc": "Master sustainable farming techniques through interactive lessons. Complete quests, earn XP, and become a certified expert.",
+    "newQuestsAvailable": "New Quests Available",
+    "totalAvailableXP": "Total Available XP",
+    "totalQuests": "Total Quests",
+    "completedQuests": "Completed Quests",
+    "remainingQuests": "Remaining Quests",
+    "completionRate": "Completion Rate",
+    "searchPlaceholder": "Search quests...",
+    "allCrops": "All Crops",
+    "anyLevel": "Any Level",
+    "noQuestsFound": "No quests found",
+    "adjustFilters": "Try adjusting your search or filters",
+    "clearFilters": "Clear all filters",
+    "activities": "activities",
+    "filters": {
+        "crops": {
+            "All": "All Crops",
+            "Cotton": "Cotton",
+            "Coconut": "Coconut",
+            "Wheat": "Wheat",
+            "General": "General",
+            "Tomato": "Tomato",
+            "Potato": "Potato"
+        },
+        "difficulty": {
+            "All": "Any Level",
+            "Beginner": "Beginner",
+            "Easy": "Easy",
+            "Medium": "Medium",
+            "Pro": "Pro",
+            "Hard": "Hard"
+        }
+    },
+    "data": {
+        "soil_scout": {
+            "title": "Meet the Soil",
+            "badgeName": "Soil Scout",
+            "description": "Analyze the physical health of your garden soil to understand what plants will thrive in it.",
+            "activities": {
+                "activity_0": "Collect soil samples",
+                "activity_1": "Perform texture test (sand/silt/clay)",
+                "activity_2": "Check moisture levels",
+                "activity_3": "Evaluate smell and color"
+            },
+            "steps": {
+                "0": {
+                    "title": "Preparation & Gear Check",
+                    "objective": "Before you head out, gather your kit.",
+                    "subSteps": {
+                        "0": "Small trowel or sturdy spoon",
+                        "1": "3 Clean jars or Ziploc bags",
+                        "2": "Permanent marker",
+                        "3": "Water bottle",
+                        "4": "Notebook & Camera (Phone)",
+                        "5": "Optional: Ruler & Gloves"
+                    },
+                    "tip": "Pro Tip: Soil tests are best done when the soil is slightly damp, but not soaking wet from heavy rain."
+                },
+                "1": {
+                    "title": "Step 1 — The Harvest (Sampling)",
+                    "objective": "Collect a representative sample of your soil.",
+                    "subSteps": {
+                        "0": "Select 3 Spots: Pick three distinct areas in your plot (e.g., near a plant, center of the row, and an empty corner).",
+                        "1": "Dig: Clear away surface leaves/mulch. Dig 6–10 cm deep (about finger-length).",
+                        "2": "Collect: Scoop about 1 cup of soil from each spot into separate bags/jars.",
+                        "3": "Label: Mark them clearly: S1, S2, S3."
+                    },
+                    "tip": "Why? Soil changes across a garden. Three spots give you an average, not an anomaly."
+                },
+                "2": {
+                    "title": "Step 2 — Texture Analysis (The Physics)",
+                    "objective": "Determine if your soil is Sandy, Silty, or Clay-heavy.",
+                    "subSteps": {
+                        "0": "Method A: Take a moist pinch of soil (add a drop of water if needed).",
+                        "1": "Knead it into a ball, then press it between your thumb and finger to push out a 'ribbon.'",
+                        "2": "Check Ribbon: Sandy (No ribbon), Silty (Weak ribbon), Clay (Strong ribbon >2cm).",
+                        "3": "Method B: Fill a clear jar 2/3 with soil and top with water.",
+                        "4": "Add a pinch of salt and shake vigorously for 2 minutes.",
+                        "5": "Wait 24 Hours and observe layers (Sand bottom, Silt middle, Clay top)."
+                    }
+                },
+                "3": {
+                    "title": "Step 3 — Hydration Check",
+                    "objective": "Check water retention and drainage.",
+                    "subSteps": {
+                        "0": "The Squeeze Test: Pick up a handful of soil and squeeze gently. Open your hand.",
+                        "1": "Check if Dry: Falls apart immediately (Needs irrigation).",
+                        "2": "Check if Moist: Holds loose shape but crumbles (Ideal).",
+                        "3": "Check if Wet: Drips water, sticky blob (Poor drainage)."
+                    }
+                },
+                "4": {
+                    "title": "Step 4 — Sensory Check (Color & Smell)",
+                    "objective": "Assess organic health and aeration.",
+                    "subSteps": {
+                        "0": "Smell Test: Earthy/Fresh (Good) vs Sour/Rotten (Bad/Anaerobic).",
+                        "1": "Color Code: Dark Brown/Black (Rich Organic Matter).",
+                        "2": "Color Code: Red/Yellow (High Iron).",
+                        "3": "Color Code: Gray/Blue-ish (Waterlogged).",
+                        "4": "Color Code: Pale/White (Leached/Salty)."
+                    }
+                },
+                "5": {
+                    "title": "Conclusion & Learning Summary",
+                    "objective": "Mission Complete! Compile your notes.",
+                    "subSteps": {
+                        "0": "Determine Texture (e.g., Sandy Loam)",
+                        "1": "Determine Moisture (e.g., Well-drained)",
+                        "2": "Determine Health (e.g., Dark & Earthy)",
+                        "3": "Review: Texture dictates strategy.",
+                        "4": "Review: Color indicates diet.",
+                        "5": "Review: Smell reveals breath."
+                    }
+                }
+            }
+        },
+        "crop_quest": {
+            "title": "Crops that Fits",
+            "description": "Discover the best sustainable crops for your region.",
+            "steps": {
+                "0": {
+                    "title": "Explore Crops",
+                    "instruction": "Browse suggested crops based on your region."
+                },
+                "1": {
+                    "title": "Pick Your 3 Crops",
+                    "instruction": "Select crops that fit your climate & land."
+                },
+                "2": {
+                    "title": "Check Season",
+                    "instruction": "Match each crop with the correct planting season."
+                },
+                "3": {
+                    "title": "Water Needs",
+                    "instruction": "Confirm whether crops require low, medium, or high water."
+                }
+            }
+        },
+        "compost_kickoff": {
+            "title": "Soil Booster",
+            "description": "Turn organic waste into nutrient-rich compost.",
+            "steps": {
+                "0": {
+                    "title": "Choose Spot",
+                    "instruction": "Select a shaded spot with good airflow."
+                },
+                "1": {
+                    "title": "Add Greens",
+                    "instruction": "Include kitchen waste like peels & scraps."
+                },
+                "2": {
+                    "title": "Add Browns",
+                    "instruction": "Mix dry leaves, cardboard, or straw."
+                },
+                "3": {
+                    "title": "Mix Weekly",
+                    "instruction": "Turn compost every 7 days to speed decomposition."
+                }
+            }
+        },
+        "zero_waste": {
+            "title": "Zero Waste Warrior",
+            "description": "Learn to segregate waste for eco-friendly farming.",
+            "steps": {
+                "0": {
+                    "title": "Segregate Waste",
+                    "instruction": "Separate organic & non-organic waste at home."
+                },
+                "1": {
+                    "title": "Collect Dry Leaves",
+                    "instruction": "Store leaves for mulching your plants."
+                },
+                "2": {
+                    "title": "Mini Waste Station",
+                    "instruction": "Set up 2–3 labeled bins for easy segregation."
+                }
+            }
+        },
+        "mini_garden": {
+            "title": "Miniplot Mastery",
+            "description": "Build your first small garden with 5 simple plants.",
+            "steps": {
+                "0": {
+                    "title": "Pick 5 Plants",
+                    "instruction": "Choose beginner-friendly herbs/veggies."
+                },
+                "1": {
+                    "title": "Prepare Patch",
+                    "instruction": "Loosen top soil in a 1×1m area."
+                },
+                "2": {
+                    "title": "Plant Seeds",
+                    "instruction": "Sow seeds or plant small saplings."
+                },
+                "3": {
+                    "title": "Water & Mulch",
+                    "instruction": "Keep soil moist and apply mulch on top."
+                }
+            }
+        },
+        "mulch_master": {
+            "title": "Soil Shield",
+            "description": "Protect your soil using natural mulching.",
+            "steps": {
+                "0": {
+                    "title": "Collect Mulch",
+                    "instruction": "Gather dry leaves, straw, or grass clippings."
+                },
+                "1": {
+                    "title": "Spread Mulch",
+                    "instruction": "Create a 2–3 inch thick layer around the plant."
+                },
+                "2": {
+                    "title": "Settle Mulch",
+                    "instruction": "Water lightly to keep mulch in place."
+                }
+            }
+        },
+        "boll_keeper": {
+            "title": "Boll Keeper Mastery Challenge",
+            "description": "Prevent cotton boll shedding with simple interventions.",
+            "steps": {
+                "0": {
+                    "title": "Inspect Bolls",
+                    "instruction": "Check for early shedding & pest marks."
+                },
+                "1": {
+                    "title": "Nutrient Spray",
+                    "instruction": "Apply balanced micronutrient foliar spray."
+                },
+                "2": {
+                    "title": "Remove Damage",
+                    "instruction": "Cut off pest-affected bolls to prevent spread."
+                }
+            }
+        },
+        "coconut_basin": {
+            "title": "Build a Life Ring",
+            "description": "Create water-saving basins around coconut trees.",
+            "steps": {
+                "0": {
+                    "title": "Mark Radius",
+                    "instruction": "Draw a 1–1.5m circle around the tree."
+                },
+                "1": {
+                    "title": "Dig Basin",
+                    "instruction": "Create a shallow circular trench."
+                },
+                "2": {
+                    "title": "Level Soil",
+                    "instruction": "Flatten inner area for even watering."
+                },
+                "3": {
+                    "title": "Add Mulch",
+                    "instruction": "Fill with dry leaves or coconut husk."
+                },
+                "4": {
+                    "title": "Water",
+                    "instruction": "Water gently to help basin settle."
+                }
+            }
+        },
+        "coconut_bioenzyme": {
+            "title": "Coconut Water Bio-Elixir",
+            "description": "Make a natural bio-enzyme using coconut water.",
+            "steps": {
+                "0": {
+                    "title": "Collect Water",
+                    "instruction": "Use leftover coconut water as base."
+                },
+                "1": {
+                    "title": "Add Jaggery",
+                    "instruction": "Mix jaggery to feed microbes."
+                },
+                "2": {
+                    "title": "Ferment 7 Days",
+                    "instruction": "Store sealed and allow natural fermentation."
+                },
+                "3": {
+                    "title": "Dilute & Apply",
+                    "instruction": "Mix with water (1:20) and pour around root zone."
+                }
+            }
+        },
+        "rust_shield": {
+            "title": "Rust Shield Challenge",
+            "description": "Protect wheat from rust disease using safe methods.",
+            "steps": {
+                "0": {
+                    "title": "Spot Symptoms",
+                    "instruction": "Look for yellow/orange rust patches on leaves."
+                },
+                "1": {
+                    "title": "Remove Infected Leaves",
+                    "instruction": "Cut and discard affected parts safely."
+                },
+                "2": {
+                    "title": "Improve Airflow",
+                    "instruction": "Ensure proper spacing between plants."
+                },
+                "3": {
+                    "title": "Organic Spray",
+                    "instruction": "Apply safe fungicidal solution weekly."
+                }
+            }
+        },
+        "biodiversity_strip": {
+            "title": "Biodiversity Bloom Bar",
+            "description": "Plant a strip of flowering plants to attract beneficial insects.",
+            "steps": {
+                "0": {
+                    "title": "Select Flowers",
+                    "instruction": "Choose 5 pollinator-friendly plants."
+                },
+                "1": {
+                    "title": "Mark 1m Strip",
+                    "instruction": "Prepare a 1-meter planting strip."
+                },
+                "2": {
+                    "title": "Cluster Planting",
+                    "instruction": "Plant flowers in small clusters."
+                },
+                "3": {
+                    "title": "Mulch & Water",
+                    "instruction": "Mulch lightly and water regularly."
+                }
+            }
+        },
+        "rainwater_hero": {
+            "title": "Rainwater Hero",
+            "description": "Set up a simple rainwater harvesting system.",
+            "steps": {
+                "0": {
+                    "title": "Place Barrel",
+                    "instruction": "Set container under roof edge to collect runoff."
+                },
+                "1": {
+                    "title": "Add Mesh Filter",
+                    "instruction": "Install mesh to block debris and insects."
+                },
+                "2": {
+                    "title": "Fit Tap",
+                    "instruction": "Attach outlet tap near bottom of barrel."
+                },
+                "3": {
+                    "title": "Use Saved Water",
+                    "instruction": "Water plants using collected rainwater."
+                }
+            }
+        },
+        "biochar_maker": {
+            "title": "Biochar Mastery Challenge",
+            "description": "Make biochar using farm waste to enrich soil.",
+            "steps": {
+                "0": {
+                    "title": "Gather Waste Wood",
+                    "instruction": "Collect dry sticks, branches, and husk pieces."
+                },
+                "1": {
+                    "title": "Burn Low-Oxygen",
+                    "instruction": "Slow-burn in pit while limiting airflow."
+                },
+                "2": {
+                    "title": "Crush Charcoal",
+                    "instruction": "Break cooled biochar into smaller pieces."
+                },
+                "3": {
+                    "2": {
+                        "title": "Mini Waste Station",
+                        "instruction": "Set up 2–3 labeled bins for easy segregation."
+                    }
+                }
+            },
+            "mini_garden": {
+                "title": "Miniplot Mastery",
+                "description": "Build your first small garden with 5 simple plants.",
+                "steps": {
+                    "0": {
+                        "title": "Pick 5 Plants",
+                        "instruction": "Choose beginner-friendly herbs/veggies."
+                    },
+                    "1": {
+                        "title": "Prepare Patch",
+                        "instruction": "Loosen top soil in a 1×1m area."
+                    },
+                    "2": {
+                        "title": "Plant Seeds",
+                        "instruction": "Sow seeds or plant small saplings."
+                    },
+                    "3": {
+                        "title": "Water & Mulch",
+                        "instruction": "Keep soil moist and apply mulch on top."
+                    }
+                }
+            },
+            "mulch_master": {
+                "title": "Soil Shield",
+                "description": "Protect your soil using natural mulching.",
+                "steps": {
+                    "0": {
+                        "title": "Collect Mulch",
+                        "instruction": "Gather dry leaves, straw, or grass clippings."
+                    },
+                    "1": {
+                        "title": "Spread Mulch",
+                        "instruction": "Create a 2–3 inch thick layer around the plant."
+                    },
+                    "2": {
+                        "title": "Settle Mulch",
+                        "instruction": "Water lightly to keep mulch in place."
+                    }
+                }
+            },
+            "boll_keeper": {
+                "title": "Boll Keeper Mastery Challenge",
+                "description": "Prevent cotton boll shedding with simple interventions.",
+                "steps": {
+                    "0": {
+                        "title": "Inspect Bolls",
+                        "instruction": "Check for early shedding & pest marks."
+                    },
+                    "1": {
+                        "title": "Nutrient Spray",
+                        "instruction": "Apply balanced micronutrient foliar spray."
+                    },
+                    "2": {
+                        "title": "Remove Damage",
+                        "instruction": "Cut off pest-affected bolls to prevent spread."
+                    }
+                }
+            },
+            "coconut_basin": {
+                "title": "Build a Life Ring",
+                "description": "Create water-saving basins around coconut trees.",
+                "steps": {
+                    "0": {
+                        "title": "Mark Radius",
+                        "instruction": "Draw a 1–1.5m circle around the tree."
+                    },
+                    "1": {
+                        "title": "Dig Basin",
+                        "instruction": "Create a shallow circular trench."
+                    },
+                    "2": {
+                        "title": "Level Soil",
+                        "instruction": "Flatten inner area for even watering."
+                    },
+                    "3": {
+                        "title": "Add Mulch",
+                        "instruction": "Fill with dry leaves or coconut husk."
+                    },
+                    "4": {
+                        "title": "Water",
+                        "instruction": "Water gently to help basin settle."
+                    }
+                }
+            },
+            "coconut_bioenzyme": {
+                "title": "Coconut Water Bio-Elixir",
+                "description": "Make a natural bio-enzyme using coconut water.",
+                "steps": {
+                    "0": {
+                        "title": "Collect Water",
+                        "instruction": "Use leftover coconut water as base."
+                    },
+                    "1": {
+                        "title": "Add Jaggery",
+                        "instruction": "Mix jaggery to feed microbes."
+                    },
+                    "2": {
+                        "title": "Ferment 7 Days",
+                        "instruction": "Store sealed and allow natural fermentation."
+                    },
+                    "3": {
+                        "title": "Dilute & Apply",
+                        "instruction": "Mix with water (1:20) and pour around root zone."
+                    }
+                }
+            },
+            "rust_shield": {
+                "title": "Rust Shield Challenge",
+                "description": "Protect wheat from rust disease using safe methods.",
+                "steps": {
+                    "0": {
+                        "title": "Spot Symptoms",
+                        "instruction": "Look for yellow/orange rust patches on leaves."
+                    },
+                    "1": {
+                        "title": "Remove Infected Leaves",
+                        "instruction": "Cut and discard affected parts safely."
+                    },
+                    "2": {
+                        "title": "Improve Airflow",
+                        "instruction": "Ensure proper spacing between plants."
+                    },
+                    "3": {
+                        "title": "Organic Spray",
+                        "instruction": "Apply safe fungicidal solution weekly."
+                    }
+                }
+            },
+            "biodiversity_strip": {
+                "title": "Biodiversity Bloom Bar",
+                "description": "Plant a strip of flowering plants to attract beneficial insects.",
+                "steps": {
+                    "0": {
+                        "title": "Select Flowers",
+                        "instruction": "Choose 5 pollinator-friendly plants."
+                    },
+                    "1": {
+                        "title": "Mark 1m Strip",
+                        "instruction": "Prepare a 1-meter planting strip."
+                    },
+                    "2": {
+                        "title": "Cluster Planting",
+                        "instruction": "Plant flowers in small clusters."
+                    },
+                    "3": {
+                        "title": "Mulch & Water",
+                        "instruction": "Mulch lightly and water regularly."
+                    }
+                }
+            },
+            "rainwater_hero": {
+                "title": "Rainwater Hero",
+                "description": "Set up a simple rainwater harvesting system.",
+                "steps": {
+                    "0": {
+                        "title": "Place Barrel",
+                        "instruction": "Set container under roof edge to collect runoff."
+                    },
+                    "1": {
+                        "title": "Add Mesh Filter",
+                        "instruction": "Install mesh to block debris and insects."
+                    },
+                    "2": {
+                        "title": "Fit Tap",
+                        "instruction": "Attach outlet tap near bottom of barrel."
+                    },
+                    "3": {
+                        "title": "Use Saved Water",
+                        "instruction": "Water plants using collected rainwater."
+                    }
+                }
+            },
+            "biochar_maker": {
+                "title": "Biochar Mastery Challenge",
+                "description": "Make biochar using farm waste to enrich soil.",
+                "steps": {
+                    "0": {
+                        "title": "Gather Waste Wood",
+                        "instruction": "Collect dry sticks, branches, and husk pieces."
+                    },
+                    "1": {
+                        "title": "Burn Low-Oxygen",
+                        "instruction": "Slow-burn in pit while limiting airflow."
+                    },
+                    "2": {
+                        "title": "Crush Charcoal",
+                        "instruction": "Break cooled biochar into smaller pieces."
+                    },
+                    "3": {
+                        "title": "Mix with Compost",
+                        "instruction": "Blend biochar into compost before application."
+                    }
+                }
+            },
+            "jeevamrutham": {
+                "title": "Jeevamrutham Mission",
+                "description": "Prepare Jeevamrutham to boost beneficial soil microbes.",
+                "steps": {
+                    "0": {
+                        "title": "Mix Dung & Urine",
+                        "instruction": "Combine fresh cow dung and urine in a drum."
+                    },
+                    "1": {
+                        "title": "Add Jaggery + Flour",
+                        "instruction": "Add jaggery & gram flour to feed microbes."
+                    },
+                    "2": {
+                        "title": "Ferment 5–7 Days",
+                        "instruction": "Stir daily and allow microbial growth."
+                    },
+                    "3": {
+                        "title": "Apply to Soil",
+                        "instruction": "Pour near root zone for microbial boost."
+                    }
+                }
+            }
+        }
+    }
 }

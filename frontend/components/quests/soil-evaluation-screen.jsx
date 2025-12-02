@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next"
 import { ChevronLeft, CheckCircle2 } from "lucide-react"
 
 export function SoilEvaluationScreen({ quest, onSubmit, onBack }) {
-    const { t } = useTranslation()
+    const { t } = useTranslation("quests")
     const [texture, setTexture] = useState("")
     const [moisture, setMoisture] = useState("")
     const [health, setHealth] = useState("")

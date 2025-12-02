@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next"
 import { ChevronLeft, Zap, Trophy, ArrowRight, CheckCircle2 } from "lucide-react"
 
 export function QuestIntroScreen({ quest, onStart, onBack, isCompleted }) {
-  const { t } = useTranslation()
+  const { t } = useTranslation(["quests", "common"])
 
   return (
     <div className="h-screen flex flex-col bg-background overflow-hidden relative">
@@ -19,7 +19,7 @@ export function QuestIntroScreen({ quest, onStart, onBack, isCompleted }) {
         </button>
         <div className="flex items-center gap-2">
           <div className="px-3 py-1 rounded-full bg-accent/10 text-accent text-xs font-bold uppercase tracking-wider border border-accent/20">
-            {quest.difficulty} {t("quests.quest")}
+            {t(`quests.filters.difficulty.${quest.difficulty}`, quest.difficulty)} {t("quests.quest")}
           </div>
           {isCompleted && (
             <div className="px-3 py-1 rounded-full bg-emerald-500 text-white text-xs font-bold flex items-center gap-1 shadow-md">
@@ -38,10 +38,10 @@ export function QuestIntroScreen({ quest, onStart, onBack, isCompleted }) {
         <div className="flex-1 space-y-6 text-center md:text-left overflow-y-auto max-h-full no-scrollbar">
           <div className="space-y-2">
             <h1 className="text-4xl md:text-6xl font-black text-foreground tracking-tight leading-tight">
-              {quest.title}
+              {t(`quests.data.${quest.id}.title`, quest.title)}
             </h1>
             <p className="text-lg text-muted-foreground max-w-xl mx-auto md:mx-0 leading-relaxed">
-              {quest.description}
+              {t(`quests.data.${quest.id}.description`, quest.description)}
             </p>
           </div>
 
@@ -61,7 +61,7 @@ export function QuestIntroScreen({ quest, onStart, onBack, isCompleted }) {
                 <Trophy className="w-5 h-5 text-accent" />
               </div>
               <div className="text-left">
-                <p className="text-sm font-bold text-foreground">{quest.badgeName}</p>
+                <p className="text-sm font-bold text-foreground">{t(`quests.data.${quest.id}.badgeName`, quest.badgeName)}</p>
                 <p className="text-[10px] text-muted-foreground uppercase font-bold">{t("quests.badge")}</p>
               </div>
             </div>
@@ -79,11 +79,13 @@ export function QuestIntroScreen({ quest, onStart, onBack, isCompleted }) {
 
           <div className="space-y-3 flex-1 overflow-y-auto pr-2 custom-scrollbar">
             {quest.activities.map((activity, idx) => (
-              <div key={idx} className="flex items-center gap-3 p-3 rounded-xl bg-background/50 border border-border/50 hover:border-primary/30 transition-colors">
-                <div className="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center text-xs font-bold text-primary shrink-0">
+              <div key={idx} className="flex items-center gap-3 bg-card/50 p-3 rounded-xl border border-border/50">
+                <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold text-sm">
                   {idx + 1}
                 </div>
-                <p className="text-sm font-medium text-foreground/80">{activity}</p>
+                <p className="text-sm font-medium text-foreground/80">
+                  {t(`quests.data.${quest.id}.activities.activity_${idx}`, activity)}
+                </p>
               </div>
             ))}
           </div>
@@ -92,8 +94,8 @@ export function QuestIntroScreen({ quest, onStart, onBack, isCompleted }) {
             onClick={onStart}
             disabled={isCompleted}
             className={`w-full mt-6 font-bold py-4 rounded-2xl transition-all transform active:scale-[0.98] shadow-lg flex items-center justify-center gap-2 group/btn relative z-10 ${isCompleted
-                ? 'bg-emerald-500 text-white cursor-default'
-                : 'bg-primary text-primary-foreground hover:bg-primary/90 shadow-primary/20'
+              ? 'bg-emerald-500 text-white cursor-default'
+              : 'bg-primary text-primary-foreground hover:bg-primary/90 shadow-primary/20'
               }`}
           >
             {isCompleted ? (

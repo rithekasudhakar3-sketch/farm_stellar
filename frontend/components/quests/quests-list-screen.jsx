@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next"
 import { Leaf, Sprout, Droplets, Sun, Wheat, TreePine, Bug, Flower2 } from "lucide-react"
 
 export function HomeScreen({ onStartQuest, quests }) {
-  const { t } = useTranslation()
+  const { t } = useTranslation(["quests", "common"])
   const questList = Object.values(quests)
   const totalXP = questList.reduce((sum, quest) => sum + quest.xpReward, 0)
 
@@ -125,12 +125,12 @@ export function HomeScreen({ onStartQuest, quests }) {
                       </div>
                       <div className="flex-1">
                         <span className="inline-block text-xs bg-accent/20 text-primary px-3 py-1 rounded-full font-medium mb-2">
-                          {quest.difficulty}
+                          {t(`quests.filters.difficulty.${quest.difficulty}`, quest.difficulty)}
                         </span>
                       </div>
                     </div>
-                    <h3 className="font-bold text-lg text-foreground mb-2">{quest.title}</h3>
-                    <p className="text-sm text-muted-foreground mb-3 line-clamp-2">{quest.description}</p>
+                    <h3 className="font-bold text-lg text-foreground mb-2">{t(`quests.data.${quest.id}.title`, quest.title)}</h3>
+                    <p className="text-sm text-muted-foreground mb-3 line-clamp-2">{t(`quests.data.${quest.id}.description`, quest.description)}</p>
 
                     {/* Crop-specific pills */}
                     {cropLabels.length > 0 && (

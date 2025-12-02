@@ -95,7 +95,7 @@ export const stepsData = {
 };
 
 export function QuestStepsScreen({ quest, onContinue, onBack }) {
-  const { t } = useTranslation()
+  const { t } = useTranslation(["quests", "common"])
   // Check if we have detailed steps in the quest object (New Format)
   const detailedSteps = quest.steps
 
@@ -155,8 +155,8 @@ export function QuestStepsScreen({ quest, onContinue, onBack }) {
             <div className="flex items-start gap-4">
               <div className="text-3xl mt-1">{step.icon}</div>
               <div className="flex-1">
-                <h3 className="font-bold text-foreground">{step.title}</h3>
-                <p className="text-sm text-muted-foreground mt-1">{step.instruction}</p>
+                <h3 className="font-bold text-foreground">{t(`quests.data.${quest.id}.steps.${idx}.title`, step.title)}</h3>
+                <p className="text-sm text-muted-foreground mt-1">{t(`quests.data.${quest.id}.steps.${idx}.instruction`, step.instruction)}</p>
               </div>
               <div className="flex-shrink-0 mt-1">
                 {completedSteps[idx] ? (
@@ -190,7 +190,7 @@ export function QuestStepsScreen({ quest, onContinue, onBack }) {
 }
 
 function QuestWizard({ steps, onComplete, onBack, questId }) {
-  const { t } = useTranslation()
+  const { t } = useTranslation(["quests", "common"])
   const router = useRouter()
   const pathname = usePathname()
   const searchParams = useSearchParams()
@@ -289,8 +289,12 @@ function QuestWizard({ steps, onComplete, onBack, questId }) {
           <div className="flex flex-col h-full overflow-hidden relative max-w-6xl mx-auto">
             <div className="flex-1 overflow-y-auto px-6 pt-6 md:px-12 md:pt-12 pb-96 custom-scrollbar">
               <div className="animate-in fade-in slide-in-from-bottom-4 duration-700 fill-mode-both">
-                <h2 className="text-3xl md:text-5xl font-black mb-4 text-foreground tracking-tight leading-tight">{step.title}</h2>
-                <p className="text-lg md:text-xl text-muted-foreground mb-10 leading-relaxed font-medium">{step.objective}</p>
+                <h2 className="text-3xl md:text-5xl font-black mb-4 text-foreground tracking-tight leading-tight">
+                  {t(`quests.data.${questId}.steps.${safeIndex}.title`, step.title)}
+                </h2>
+                <p className="text-lg md:text-xl text-muted-foreground mb-10 leading-relaxed font-medium">
+                  {t(`quests.data.${questId}.steps.${safeIndex}.objective`, step.objective)}
+                </p>
 
                 {/* Learning Summary View - No Checkboxes */}
                 {step.subSteps && step.subSteps.length > 0 && (
@@ -310,7 +314,7 @@ function QuestWizard({ steps, onComplete, onBack, questId }) {
                               <span className="text-sm font-bold text-primary">{idx + 1}</span>
                             </div>
                             <p className="text-base font-medium leading-relaxed text-foreground">
-                              {subStep}
+                              {t(`quests.data.${questId}.steps.${safeIndex}.subSteps.${idx}`, subStep)}
                             </p>
                           </div>
                         ))}
@@ -356,8 +360,12 @@ function QuestWizard({ steps, onComplete, onBack, questId }) {
           <div className="flex flex-col h-full overflow-hidden relative bg-background">
             <div className="flex-1 overflow-y-auto px-6 pt-6 md:px-12 md:pt-12 pb-96 custom-scrollbar">
               <div className="animate-in fade-in slide-in-from-bottom-4 duration-700 fill-mode-both">
-                <h2 className="text-3xl md:text-5xl font-black mb-4 text-foreground tracking-tight leading-tight">{step.title}</h2>
-                <p className="text-lg md:text-xl text-muted-foreground mb-10 leading-relaxed font-medium">{step.objective}</p>
+                <h2 className="text-3xl md:text-5xl font-black mb-4 text-foreground tracking-tight leading-tight">
+                  {t(`quests.data.${questId}.steps.${safeIndex}.title`, step.title)}
+                </h2>
+                <p className="text-lg md:text-xl text-muted-foreground mb-10 leading-relaxed font-medium">
+                  {t(`quests.data.${questId}.steps.${safeIndex}.objective`, step.objective)}
+                </p>
 
                 {/* Regular Interactive Checkboxes */}
                 {step.subSteps && step.subSteps.length > 0 && (
@@ -378,7 +386,7 @@ function QuestWizard({ steps, onComplete, onBack, questId }) {
                           {checkedItems[safeIndex]?.[idx] && <Check className="w-3.5 h-3.5 stroke-[3]" />}
                         </div>
                         <p className="text-base font-medium leading-relaxed text-foreground flex-1">
-                          {subStep}
+                          {t(`quests.data.${questId}.steps.${safeIndex}.subSteps.${idx}`, subStep)}
                         </p>
                       </div>
                     ))}
@@ -394,7 +402,9 @@ function QuestWizard({ steps, onComplete, onBack, questId }) {
                       </div>
                       <div className="flex-1">
                         <h4 className="font-bold text-amber-900 dark:text-amber-100 mb-2 text-sm uppercase tracking-wide">{t("quests.proTip")}</h4>
-                        <p className="leading-relaxed font-medium">{step.tip || step.reason}</p>
+                        <p className="leading-relaxed font-medium">
+                          {t(`quests.data.${questId}.steps.${safeIndex}.tip`, step.tip || step.reason)}
+                        </p>
                       </div>
                     </div>
                   </div>

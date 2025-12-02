@@ -4,9 +4,11 @@ import { RevampedQuestsListScreen } from "@/components/quests/revamped-quests-li
 import { QUESTS_DATA } from "@/constants/quests"
 import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
+import { useTranslation } from "react-i18next"
 
 export default function QuestsPage() {
     const router = useRouter()
+    const { t } = useTranslation()
     const [userData, setUserData] = useState(null)
     const [loading, setLoading] = useState(true)
 
@@ -15,6 +17,21 @@ export default function QuestsPage() {
             const token = localStorage.getItem("token")
             if (!token) {
                 router.push("/welcome")
+                return
+            }
+
+            // Check for mock token
+            if (token === "mock-token-for-dev") {
+                console.log("Using mock data for development")
+                const mockUser = {
+                    xpLevel: 1,
+                    xp: 150,
+                    questsProgress: [],
+                    completedQuests: [],
+                    farmerType: "Beginner"
+                }
+                setUserData(mockUser)
+                setLoading(false)
                 return
             }
 
@@ -29,7 +46,7 @@ export default function QuestsPage() {
                 if (!userRes.ok) {
                     const errorData = await userRes.json().catch(() => ({}))
                     console.error("API Error:", userRes.status, errorData)
-                    
+
                     // If unauthorized, clear token and redirect
                     if (userRes.status === 401) {
                         localStorage.removeItem("token")
@@ -38,7 +55,7 @@ export default function QuestsPage() {
                         router.push("/welcome")
                         return
                     }
-                    
+
                     throw new Error(errorData.message || "Failed to fetch user data")
                 }
 
@@ -56,8 +73,16 @@ export default function QuestsPage() {
                 setUserData(mergedData)
             } catch (error) {
                 console.error("Error fetching data:", error)
+                // Fallback to mock data if fetch fails (e.g. backend down)
                 const data = JSON.parse(localStorage.getItem("farmquest_userdata") || "{}")
-                setUserData(data)
+                const fallbackData = {
+                    xpLevel: data.xpLevel || 1,
+                    xp: data.xp || 0,
+                    questsProgress: data.questsProgress || [],
+                    completedQuests: data.completedQuests || [],
+                    farmerType: data.farmerType || "Beginner"
+                }
+                setUserData(fallbackData)
             } finally {
                 setLoading(false)
             }
@@ -67,7 +92,7 @@ export default function QuestsPage() {
     }, [router])
 
     if (loading || !userData) {
-        return <div className="min-h-screen flex items-center justify-center">Loading...</div>
+        return <div className="min-h-screen flex items-center justify-center">{t("common.loading")}</div>
     }
 
     return (

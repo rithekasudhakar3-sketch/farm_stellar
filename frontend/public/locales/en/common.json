@@ -1,5 +1,6 @@
 {
     "name": "Name",
+    "loading": "Loading...",
     "level": "Level",
     "location": "Location",
     "xp": "XP",

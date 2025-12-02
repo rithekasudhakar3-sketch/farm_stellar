@@ -1,0 +1,4 @@
+Processing d:\farm_stellar\farm_stellar\frontend\public\locales\en\quests.json...
+Keys in soil_scout: ['title', 'badgeName', 'description', 'activities', 'steps']
+Keys in soil_scout.steps: ['0', '1', '2', '3', '4', '5']
+Found quests: []

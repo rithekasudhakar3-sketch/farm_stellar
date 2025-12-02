@@ -1,9 +1,11 @@
 "use client"
 
 import { useState } from "react"
+import { useTranslation } from "react-i18next"
 import { Leaf, Sprout, Droplets, Sun, Wheat, TreePine, Bug, Flower2, Search, Filter, ArrowRight, Star, Trophy, ChevronDown, CheckCircle, Clock } from "lucide-react"
 
 export function RevampedQuestsListScreen({ onStartQuest, quests, userData }) {
+    const { t } = useTranslation(["quests", "common"])
     const [searchQuery, setSearchQuery] = useState("")
     const [selectedCrop, setSelectedCrop] = useState("All")
     const [selectedDifficulty, setSelectedDifficulty] = useState("All")
@@ -49,14 +51,13 @@ export function RevampedQuestsListScreen({ onStartQuest, quests, userData }) {
                     <div className="max-w-4xl mx-auto text-center mb-10">
                         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-accent/10 text-accent-foreground text-sm font-medium mb-4 border border-accent/20">
                             <SparklesIcon className="w-4 h-4" />
-                            <span>New Quests Available</span>
+                            <span>{t("quests.newQuestsAvailable")}</span>
                         </div>
                         <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-4 tracking-tight">
-                            Explore Farming Quests
+                            {t("quests.exploreQuests")}
                         </h1>
                         <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-                            Master sustainable farming techniques through interactive lessons.
-                            Complete quests, earn XP, and become a certified expert.
+                            {t("quests.exploreDesc")}
                         </p>
                     </div>
 
@@ -67,42 +68,42 @@ export function RevampedQuestsListScreen({ onStartQuest, quests, userData }) {
                                 <Trophy className="w-5 h-5 text-primary" />
                             </div>
                             <p className="text-2xl font-bold text-foreground">{userLevel}</p>
-                            <p className="text-xs text-muted-foreground">Current Level</p>
+                            <p className="text-xs text-muted-foreground">{t("quests.currentLevel")}</p>
                         </div>
                         <div className="bg-card/80 backdrop-blur-sm border border-border rounded-2xl p-4 shadow-sm hover:shadow-md transition-all text-center group">
                             <div className="w-10 h-10 mx-auto bg-accent/10 rounded-full flex items-center justify-center mb-2 group-hover:scale-110 transition-transform">
                                 <Star className="w-5 h-5 text-accent" />
                             </div>
                             <p className="text-2xl font-bold text-foreground">{totalXP}</p>
-                            <p className="text-xs text-muted-foreground">Total Available XP</p>
+                            <p className="text-xs text-muted-foreground">{t("quests.totalAvailableXP")}</p>
                         </div>
                         <div className="bg-card/80 backdrop-blur-sm border border-border rounded-2xl p-4 shadow-sm hover:shadow-md transition-all text-center group">
                             <div className="w-10 h-10 mx-auto bg-secondary/10 rounded-full flex items-center justify-center mb-2 group-hover:scale-110 transition-transform">
                                 <Leaf className="w-5 h-5 text-secondary" />
                             </div>
                             <p className="text-2xl font-bold text-foreground">{questList.length}</p>
-                            <p className="text-xs text-muted-foreground">Total Quests</p>
+                            <p className="text-xs text-muted-foreground">{t("quests.totalQuests")}</p>
                         </div>
                         <div className="bg-card/80 backdrop-blur-sm border border-border rounded-2xl p-4 shadow-sm hover:shadow-md transition-all text-center group">
                             <div className="w-10 h-10 mx-auto bg-emerald-100 rounded-full flex items-center justify-center mb-2 group-hover:scale-110 transition-transform">
                                 <CheckCircle className="w-5 h-5 text-emerald-600" />
                             </div>
                             <p className="text-2xl font-bold text-foreground">{completedCount}</p>
-                            <p className="text-xs text-muted-foreground">Completed Quests</p>
+                            <p className="text-xs text-muted-foreground">{t("quests.completedQuests")}</p>
                         </div>
                         <div className="bg-card/80 backdrop-blur-sm border border-border rounded-2xl p-4 shadow-sm hover:shadow-md transition-all text-center group">
                             <div className="w-10 h-10 mx-auto bg-amber-100 rounded-full flex items-center justify-center mb-2 group-hover:scale-110 transition-transform">
                                 <Clock className="w-5 h-5 text-amber-600" />
                             </div>
                             <p className="text-2xl font-bold text-foreground">{questList.length - completedCount}</p>
-                            <p className="text-xs text-muted-foreground">Remaining Quests</p>
+                            <p className="text-xs text-muted-foreground">{t("quests.remainingQuests")}</p>
                         </div>
                         <div className="bg-card/80 backdrop-blur-sm border border-border rounded-2xl p-4 shadow-sm hover:shadow-md transition-all text-center group">
                             <div className="w-10 h-10 mx-auto bg-orange-100 rounded-full flex items-center justify-center mb-2 group-hover:scale-110 transition-transform">
                                 <Wheat className="w-5 h-5 text-orange-600" />
                             </div>
                             <p className="text-2xl font-bold text-foreground">{completionRate}%</p>
-                            <p className="text-xs text-muted-foreground">Completion Rate</p>
+                            <p className="text-xs text-muted-foreground">{t("quests.completionRate")}</p>
                         </div>
                     </div>
                 </div>
@@ -117,7 +118,7 @@ export function RevampedQuestsListScreen({ onStartQuest, quests, userData }) {
                             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                             <input
                                 type="text"
-                                placeholder="Search quests..."
+                                placeholder={t("quests.searchPlaceholder")}
                                 className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-input bg-background focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all"
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
@@ -135,7 +136,7 @@ export function RevampedQuestsListScreen({ onStartQuest, quests, userData }) {
                                 >
                                     {cropFilters.map(crop => (
                                         <option key={crop} value={crop}>
-                                            {crop === "All" ? "All Crops" : crop}
+                                            {t(`quests.filters.crops.${crop}`, crop)}
                                         </option>
                                     ))}
                                 </select>
@@ -151,7 +152,7 @@ export function RevampedQuestsListScreen({ onStartQuest, quests, userData }) {
                                 >
                                     {difficultyFilters.map(diff => (
                                         <option key={diff} value={diff}>
-                                            {diff === "All" ? "Any Level" : diff}
+                                            {t(`quests.filters.difficulty.${diff}`, diff)}
                                         </option>
                                     ))}
                                 </select>
@@ -187,11 +188,10 @@ export function RevampedQuestsListScreen({ onStartQuest, quests, userData }) {
                                 <div
                                     key={quest.id}
                                     onClick={() => onStartQuest(quest.id)}
-                                    className={`group bg-card rounded-3xl p-6 border shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 cursor-pointer relative overflow-hidden ${
-                                        isCompleted 
-                                            ? 'border-emerald-500/50 bg-emerald-50/5' 
-                                            : 'border-border'
-                                    }`}
+                                    className={`group bg-card rounded-3xl p-6 border shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 cursor-pointer relative overflow-hidden ${isCompleted
+                                        ? 'border-emerald-500/50 bg-emerald-50/5'
+                                        : 'border-border'
+                                        }`}
                                 >
                                     {/* Decorative background gradient */}
                                     <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-primary/5 to-accent/5 rounded-bl-full -mr-8 -mt-8 transition-transform group-hover:scale-150 duration-500"></div>
@@ -206,29 +206,29 @@ export function RevampedQuestsListScreen({ onStartQuest, quests, userData }) {
                                                     quest.difficulty === 'Medium' ? 'bg-yellow-50 text-yellow-700 border-yellow-200' :
                                                         'bg-red-50 text-red-700 border-red-200'
                                                     }`}>
-                                                    {quest.difficulty}
+                                                    {t(`quests.filters.difficulty.${quest.difficulty}`, quest.difficulty)}
                                                 </span>
                                                 {isCompleted && (
                                                     <span className="bg-emerald-500 text-white px-3 py-1 rounded-full flex items-center gap-1 text-xs font-bold shadow-md">
                                                         <CheckCircle className="w-3 h-3" />
-                                                        Completed
+                                                        {t("quests.completed")}
                                                     </span>
                                                 )}
                                             </div>
                                         </div>
 
                                         <h3 className="font-bold text-xl text-foreground mb-2 group-hover:text-primary transition-colors">
-                                            {quest.title}
+                                            {t(`quests.data.${quest.id}.title`, quest.title)}
                                         </h3>
                                         <p className="text-sm text-muted-foreground mb-6 line-clamp-2 leading-relaxed">
-                                            {quest.description}
+                                            {t(`quests.data.${quest.id}.description`, quest.description)}
                                         </p>
 
                                         {/* Crop Badge */}
                                         {quest.cropType && (
                                             <div className={`w-fit px-3 py-1.5 rounded-xl flex items-center justify-center border mb-4 ${getBadgeStyle(quest.cropType)}`}>
                                                 <span className="text-[10px] font-bold text-center leading-tight">
-                                                    {quest.cropType}
+                                                    {t(`quests.filters.crops.${quest.cropType}`, quest.cropType)}
                                                 </span>
                                             </div>
                                         )}
@@ -236,10 +236,10 @@ export function RevampedQuestsListScreen({ onStartQuest, quests, userData }) {
                                         <div className="flex items-center justify-between pt-4 border-t border-border/50">
                                             <div className="flex items-center gap-2 text-xs text-muted-foreground">
                                                 <span className="w-2 h-2 rounded-full bg-primary/50"></span>
-                                                {quest.activities.length} activities
+                                                {quest.activities.length} {t("quests.activities")}
                                             </div>
                                             <div className="flex items-center gap-1 text-sm font-bold text-accent">
-                                                <span>+{quest.xpReward} XP</span>
+                                                <span>+{quest.xpReward} {t("common.xp")}</span>
                                                 <ArrowRight className="w-4 h-4 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
                                             </div>
                                         </div>
@@ -254,13 +254,13 @@ export function RevampedQuestsListScreen({ onStartQuest, quests, userData }) {
                             <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mx-auto mb-4">
                                 <Search className="w-8 h-8 text-muted-foreground" />
                             </div>
-                            <h3 className="text-lg font-bold text-foreground">No quests found</h3>
-                            <p className="text-muted-foreground">Try adjusting your search or filters</p>
+                            <h3 className="text-lg font-bold text-foreground">{t("quests.noQuestsFound")}</h3>
+                            <p className="text-muted-foreground">{t("quests.adjustFilters")}</p>
                             <button
                                 onClick={() => { setSearchQuery(""); setSelectedCrop("All"); setSelectedDifficulty("All") }}
                                 className="mt-4 text-primary font-medium hover:underline"
                             >
-                                Clear all filters
+                                {t("quests.clearFilters")}
                             </button>
                         </div>
                     )}

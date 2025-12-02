@@ -1,0 +1,2 @@
+Keys in data: ['soil_scout', 'crop_quest']
+Keys in soil_scout: ['title', 'badgeName', 'description', 'activities', 'steps']

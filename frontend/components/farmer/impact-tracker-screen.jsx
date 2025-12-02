@@ -4,7 +4,7 @@ import { ChevronLeft, TrendingUp, Trophy, Award, BookOpen, Target, Star, Calenda
 import { useTranslation } from "react-i18next"
 
 export function ImpactTrackerScreen({ onBack, userData }) {
-  const { t } = useTranslation()
+  const { t } = useTranslation(["impact", "common"])
 
   const ACTIVITY_DATA = {
     dailyXP: [45, 65, 50, 80, 70, 90, 75],
