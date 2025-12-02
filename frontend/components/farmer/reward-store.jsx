@@ -3,6 +3,9 @@
 import { ShoppingBag, Sparkles, Leaf, Award, Star, Zap, ChevronLeft, Check, Sprout, Wrench } from "lucide-react"
 import { useState } from "react"
 
+// [All category definitions remain the same - keeping them as they were]
+// I'm including the full file to avoid corruption
+
 // Seed Store Categories
 const SEED_STORE_CATEGORIES = {
     vegetable_seeds: {
@@ -11,10 +14,10 @@ const SEED_STORE_CATEGORIES = {
         color: "from-green-500 to-emerald-500",
         description: "Small, affordable XP rewards for kitchen gardens and small farmers",
         items: [
-            { id: "tomato_seeds", name: "Tomato Seeds", description: "High germination rate, fast-growing hybrid varieties. Perfect for Kerala climate.", cost: 150, icon: "🍅", rarity: "common", details: "Includes 50g packet with 95% germination guarantee" },
-            { id: "okra_seeds", name: "Okra Seeds (Lady's Finger)", description: "Suitable for warm climates, disease-resistant traits. Thrives in Kerala weather.", cost: 120, icon: "🌿", rarity: "common", details: "30g packet, resistant to yellow vein mosaic virus" },
-            { id: "brinjal_seeds", name: "Brinjal Seeds (Eggplant)", description: "Long and round varieties, specially suited for Kerala soils. High yield potential.", cost: 180, icon: "🍆", rarity: "uncommon", details: "Includes both long purple and round varieties, 40g packet" },
-            { id: "chilli_seeds", name: "Chilli Seeds", description: "High-yield varieties, resistant to common fungal diseases. Spice up your farm!", cost: 140, icon: "🌶️", rarity: "common", details: "25g packet, includes Kanthari and Bird's Eye varieties" },
+            { id: "tomato_seeds", name: "Tomato Seeds", category: "Vegetable Seeds", description: "High germination rate, fast-growing hybrid varieties. Perfect for Kerala climate.", cost: 150, icon: "🍅", rarity: "common", details: "Includes 50g packet with 95% germination guarantee" },
+            { id: "okra_seeds", name: "Okra Seeds (Lady's Finger)", category: "Vegetable Seeds", description: "Suitable for warm climates, disease-resistant traits. Thrives in Kerala weather.", cost: 120, icon: "🌿", rarity: "common", details: "30g packet, resistant to yellow vein mosaic virus" },
+            { id: "brinjal_seeds", name: "Brinjal Seeds (Eggplant)", category: "Vegetable Seeds", description: "Long and round varieties, specially suited for Kerala soils. High yield potential.", cost: 180, icon: "🍆", rarity: "uncommon", details: "Includes both long purple and round varieties, 40g packet" },
+            { id: "chilli_seeds", name: "Chilli Seeds", category: "Vegetable Seeds", description: "High-yield varieties, resistant to common fungal diseases. Spice up your farm!", cost: 140, icon: "🌶️", rarity: "common", details: "25g packet, includes Kanthari and Bird's Eye varieties" },
         ],
         benefits: "Improves vegetable self-production, reduces household expenses, promotes organic growing"
     },
@@ -24,11 +27,11 @@ const SEED_STORE_CATEGORIES = {
         color: "from-yellow-600 to-amber-600",
         description: "Most relevant for Kerala farmers - traditional and hybrid varieties",
         items: [
-            { id: "matta_rice", name: "Matta Rice Seeds (Traditional)", description: "Premium Kerala Matta variety. Rich in nutrients, authentic taste, high market value.", cost: 400, icon: "🌾", rarity: "rare", details: "5kg certified seeds, 120-day maturity, red rice variety" },
-            { id: "uma_rice", name: "Uma Rice Seeds (Traditional)", description: "Traditional Kerala variety with excellent cooking quality and aroma.", cost: 350, icon: "🌾", rarity: "uncommon", details: "5kg certified seeds, 110-day maturity, white rice variety" },
-            { id: "hybrid_paddy", name: "High-Yield Hybrid Paddy", description: "Modern hybrid varieties with 30% higher yield than traditional types.", cost: 500, icon: "🌾", rarity: "rare", details: "5kg certified hybrid seeds, 100-day maturity, disease resistant" },
-            { id: "flood_resistant_paddy", name: "Flood-Resistant Paddy", description: "Stress-tolerant variety, survives waterlogging up to 14 days. Perfect for monsoon.", cost: 600, icon: "🌊", rarity: "epic", details: "5kg certified seeds, submergence tolerant, 115-day maturity" },
-            { id: "drought_resistant_paddy", name: "Drought-Resistant Paddy", description: "Requires 30% less water, ideal for areas with irrigation challenges.", cost: 550, icon: "☀️", rarity: "epic", details: "5kg certified seeds, aerobic rice variety, 105-day maturity" },
+            { id: "matta_rice", name: "Matta Rice Seeds (Traditional)", category: "Paddy Seeds", description: "Premium Kerala Matta variety. Rich in nutrients, authentic taste, high market value.", cost: 400, icon: "🌾", rarity: "rare", details: "5kg certified seeds, 120-day maturity, red rice variety" },
+            { id: "uma_rice", name: "Uma Rice Seeds (Traditional)", category: "Paddy Seeds", description: "Traditional Kerala variety with excellent cooking quality and aroma.", cost: 350, icon: "🌾", rarity: "uncommon", details: "5kg certified seeds, 110-day maturity, white rice variety" },
+            { id: "hybrid_paddy", name: "High-Yield Hybrid Paddy", category: "Paddy Seeds", description: "Modern hybrid varieties with 30% higher yield than traditional types.", cost: 500, icon: "🌾", rarity: "rare", details: "5kg certified hybrid seeds, 100-day maturity, disease resistant" },
+            { id: "flood_resistant_paddy", name: "Flood-Resistant Paddy", category: "Paddy Seeds", description: "Stress-tolerant variety, survives waterlogging up to 14 days. Perfect for monsoon.", cost: 600, icon: "🌊", rarity: "epic", details: "5kg certified seeds, submergence tolerant, 115-day maturity" },
+            { id: "drought_resistant_paddy", name: "Drought-Resistant Paddy", category: "Paddy Seeds", description: "Requires 30% less water, ideal for areas with irrigation challenges.", cost: 550, icon: "☀️", rarity: "epic", details: "5kg certified seeds, aerobic rice variety, 105-day maturity" },
         ],
         benefits: "Better yields, faster growth, improved resistance to pests and climate problems"
     },
@@ -38,11 +41,11 @@ const SEED_STORE_CATEGORIES = {
         color: "from-purple-500 to-pink-500",
         description: "High-yield and climate-resilient varieties for farmers upgrading productivity",
         items: [
-            { id: "drought_maize", name: "Drought-Resistant Maize", description: "Climate-smart maize that handles water stress. 40% more drought tolerant.", cost: 450, icon: "🌽", rarity: "rare", details: "1kg hybrid seeds, 90-day maturity, suitable for dry spells" },
-            { id: "short_duration_rice", name: "Short-Duration Rice", description: "Harvest in just 75-80 days! Allows multiple cropping cycles per year.", cost: 550, icon: "⚡", rarity: "epic", details: "5kg certified seeds, ultra-early variety, good for double cropping" },
-            { id: "hybrid_chilli", name: "High-Yield Hybrid Chilli", description: "Premium hybrid with 3x yield of traditional varieties. Export quality.", cost: 300, icon: "🔥", rarity: "uncommon", details: "50g F1 hybrid seeds, continuous fruiting, disease resistant" },
-            { id: "hybrid_tomato", name: "High-Yield Hybrid Tomato", description: "Commercial-grade hybrid tomato. Uniform size, long shelf life, high market value.", cost: 350, icon: "🍅", rarity: "rare", details: "25g F1 hybrid seeds, determinate type, suitable for staking" },
-            { id: "climate_vegetable_mix", name: "Climate-Resilient Vegetable Mix", description: "Curated seed collection of 8 vegetables bred for climate stress tolerance.", cost: 700, icon: "🌱", rarity: "legendary", details: "Includes beans, cucumber, radish, carrot, beetroot, spinach, coriander, fenugreek" },
+            { id: "drought_maize", name: "Drought-Resistant Maize", category: "Premium Seeds", description: "Climate-smart maize that handles water stress. 40% more drought tolerant.", cost: 450, icon: "🌽", rarity: "rare", details: "1kg hybrid seeds, 90-day maturity, suitable for dry spells" },
+            { id: "short_duration_rice", name: "Short-Duration Rice", category: "Premium Seeds", description: "Harvest in just 75-80 days! Allows multiple cropping cycles per year.", cost: 550, icon: "⚡", rarity: "epic", details: "5kg certified seeds, ultra-early variety, good for double cropping" },
+            { id: "hybrid_chilli", name: "High-Yield Hybrid Chilli", category: "Premium Seeds", description: "Premium hybrid with 3x yield of traditional varieties. Export quality.", cost: 300, icon: "🔥", rarity: "uncommon", details: "50g F1 hybrid seeds, continuous fruiting, disease resistant" },
+            { id: "hybrid_tomato", name: "High-Yield Hybrid Tomato", category: "Premium Seeds", description: "Commercial-grade hybrid tomato. Uniform size, long shelf life, high market value.", cost: 350, icon: "🍅", rarity: "rare", details: "25g F1 hybrid seeds, determinate type, suitable for staking" },
+            { id: "climate_vegetable_mix", name: "Climate-Resilient Vegetable Mix", category: "Premium Seeds", description: "Curated seed collection of 8 vegetables bred for climate stress tolerance.", cost: 700, icon: "🌱", rarity: "legendary", details: "Includes beans, cucumber, radish, carrot, beetroot, spinach, coriander, fenugreek" },
         ],
         benefits: "Handles climate stress, gives more output with less water, reduces risk of crop failure"
     }
@@ -56,9 +59,9 @@ const ORGANIC_MANURE_CATEGORIES = {
         color: "from-amber-600 to-orange-600",
         description: "Natural soil enhancers rich in nutrients",
         items: [
-            { id: "cow_dung_manure", name: "Cow Dung Manure", description: "Premium quality cow dung manure. Improves soil structure and enhances water retention.", cost: 200, icon: "🐄", rarity: "common", details: "10kg bag, well-decomposed, ready to use" },
-            { id: "farmyard_manure", name: "Farmyard Manure (FYM)", description: "Mixed organic manure from farm animals. Boosts overall plant growth and supports organic farming.", cost: 250, icon: "🌾", rarity: "common", details: "15kg bag, aged 6 months, nutrient-rich" },
-            { id: "organic_nutrient_mix", name: "Organic Nutrient Mixture", description: "Balanced blend of organic materials. Complete nutrition for all crops.", cost: 300, icon: "🌿", rarity: "uncommon", details: "10kg bag, NPK balanced, suitable for all crops" },
+            { id: "cow_dung_manure", name: "Cow Dung Manure", category: "Organic Manure", description: "Premium quality cow dung manure. Improves soil structure and enhances water retention.", cost: 200, icon: "🐄", rarity: "common", details: "10kg bag, well-decomposed, ready to use" },
+            { id: "farmyard_manure", name: "Farmyard Manure (FYM)", category: "Organic Manure", description: "Mixed organic manure from farm animals. Boosts overall plant growth and supports organic farming.", cost: 250, icon: "🌾", rarity: "common", details: "15kg bag, aged 6 months, nutrient-rich" },
+            { id: "organic_nutrient_mix", name: "Organic Nutrient Mixture", category: "Organic Manure", description: "Balanced blend of organic materials. Complete nutrition for all crops.", cost: 300, icon: "🌿", rarity: "uncommon", details: "10kg bag, NPK balanced, suitable for all crops" },
         ],
         benefits: "Improves soil structure, enhances water retention, boosts plant growth, supports organic farming"
     },
@@ -68,9 +71,9 @@ const ORGANIC_MANURE_CATEGORIES = {
         color: "from-green-600 to-teal-600",
         description: "Starter kits to convert organic waste into high-quality compost",
         items: [
-            { id: "basic_compost_kit", name: "Basic Compost Kit", description: "Everything you need to start composting. Includes bin and microbial starter.", cost: 400, icon: "♻️", rarity: "uncommon", details: "50L bin + 500g microbial starter + instruction manual" },
-            { id: "premium_compost_kit", name: "Premium Compost Kit", description: "Advanced composting system with temperature monitor. Faster decomposition.", cost: 600, icon: "🔄", rarity: "rare", details: "100L bin + thermometer + aerator + starter culture" },
-            { id: "community_compost_kit", name: "Community Compost Kit", description: "Large-scale composting for farmer groups. Processes 50kg waste daily.", cost: 900, icon: "👥", rarity: "epic", details: "500L capacity + industrial starter + training guide" },
+            { id: "basic_compost_kit", name: "Basic Compost Kit", category: "Compost Kits", description: "Everything you need to start composting. Includes bin and microbial starter.", cost: 400, icon: "♻️", rarity: "uncommon", details: "50L bin + 500g microbial starter + instruction manual" },
+            { id: "premium_compost_kit", name: "Premium Compost Kit", category: "Compost Kits", description: "Advanced composting system with temperature monitor. Faster decomposition.", cost: 600, icon: "🔄", rarity: "rare", details: "100L bin + thermometer + aerator + starter culture" },
+            { id: "community_compost_kit", name: "Community Compost Kit", category: "Compost Kits", description: "Large-scale composting for farmer groups. Processes 50kg waste daily.", cost: 900, icon: "👥", rarity: "epic", details: "500L capacity + industrial starter + training guide" },
         ],
         benefits: "Reduces farm waste, produces nutrient-rich compost at home, cuts fertilizer cost, encourages sustainable practices"
     },
@@ -80,9 +83,9 @@ const ORGANIC_MANURE_CATEGORIES = {
         color: "from-emerald-600 to-green-700",
         description: "Nutrient-rich compost made using earthworms",
         items: [
-            { id: "vermicompost_1kg", name: "Vermicompost (1kg)", description: "High nutrient content (NPK). Promotes soil aeration and enhances root growth.", cost: 100, icon: "🪱", rarity: "common", details: "1kg bag, ready to use, safe for all crops" },
-            { id: "vermicompost_5kg", name: "Vermicompost (5kg)", description: "Economy pack for small gardens. Rich in beneficial microorganisms.", cost: 400, icon: "🪱", rarity: "uncommon", details: "5kg bag, moisture-controlled packaging" },
-            { id: "vermicompost_10kg", name: "Vermicompost (10kg)", description: "Best value for regular farmers. Complete nutrition for healthy crops.", cost: 700, icon: "🪱", rarity: "rare", details: "10kg bag, premium quality, lab-tested NPK" },
+            { id: "vermicompost_1kg", name: "Vermicompost (1kg)", category: "Vermicompost", description: "High nutrient content (NPK). Promotes soil aeration and enhances root growth.", cost: 100, icon: "🪱", rarity: "common", details: "1kg bag, ready to use, safe for all crops" },
+            { id: "vermicompost_5kg", name: "Vermicompost (5kg)", category: "Vermicompost", description: "Economy pack for small gardens. Rich in beneficial microorganisms.", cost: 400, icon: "🪱", rarity: "uncommon", details: "5kg bag, moisture-controlled packaging" },
+            { id: "vermicompost_10kg", name: "Vermicompost (10kg)", category: "Vermicompost", description: "Best value for regular farmers. Complete nutrition for healthy crops.", cost: 700, icon: "🪱", rarity: "rare", details: "10kg bag, premium quality, lab-tested NPK" },
         ],
         benefits: "High nutrient content (NPK), promotes soil aeration, enhances root growth, safe for all crops"
     },
@@ -92,10 +95,10 @@ const ORGANIC_MANURE_CATEGORIES = {
         color: "from-blue-600 to-indigo-600",
         description: "Microbial fertilizers that enrich soil naturally",
         items: [
-            { id: "azospirillum", name: "Azospirillum Biofertilizer", description: "Ideal for paddy, wheat, maize. Improves nitrogen fixation naturally.", cost: 250, icon: "🦠", rarity: "uncommon", details: "500g packet, treats 1 acre, increases N availability" },
-            { id: "rhizobium", name: "Rhizobium Biofertilizer", description: "Perfect for pulses and legumes. Forms root nodules for nitrogen fixation.", cost: 250, icon: "🦠", rarity: "uncommon", details: "500g packet, specific for legumes, boosts yield 20%" },
-            { id: "bio_combo_pack", name: "Biofertilizer Combo Pack", description: "Complete microbial solution. Includes Azospirillum, Rhizobium, and PSB.", cost: 600, icon: "🧬", rarity: "rare", details: "3x500g packets, covers 3 acres, comprehensive nutrition" },
-            { id: "premium_bio_mix", name: "Premium Bio Mix", description: "Advanced microbial consortium. Reduces chemical fertilizer need by 50%.", cost: 800, icon: "✨", rarity: "epic", details: "1kg premium blend, 7 beneficial microbes, 2-acre coverage" },
+            { id: "azospirillum", name: "Azospirillum Biofertilizer", category: "Biofertilizers", description: "Ideal for paddy, wheat, maize. Improves nitrogen fixation naturally.", cost: 250, icon: "🦠", rarity: "uncommon", details: "500g packet, treats 1 acre, increases N availability" },
+            { id: "rhizobium", name: "Rhizobium Biofertilizer", category: "Biofertilizers", description: "Perfect for pulses and legumes. Forms root nodules for nitrogen fixation.", cost: 250, icon: "🦠", rarity: "uncommon", details: "500g packet, specific for legumes, boosts yield 20%" },
+            { id: "bio_combo_pack", name: "Biofertilizer Combo Pack", category: "Biofertilizers", description: "Complete microbial solution. Includes Azospirillum, Rhizobium, and PSB.", cost: 600, icon: "🧬", rarity: "rare", details: "3x500g packets, covers 3 acres, comprehensive nutrition" },
+            { id: "premium_bio_mix", name: "Premium Bio Mix", category: "Biofertilizers", description: "Advanced microbial consortium. Reduces chemical fertilizer need by 50%.", cost: 800, icon: "✨", rarity: "epic", details: "1kg premium blend, 7 beneficial microbes, 2-acre coverage" },
         ],
         benefits: "Reduces chemical fertilizer need, naturally improves soil fertility, increases plant resistance, boosts crop yield"
     }
@@ -109,14 +112,14 @@ const FARMING_TOOLS_CATEGORIES = {
         color: "from-slate-600 to-gray-700",
         description: "Affordable daily-use tools for small and medium farmers",
         items: [
-            { id: "hand_gloves", name: "Hand Gloves (Farming Gloves)", description: "Durable gloves to protect hands while planting, weeding, and handling manure. Prevents injuries and improves grip.", cost: 80, icon: "🧤", rarity: "common", details: "Pair of cotton-rubber gloves, washable, ensures hygienic work" },
-            { id: "secateurs", name: "Secateurs (Garden Cutter)", description: "Sharp handheld cutting tool for trimming small branches, removing weeds, and cutting stems.", cost: 150, icon: "✂️", rarity: "common", details: "Stainless steel blade, supports healthy plant growth and easy pruning" },
-            { id: "pruning_shears", name: "Pruning Shears (Katti)", description: "Stronger than secateurs, used for cutting tougher branches of coconut, banana, vegetables, or fruit plants.", cost: 250, icon: "✂️", rarity: "uncommon", details: "Heavy-duty steel, helps maintain plant structure for better yield" },
-            { id: "hand_sprayer", name: "Manual Hand Sprayer (1-2L)", description: "Small pesticide sprayer for applying organic pesticides like neem oil. Perfect for home gardens.", cost: 200, icon: "💧", rarity: "common", details: "2L capacity, easy to operate, suitable for small farms" },
-            { id: "water_test_strips", name: "Water Testing Strips", description: "Quick test strips to check irrigation water quality (pH, hardness). Ensures crops receive safe water.", cost: 120, icon: "🧪", rarity: "uncommon", details: "50 strips pack, prevents nutrient imbalance, easy to use" },
-            { id: "soil_ph_meter", name: "Soil pH Meter", description: "Simple device to measure soil acidity/alkalinity. Helps decide the correct fertilizer.", cost: 400, icon: "📊", rarity: "rare", details: "Digital display, battery-operated, essential for soil health monitoring" },
-            { id: "manvetti", name: "Manvetti (മൺവെട്ടി)", description: "Traditional Kerala soil-digging tool for breaking soil, removing weeds, and preparing planting pits.", cost: 180, icon: "⛏️", rarity: "common", details: "Durable iron blade, wooden handle, works well in clay/wet soils" },
-            { id: "aruva", name: "Aruva (അറുവ) / Sickle", description: "Curved cutting tool for harvesting crops, cutting grass, clearing weeds, and preparing fodder.", cost: 150, icon: "🔪", rarity: "common", details: "Lightweight steel, ideal for paddy, banana, and vegetable farms" },
+            { id: "hand_gloves", name: "Hand Gloves (Farming Gloves)", category: "Farming Tools", description: "Durable gloves to protect hands while planting, weeding, and handling manure. Prevents injuries and improves grip.", cost: 80, icon: "🧤", rarity: "common", details: "Pair of cotton-rubber gloves, washable, ensures hygienic work" },
+            { id: "secateurs", name: "Secateurs (Garden Cutter)", category: "Farming Tools", description: "Sharp handheld cutting tool for trimming small branches, removing weeds, and cutting stems.", cost: 150, icon: "✂️", rarity: "common", details: "Stainless steel blade, supports healthy plant growth and easy pruning" },
+            { id: "pruning_shears", name: "Pruning Shears (Katti)", category: "Farming Tools", description: "Stronger than secateurs, used for cutting tougher branches of coconut, banana, vegetables, or fruit plants.", cost: 250, icon: "✂️", rarity: "uncommon", details: "Heavy-duty steel, helps maintain plant structure for better yield" },
+            { id: "hand_sprayer", name: "Manual Hand Sprayer (1-2L)", category: "Farming Tools", description: "Small pesticide sprayer for applying organic pesticides like neem oil. Perfect for home gardens.", cost: 200, icon: "💧", rarity: "common", details: "2L capacity, easy to operate, suitable for small farms" },
+            { id: "water_test_strips", name: "Water Testing Strips", category: "Farming Tools", description: "Quick test strips to check irrigation water quality (pH, hardness). Ensures crops receive safe water.", cost: 120, icon: "🧪", rarity: "uncommon", details: "50 strips pack, prevents nutrient imbalance, easy to use" },
+            { id: "soil_ph_meter", name: "Soil pH Meter", category: "Farming Tools", description: "Simple device to measure soil acidity/alkalinity. Helps decide the correct fertilizer.", cost: 400, icon: "📊", rarity: "rare", details: "Digital display, battery-operated, essential for soil health monitoring" },
+            { id: "manvetti", name: "Manvetti (മൺവെട്ടി)", category: "Farming Tools", description: "Traditional Kerala soil-digging tool for breaking soil, removing weeds, and preparing planting pits.", cost: 180, icon: "⛏️", rarity: "common", details: "Durable iron blade, wooden handle, works well in clay/wet soils" },
+            { id: "aruva", name: "Aruva (അറുവ) / Sickle", category: "Farming Tools", description: "Curved cutting tool for harvesting crops, cutting grass, clearing weeds, and preparing fodder.", cost: 150, icon: "🔪", rarity: "common", details: "Lightweight steel, ideal for paddy, banana, and vegetable farms" },
         ],
         benefits: "Essential for daily farm work, improves efficiency, prevents injuries, supports organic farming practices"
     }
@@ -138,30 +141,42 @@ const RARITY_LABELS = {
     legendary: { text: "Legendary", color: "text-yellow-600 dark:text-yellow-400" }
 }
 
+
 export function RewardStore({ userData, onBack, onPurchase }) {
     const [mainTab, setMainTab] = useState("seeds") // "seeds", "manure", or "tools"
     const [purchasedItems, setPurchasedItems] = useState(userData?.purchasedRewards || [])
-    const [showPurchaseModal, setShowPurchaseModal] = useState(null)
+    const [isPurchasing, setIsPurchasing] = useState(false)
+    const [currentXP, setCurrentXP] = useState(userData?.xp || 0)
 
-    const userXP = userData?.xp || 0
     const currentCategories = mainTab === "seeds" ? SEED_STORE_CATEGORIES :
         mainTab === "manure" ? ORGANIC_MANURE_CATEGORIES :
             FARMING_TOOLS_CATEGORIES
 
-    const handlePurchase = (item) => {
-        if (userXP >= item.cost && !purchasedItems.includes(item.id)) {
-            setPurchasedItems([...purchasedItems, item.id])
-            setShowPurchaseModal(item)
+    const handlePurchase = async (item) => {
+        if (currentXP >= item.cost && !purchasedItems.includes(item.id) && !isPurchasing) {
+            setIsPurchasing(true)
 
-            if (onPurchase) {
-                onPurchase(item)
+            try {
+                // Call the parent's onPurchase handler (which shows order form modal)
+                const result = await onPurchase(item)
+
+                if (result && result.success) {
+                    // Don't show success modal here - parent will handle order form
+                    // Just update local XP display
+                    setCurrentXP(result.updatedXP)
+                } else {
+                    // Purchase failed
+                    console.error("Purchase failed")
+                }
+            } catch (error) {
+                console.error("Error during purchase:", error)
+            } finally {
+                setIsPurchasing(false)
             }
-
-            setTimeout(() => setShowPurchaseModal(null), 3000)
         }
     }
 
-    const canAfford = (cost) => userXP >= cost
+    const canAfford = (cost) => currentXP >= cost
     const isPurchased = (itemId) => purchasedItems.includes(itemId)
 
     return (
@@ -188,7 +203,7 @@ export function RewardStore({ userData, onBack, onPurchase }) {
                                 <Zap className="w-5 h-5" />
                                 <div>
                                     <p className="text-xs opacity-90">Your Balance</p>
-                                    <p className="text-2xl font-black">{userXP} XP</p>
+                                    <p className="text-2xl font-black">{currentXP} XP</p>
                                 </div>
                             </div>
                         </div>
@@ -209,8 +224,8 @@ export function RewardStore({ userData, onBack, onPurchase }) {
                         <button
                             onClick={() => setMainTab("manure")}
                             className={`flex items-center gap-2 px-6 py-3 rounded-xl font-bold transition-all ${mainTab === "manure"
-                                    ? "bg-gradient-to-r from-amber-600 to-orange-600 text-white shadow-lg scale-105"
-                                    : "bg-card text-muted-foreground hover:bg-muted"
+                                ? "bg-gradient-to-r from-amber-600 to-orange-600 text-white shadow-lg scale-105"
+                                : "bg-card text-muted-foreground hover:bg-muted"
                                 }`}
                         >
                             <Leaf className="w-5 h-5" />
@@ -219,8 +234,8 @@ export function RewardStore({ userData, onBack, onPurchase }) {
                         <button
                             onClick={() => setMainTab("tools")}
                             className={`flex items-center gap-2 px-6 py-3 rounded-xl font-bold transition-all ${mainTab === "tools"
-                                    ? "bg-gradient-to-r from-slate-600 to-gray-700 text-white shadow-lg scale-105"
-                                    : "bg-card text-muted-foreground hover:bg-muted"
+                                ? "bg-gradient-to-r from-slate-600 to-gray-700 text-white shadow-lg scale-105"
+                                : "bg-card text-muted-foreground hover:bg-muted"
                                 }`}
                         >
                             <Wrench className="w-5 h-5" />
@@ -293,13 +308,13 @@ export function RewardStore({ userData, onBack, onPurchase }) {
 
                                                 <button
                                                     onClick={() => handlePurchase(item)}
-                                                    disabled={!affordable || purchased}
+                                                    disabled={!affordable || purchased || isPurchasing}
                                                     className={`w-full py-3 rounded-xl font-bold transition-all ${purchased ? "bg-muted text-muted-foreground cursor-not-allowed" :
-                                                        affordable ? `bg-gradient-to-r ${category.color} text-white hover:shadow-lg active:scale-95` :
+                                                        affordable && !isPurchasing ? `bg-gradient-to-r ${category.color} text-white hover:shadow-lg active:scale-95` :
                                                             "bg-muted text-muted-foreground cursor-not-allowed"
                                                         }`}
                                                 >
-                                                    {purchased ? "Already Redeemed" : affordable ? "Redeem Now" : "Insufficient XP"}
+                                                    {isPurchasing ? "Processing..." : purchased ? "Already Redeemed" : affordable ? "Redeem Now" : "Insufficient XP"}
                                                 </button>
                                             </div>
                                         </div>
@@ -310,33 +325,6 @@ export function RewardStore({ userData, onBack, onPurchase }) {
                     )
                 })}
             </div>
-
-            {/* Purchase Success Modal */}
-            {showPurchaseModal && (
-                <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-6">
-                    <div className="bg-card rounded-3xl p-8 max-w-md w-full shadow-2xl border-2 border-accent animate-in zoom-in-95">
-                        <div className="text-center space-y-4">
-                            <div className="text-7xl animate-bounce">{showPurchaseModal.icon}</div>
-                            <h2 className="text-3xl font-black text-foreground">Redeemed Successfully! 🎉</h2>
-                            <p className="text-lg text-muted-foreground">
-                                You've unlocked <span className="text-accent font-bold">{showPurchaseModal.name}</span>
-                            </p>
-                            <div className="bg-muted/50 rounded-xl p-4 space-y-2">
-                                <p className="text-xs text-muted-foreground">{showPurchaseModal.details}</p>
-                                <p className="text-sm text-muted-foreground">
-                                    Remaining Balance: <span className="text-primary font-bold text-xl">{userXP - showPurchaseModal.cost} XP</span>
-                                </p>
-                            </div>
-                            <button
-                                onClick={() => setShowPurchaseModal(null)}
-                                className="w-full bg-gradient-to-r from-primary to-accent text-white font-bold py-3 rounded-xl hover:shadow-lg transition-all"
-                            >
-                                Continue Shopping
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            )}
         </div>
     )
 }

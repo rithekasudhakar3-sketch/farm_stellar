@@ -97,55 +97,52 @@ function QuestContent() {
             const token = localStorage.getItem("token")
             const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:4000"
 
-            // Calculate new XP and level
-            const newXP = (userData.xp || 0) + quest.xpReward
-            const newXpLevel = Math.floor(newXP / 100)
-
-            // Update user in backend
-            const updateResponse = await fetch(`${backendUrl}/api/users/me`, {
-                method: "PATCH",
+            // Call backend auto-complete endpoint to award XP
+            const completeResponse = await fetch(`${backendUrl}/api/submissions/auto-complete`, {
+                method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                     "Authorization": `Bearer ${token}`
                 },
                 body: JSON.stringify({
-                    xp: newXP,
-                    xpLevel: newXpLevel,
-                    questsProgress: [
-                        ...(userData.questsProgress || []),
-                        {
-                            questId: quest.id,
-                            status: "completed",
-                            stageIndex: quest.stages?.length || 0
-                        }
-                    ]
+                    questId: quest.id
                 })
             })
 
-            if (!updateResponse.ok) {
-                const errorData = await updateResponse.json().catch(() => ({}))
+            if (!completeResponse.ok) {
+                const errorData = await completeResponse.json().catch(() => ({}))
                 console.error("Backend error:", errorData)
-                throw new Error(errorData.message || "Failed to update user progress")
+                throw new Error(errorData.message || "Failed to complete quest")
             }
 
-            const updatedUser = await updateResponse.json()
+            const result = await completeResponse.json()
 
-            // Update local state
+            // Update local state with backend response
             const updatedData = {
                 ...userData,
-                xp: newXP,
-                xpLevel: newXpLevel,
+                xp: result.updatedXP,
+                xpLevel: result.updatedLevel,
                 completedQuests: [...(userData.completedQuests || []), quest.id],
                 badges: [...(userData.badges || []), quest.badgeName],
-                questsProgress: updatedUser.questsProgress || []
+                questsProgress: [
+                    ...(userData.questsProgress || []).filter(q => q.questId !== quest.id),
+                    {
+                        questId: quest.id,
+                        status: 'completed',
+                        stageIndex: quest.stages?.length || 0
+                    }
+                ]
             }
 
             setUserData(updatedData)
             localStorage.setItem("farmquest_userdata", JSON.stringify(updatedData))
 
-            showSuccessToast(`🎉 +${quest.xpReward} XP earned! You're now level ${newXpLevel}!`)
+            showSuccessToast(`🎉 +${result.xpAwarded} XP earned! You're now level ${result.updatedLevel}!`)
 
-            return { leveledUp: newXpLevel > (userData.xpLevel || 0), newLevel: newXpLevel }
+            return {
+                leveledUp: result.leveledUp,
+                newLevel: result.updatedLevel
+            }
         } catch (error) {
             console.error("Error completing quest:", error)
             showSuccessToast("⚠️ Failed to save progress. Please try again.")

@@ -28,13 +28,18 @@ exports.redeemReward = async (req, res) => {
       return res.status(400).json({ message: 'Not enough XP' });
     }
 
+    // Deduct XP from user
     user.xp -= reward.xpCost;
     reward.stock -= 1;
 
     await user.save();
     await reward.save();
 
-    res.status(200).json({ message: 'Reward redeemed successfully' });
+    res.status(200).json({
+      message: 'Reward redeemed successfully',
+      xpDeducted: reward.xpCost,
+      updatedXP: user.xp  // Return updated XP after deduction
+    });
   } catch (error) {
     res.status(500).json({ message: 'Server error' });
   }
