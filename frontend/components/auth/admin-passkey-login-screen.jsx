@@ -76,7 +76,7 @@ export function AdminPasskeyLoginScreen({ onSuccess, onBack }) {
             <Input
               id="email"
               type="email"
-              placeholder="admin@farmquest.org"
+              placeholder="admin@farmstellar.org"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required

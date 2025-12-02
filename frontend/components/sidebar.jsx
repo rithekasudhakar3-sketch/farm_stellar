@@ -59,9 +59,8 @@ export function Sidebar({ open, onToggle, onNavigate }) {
 
       {/* Sidebar */}
       <aside
-        className={`fixed md:static top-0 left-0 h-screen w-64 bg-card border-r border-border transition-transform duration-300 ${
-          open ? "translate-x-0" : "-translate-x-full md:translate-x-0"
-        }`}
+        className={`fixed md:static top-0 left-0 h-screen w-64 bg-card border-r border-border transition-transform duration-300 ${open ? "translate-x-0" : "-translate-x-full md:translate-x-0"
+          }`}
       >
         <div className="p-6 border-b border-border">
           <div className="flex items-center gap-3">
@@ -69,7 +68,7 @@ export function Sidebar({ open, onToggle, onNavigate }) {
               <span className="text-lg font-bold text-primary-foreground">FQ</span>
             </div>
             <div>
-              <h2 className="font-bold text-foreground">FarmQuest</h2>
+              <h2 className="font-bold text-foreground">FarmStellar</h2>
               <p className="text-xs text-muted-foreground">v1.0</p>
             </div>
           </div>
@@ -79,7 +78,6 @@ export function Sidebar({ open, onToggle, onNavigate }) {
           <NavItem icon={Home} label="Home" onClick={onNavigate} />
           <NavItem icon={BookOpen} label="Learn" />
           <NavItem icon={Trophy} label="Achievements" />
-          <NavItem icon={Settings} label="Settings" />
         </nav>
 
         <div className="mt-auto p-4">

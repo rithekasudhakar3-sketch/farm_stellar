@@ -1,12 +1,13 @@
 import { Analytics } from "@vercel/analytics/next"
 import { Quicksand, Mali } from "next/font/google"
 import "./globals.css"
+import { PreferencesProvider } from "@/components/preferences-provider"
 
 const _quicksand = Quicksand({ weight: ["400", "600", "700"], subsets: ["latin"] })
 const _mali = Mali({ weight: ["400", "600", "700"], subsets: ["latin"] })
 
 export const metadata = {
-  title: "FarmQuest - Learn Sustainable Farming",
+  title: "FarmStellar - Learn Sustainable Farming",
   description: "Gamified farming education app for beginners",
   // icons: {
   //   icon: [
@@ -18,7 +19,7 @@ export const metadata = {
   //       url: "/icon-dark-32x32.png",
   //       media: "(prefers-color-scheme: dark)",
   //     },
-  //     {
+  //     {/8
   //       url: "/icon.svg",
   //       type: "image/svg+xml",
   //     },
@@ -29,10 +30,12 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body className={`font-sans antialiased`}>
-        {children}
-        <Analytics />
+        <PreferencesProvider>
+          {children}
+          <Analytics />
+        </PreferencesProvider>
       </body>
     </html>
   )

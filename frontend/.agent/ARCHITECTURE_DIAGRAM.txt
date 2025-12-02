@@ -1,0 +1,157 @@
+```
+═══════════════════════════════════════════════════════════════════════════
+                 THEME & FONT SIZE ARCHITECTURE FLOW
+═══════════════════════════════════════════════════════════════════════════
+
+┌─────────────────────────────────────────────────────────────────────────┐
+│                         👤 USER INTERACTION                              │
+│                                                                          │
+│   ┌──────────────────────┐          ┌──────────────────────┐           │
+│   │  Theme Selection     │          │  Font Size Selection │           │
+│   │  ☀️ Light            │          │  📏 Small (14px)     │           │
+│   │  🌙 Dark             │          │  📏 Medium (16px)    │           │
+│   │  💻 Auto (System)    │          │  📏 Large (18px)     │           │
+│   └──────────────────────┘          └──────────────────────┘           │
+└──────────────────┬────────────────────────────┬──────────────────────────┘
+                   │   onClick()                │   onClick()
+                   └────────────┬───────────────┘
+                                │
+                                ▼
+┌─────────────────────────────────────────────────────────────────────────┐
+│                    ⚛️ REACT CONTEXT PROVIDER                            │
+│                  (PreferencesProvider Component)                        │
+│                                                                          │
+│  ┌────────────────────────────────────────────────────────────────────┐ │
+│  │  State Management:                                                 │ │
+│  │  • theme: "light" | "dark" | "system"                             │ │
+│  │  • fontSize: "small" | "medium" | "large"                         │ │
+│  │  • setTheme(value) → Updates state + triggers side effects        │ │
+│  │  • setFontSize(value) → Updates state + triggers side effects     │ │
+│  └────────────────────────────────────────────────────────────────────┘ │
+│                                                                          │
+│  ┌────────────────────────────────────────────────────────────────────┐ │
+│  │  ThemeSync Component:                                              │ │
+│  │  • Watches resolvedTheme changes                                   │ │
+│  │  • Syncs to DOM                                                    │ │
+│  │  • Dispatches custom events                                        │ │
+│  └────────────────────────────────────────────────────────────────────┘ │
+└──────────────┬──────────────┬──────────────┬──────────────┬─────────────┘
+               │              │              │              │
+       ┌───────▼──────┐  ┌───▼───────┐  ┌──▼──────┐  ┌───▼────────┐
+       │              │  │           │  │         │  │            │
+       ▼              ▼  ▼           ▼  ▼         ▼  ▼            ▼
+
+┌──────────────┐  ┌──────────────┐  ┌──────────┐  ┌─────────────────┐
+│ 💾 localStorage│  │ 📄 DOM Attrs │  │ 📢 Events│  │ ⚛️ React State │
+├──────────────┤  ├──────────────┤  ├──────────┤  ├─────────────────┤
+│ Keys:        │  │ <html>       │  │ Window   │  │ Context value   │
+│              │  │              │  │ events:  │  │ propagates to   │
+│ farmquest_   │  │ data-theme=  │  │          │  │ all consumers   │
+│   theme      │  │  "dark"      │  │ • theme  │  │                 │
+│              │  │              │  │   Change │  │ usePreferences()│
+│ farmquest_   │  │ data-font-   │  │          │  │ hook available  │
+│   fontsize   │  │  size=       │  │ • font   │  │ anywhere        │
+│              │  │  "large"     │  │   Size   │  │                 │
+│              │  │              │  │   Change │  │                 │
+└──────┬───────┘  └──────┬───────┘  └────┬─────┘  └────────┬────────┘
+       │                 │               │                 │
+       │ Persists        │ Instant CSS   │ Components      │ Global state
+       │ settings        │ access        │ can listen      │ access
+       │                 │               │                 │
+       ▼                 ▼               ▼                 ▼
+┌─────────────────────────────────────────────────────────────────────────┐
+│                        🎨 CSS LAYER                                      │
+│                                                                          │
+│  ┌──────────────────────────────────────────────────────────────────┐   │
+│  │  CSS Variables (Auto-updates based on theme):                    │   │
+│  │  • var(--background), var(--foreground)                          │   │
+│  │  • var(--primary), var(--secondary)                              │   │
+│  │  • var(--card), var(--border), var(--accent)                     │   │
+│  │  • Smooth transitions: 250-350ms cubic-bezier                    │   │
+│  └──────────────────────────────────────────────────────────────────┘   │
+│                                                                          │
+│  ┌──────────────────────────────────────────────────────────────────┐   │
+│  │  Font Size Scaling (Based on html[data-font-size]):              │   │
+│  │  • All rem/em units scale proportionally                         │   │
+│  │  • 1rem = 14px (small) | 16px (medium) | 18px (large)           │   │
+│  │  • Smooth 350ms transition on size change                        │   │
+│  └──────────────────────────────────────────────────────────────────┘   │
+└────────────────────────────────┬────────────────────────────────────────┘
+                                 │ Applies to ▼
+┌─────────────────────────────────────────────────────────────────────────┐
+│                      🖥️ UI COMPONENTS (Consumers)                       │
+│                                                                          │
+│  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐   │
+│  │  Dashboard  │  │   Profile   │  │   Quests    │  │  Community  │   │
+│  │             │  │             │  │             │  │             │   │
+│  │  • Uses CSS │  │  • Uses CSS │  │  • Uses CSS │  │  • Uses CSS │   │
+│  │    vars     │  │    vars     │  │    vars     │  │    vars     │   │
+│  │  • Scales   │  │  • Scales   │  │  • Scales   │  │  • Scales   │   │
+│  │    with rem │  │    with rem │  │    with rem │  │    with rem │   │
+│  │  • Updates  │  │  • Updates  │  │  • Updates  │  │  • Updates  │   │
+│  │    INSTANTLY│  │    INSTANTLY│  │    INSTANTLY│  │    INSTANTLY│   │
+│  │      ⚡     │  │      ⚡     │  │      ⚡     │  │      ⚡     │   │
+│  └─────────────┘  └─────────────┘  └─────────────┘  └─────────────┘   │
+│                                                                          │
+│  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐   │
+│  │   Sidebar   │  │   Buttons   │  │    Cards    │  │    Forms    │   │
+│  │             │  │             │  │             │  │             │   │
+│  │  All components inherit theme colors and scaled font sizes      │   │
+│  │  No manual prop passing needed - Context handles it all ✓       │   │
+│  └─────────────┘  └─────────────┘  └─────────────┘  └─────────────┘   │
+└─────────────────────────────────────────────────────────────────────────┘
+
+═══════════════════════════════════════════════════════════════════════════
+                            KEY BENEFITS ✨
+═══════════════════════════════════════════════════════════════════════════
+
+✅ INSTANT APPLICATION       Changes apply immediately across all components
+✅ SMOOTH TRANSITIONS        250-350ms cubic-bezier animations
+✅ PERSISTENT STORAGE        localStorage keeps settings across sessions
+✅ GLOBAL CONSISTENCY        All components use same source of truth
+✅ ZERO BOILERPLATE          No prop drilling, hooks available everywhere
+✅ PERFORMANCE OPTIMIZED     will-change hints, minimal re-renders
+✅ ACCESSIBLE                ARIA labels, keyboard nav, high contrast
+✅ DEVELOPER FRIENDLY        Simple API, comprehensive hooks
+
+═══════════════════════════════════════════════════════════════════════════
+                          DATA FLOW SUMMARY
+═══════════════════════════════════════════════════════════════════════════
+
+USER CLICKS BUTTON
+    ↓
+setTheme() / setFontSize() called
+    ↓
+┌───────────────┐
+│ React Context │ Updates state
+└───────────────┘
+    ↓
+┌───────────────────────────────────────────────┐
+│ Side Effects (All happen simultaneously):      │
+│  1. localStorage.setItem() ← Persist setting  │
+│  2. document.documentElement.setAttribute()    │
+│     ← Instant DOM update for CSS              │
+│  3. window.dispatchEvent(customEvent)          │
+│     ← Notify listening components             │
+│  4. Context consumers re-render                │
+│     ← React components update                  │
+└───────────────────────────────────────────────┘
+    ↓
+CSS transitions trigger (250-350ms)
+    ↓
+UI updates smoothly with new theme/size ✨
+
+═══════════════════════════════════════════════════════════════════════════
+                         TECHNOLOGY STACK
+═══════════════════════════════════════════════════════════════════════════
+
+• Next.js 14         → App routing and server components
+• React Context      → Global state management
+• next-themes        → Theme persistence and system preference detection
+• localStorage       → Browser-based setting persistence
+• CSS Variables      → Dynamic theming
+• Custom Events      → Cross-component communication
+• Tailwind CSS       → Utility-first styling with theme support
+
+═══════════════════════════════════════════════════════════════════════════
+```

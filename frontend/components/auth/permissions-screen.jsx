@@ -53,7 +53,7 @@ export function PermissionsScreen({ onSuccess, onSkip, isLoading = false }) {
             </svg>
           </div>
           <h2 className="text-2xl font-bold text-foreground mb-2">Enable Permissions</h2>
-          <p className="text-sm text-muted-foreground">Grant access to enhance your FarmQuest experience</p>
+          <p className="text-sm text-muted-foreground">Grant access to enhance your FarmStellar experience</p>
         </div>
 
         <div className="space-y-4 mb-6">

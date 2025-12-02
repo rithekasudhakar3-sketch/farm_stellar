@@ -55,7 +55,7 @@ export function UserProgressCard({ userData }) {
                         className="absolute inset-y-0 left-0 bg-gradient-to-r from-primary to-accent rounded-full transition-all duration-1000 ease-out"
                         style={{ width: `${progressPercentage}%` }}
                     >
-                        <div className="absolute inset-0 bg-white/20 animate-shimmer"></div>
+                        <div className="absolute inset-0 bg-primary-foreground/20 animate-shimmer"></div>
                     </div>
                 </div>
                 <div className="flex items-center gap-2 text-xs text-muted-foreground">

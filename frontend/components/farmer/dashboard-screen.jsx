@@ -91,7 +91,7 @@ export function FarmerDashboardScreen({ onStartQuest, onViewImpact, quests, onNa
             />
           </div>
 
-       {/* //   <StreakTracker currentStreak={FARMER_DATA.currentStreak} streakDays={FARMER_DATA.activeDays} /> */}
+          {/* //   <StreakTracker currentStreak={FARMER_DATA.currentStreak} streakDays={FARMER_DATA.activeDays} /> */}
         </div>
 
         {/* Featured Quest */}
@@ -214,18 +214,10 @@ export function FarmerDashboardScreen({ onStartQuest, onViewImpact, quests, onNa
           </div>
 
           <div className="mt-6 pt-6 border-t-2 border-dashed border-border">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <div className="text-center">
-                {/* <p className="text-2xl font-bold text-primary">{userData?.currentStreak || 7}</p>
-                <p className="text-medium text-muted-foreground mt-1">Day Streak 🔥</p> */}
-              </div>
+            <div className="grid grid-cols-2 gap-4">
               <div className="text-center">
                 <p className="text-2xl font-bold text-accent">{userData?.currentXP || 235}</p>
                 <p className="text-medium text-muted-foreground mt-1">Total XP ✨</p>
-              </div>
-              <div className="text-center">
-                <p className="text-2xl font-bold text-primary">15</p>
-                <p className="text-medium text-muted-foreground mt-1">Hours Learned 📚</p>
               </div>
               <div className="text-center">
                 <p className="text-2xl font-bold text-accent">92%</p>
