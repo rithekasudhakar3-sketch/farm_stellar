@@ -54,5 +54,20 @@
     "completionRate": "पूर्णता दर",
     "availableQuests": "उपलब्ध क्वेस्ट",
     "activities": "गतिविधियां",
-    "yourAchievements": "आपकी उपलब्धियां"
+    "yourAchievements": "आपकी उपलब्धियां",
+    "nav": {
+        "home": "होम",
+        "learn": "सीखें",
+        "achievements": "उपलब्धियां",
+        "dashboard": "डैशबोर्ड",
+        "quests": "क्वेस्ट",
+        "community": "समुदाय",
+        "rewards": "इनाम",
+        "profile": "प्रोफाइल",
+        "settings": "सेटिंग्स",
+        "help": "मदद",
+        "logout": "लॉग आउट",
+        "menu": "मेनू",
+        "empowering": "टिकाऊ खेती को सशक्त बनाना"
+    }
 }

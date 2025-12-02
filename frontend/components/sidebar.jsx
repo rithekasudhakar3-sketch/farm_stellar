@@ -6,9 +6,11 @@ import { Button } from "@/components/ui/button"
 import { SheetTrigger, SheetContent, Sheet } from "@/components/ui/sheet"
 import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
+import { useTranslation } from "react-i18next"
 
 export function Sidebar({ open, onToggle, onNavigate }) {
   const router = useRouter()
+  const { t } = useTranslation("dashboard")
   const [userData, setUserData] = useState({ level: 1, xp: 0 })
 
   useEffect(() => {
@@ -59,9 +61,8 @@ export function Sidebar({ open, onToggle, onNavigate }) {
 
       {/* Sidebar */}
       <aside
-        className={`fixed md:static top-0 left-0 h-screen w-64 bg-card border-r border-border transition-transform duration-300 ${
-          open ? "translate-x-0" : "-translate-x-full md:translate-x-0"
-        }`}
+        className={`fixed md:static top-0 left-0 h-screen w-64 bg-card border-r border-border transition-transform duration-300 ${open ? "translate-x-0" : "-translate-x-full md:translate-x-0"
+          }`}
       >
         <div className="p-6 border-b border-border">
           <div className="flex items-center gap-3">
@@ -76,15 +77,15 @@ export function Sidebar({ open, onToggle, onNavigate }) {
         </div>
 
         <nav className="p-4 space-y-2">
-          <NavItem icon={Home} label="Home" onClick={onNavigate} />
-          <NavItem icon={BookOpen} label="Learn" />
-          <NavItem icon={Trophy} label="Achievements" />
-          <NavItem icon={Settings} label="Settings" />
+          <NavItem icon={Home} label={t('nav.home')} onClick={onNavigate} />
+          <NavItem icon={BookOpen} label={t('nav.learn')} />
+          <NavItem icon={Trophy} label={t('nav.achievements')} />
+          <NavItem icon={Settings} label={t('nav.settings')} />
         </nav>
 
         <div className="mt-auto p-4">
           <Button className="w-full" variant="outline" onClick={handleLogout}>
-            Logout
+            {t('nav.logout')}
           </Button>
         </div>
 
@@ -92,11 +93,11 @@ export function Sidebar({ open, onToggle, onNavigate }) {
         <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-border bg-muted/50">
           <div className="space-y-2">
             <div className="flex justify-between text-sm">
-              <span className="text-muted-foreground">Level</span>
+              <span className="text-muted-foreground">{t('level')}</span>
               <span className="font-bold text-foreground">{userData.level}</span>
             </div>
             <div className="flex justify-between text-sm">
-              <span className="text-muted-foreground">Total XP</span>
+              <span className="text-muted-foreground">{t('totalXP')}</span>
               <span className="font-bold text-accent">{userData.xp}</span>
             </div>
           </div>

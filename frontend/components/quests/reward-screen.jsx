@@ -35,7 +35,8 @@ export function RewardScreen({ quest, onContinue, onNextQuest, onComplete }) {
         <div className="absolute top-1/3 right-1/3 w-3 h-3 bg-accent rounded-full animate-bounce"></div>
       </div>
 
-      <div className="flex-1 flex flex-col items-center justify-center px-6 py-12 space-y-8 max-w-md mx-auto w-full z-10">
+      {/* Content - No Scroll */}
+      <div className="flex-1 flex flex-col items-center justify-center px-6 py-6 max-w-md mx-auto w-full">
         {/* Celebration */}
         <div className="text-center space-y-4">
           <div className="flex justify-center text-7xl mb-6 animate-bounce">🎉</div>
@@ -44,22 +45,22 @@ export function RewardScreen({ quest, onContinue, onNextQuest, onComplete }) {
         </div>
 
         {/* Rewards Card */}
-        <div className="w-full bg-card/50 backdrop-blur-xl border border-border rounded-3xl p-8 shadow-2xl space-y-6">
+        <div className="w-full bg-card/50 backdrop-blur-xl border border-border rounded-3xl p-6 shadow-2xl space-y-4">
           {/* XP */}
-          <div className="flex items-center justify-between p-4 bg-primary/5 rounded-2xl border border-primary/10">
+          <div className="flex items-center justify-between p-3 bg-primary/5 rounded-2xl border border-primary/10">
             <div className="flex items-center gap-3">
               <div className="bg-primary/20 p-2 rounded-xl">
-                <Zap className="w-6 h-6 text-primary" />
+                <Zap className="w-5 h-5 text-primary" />
               </div>
               <span className="text-sm font-bold text-muted-foreground">{t("quests.xpEarned")}</span>
             </div>
-            <span className="text-3xl font-black text-primary">+{quest.xpReward}</span>
+            <span className="text-2xl font-black text-primary">+{quest.xpReward}</span>
           </div>
 
           {/* Badge */}
           <div className="flex items-center gap-4">
-            <div className="w-16 h-16 bg-gradient-to-br from-accent to-primary rounded-2xl flex items-center justify-center shadow-lg shadow-accent/20">
-              <Trophy className="w-8 h-8 text-white" />
+            <div className="w-14 h-14 bg-gradient-to-br from-accent to-primary rounded-2xl flex items-center justify-center shadow-lg shadow-accent/20">
+              <Trophy className="w-7 h-7 text-white" />
             </div>
             <div>
               <p className="text-xs font-bold text-accent uppercase tracking-wider mb-1">{t("quests.newBadge")}</p>
@@ -69,7 +70,8 @@ export function RewardScreen({ quest, onContinue, onNextQuest, onComplete }) {
         </div>
       </div>
 
-      <div className="p-6 bg-background/80 backdrop-blur-md border-t border-border z-20">
+      {/* Button Container */}
+      <div className="p-6 bg-background">
         <div className="flex flex-col gap-3 max-w-md mx-auto">
           {/* Primary Action - Complete Quest */}
           <button

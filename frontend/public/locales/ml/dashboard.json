@@ -54,5 +54,20 @@
     "completionRate": "പൂർത്തീകരണ നിരക്ക്",
     "availableQuests": "ലഭ്യമായ ക്വസ്റ്റുകൾ",
     "activities": "പ്രവർത്തനങ്ങൾ",
-    "yourAchievements": "നിങ്ങളുടെ നേട്ടങ്ങൾ"
+    "yourAchievements": "നിങ്ങളുടെ നേട്ടങ്ങൾ",
+    "nav": {
+        "home": "ഹോം",
+        "learn": "പഠിക്കുക",
+        "achievements": "നേട്ടങ്ങൾ",
+        "dashboard": "ഡാഷ്‌ബോർഡ്",
+        "quests": "ക്വസ്റ്റുകൾ",
+        "community": "കമ്മ്യൂണിറ്റി",
+        "rewards": "റിവാർഡുകൾ",
+        "profile": "പ്രൊഫൈൽ",
+        "settings": "ക്രമീകരണങ്ങൾ",
+        "help": "സഹായം",
+        "logout": "ലോഗ് ഔട്ട്",
+        "menu": "മെനു",
+        "empowering": "സുസ്ഥിര കൃഷിയെ ശാക്തീകരിക്കുന്നു"
+    }
 }

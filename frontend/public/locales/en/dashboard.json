@@ -54,5 +54,20 @@
     "completionRate": "Completion Rate",
     "availableQuests": "Available Quests",
     "activities": "activities",
-    "yourAchievements": "Your Achievements"
+    "yourAchievements": "Your Achievements",
+    "nav": {
+        "home": "Home",
+        "learn": "Learn",
+        "achievements": "Achievements",
+        "dashboard": "Dashboard",
+        "quests": "Quests",
+        "community": "Community",
+        "rewards": "Rewards",
+        "profile": "Profile",
+        "settings": "Settings",
+        "help": "Help",
+        "logout": "Logout",
+        "menu": "Menu",
+        "empowering": "Empowering sustainable farming"
+    }
 }

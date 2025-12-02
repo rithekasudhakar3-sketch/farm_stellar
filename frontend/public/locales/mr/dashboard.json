@@ -54,5 +54,20 @@
     "completionRate": "पूर्ण होण्याचे प्रमाण",
     "availableQuests": "उपलब्ध क्वेस्ट",
     "activities": "क्रियाकलाप",
-    "yourAchievements": "तुमचे यश"
+    "yourAchievements": "तुमचे यश",
+    "nav": {
+        "home": "होम",
+        "learn": "शिका",
+        "achievements": "उपलब्धी",
+        "dashboard": "डॅशबोर्ड",
+        "quests": "क्वेस्ट",
+        "community": "समुदाय",
+        "rewards": "बक्षिसे",
+        "profile": "प्रोफाइल",
+        "settings": "सेटिंग्ज",
+        "help": "मदत",
+        "logout": "लॉग आउट",
+        "menu": "मेनू",
+        "empowering": "शाश्वत शेतीला सक्षम करणे"
+    }
 }
