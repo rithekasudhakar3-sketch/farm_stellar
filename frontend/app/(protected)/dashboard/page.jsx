@@ -41,7 +41,7 @@ export default function DashboardPage() {
             "rewards": "/rewards",
             "farmer-profile": "/profile",
             "settings": "/settings",
-            "impact-tracker": "/impact",
+            "impact-tracker": "/rewards",
         }
 
         if (routes[screen]) {

@@ -34,7 +34,7 @@ export default function ProtectedLayout({ children }) {
             "rewards": "/rewards",
             "farmer-profile": "/profile",
             "settings": "/settings",
-            "impact-tracker": "/impact",
+            "impact-tracker": "/rewards",
         }
 
         if (routes[screen]) {
