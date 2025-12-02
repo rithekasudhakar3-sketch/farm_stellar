@@ -1,0 +1,46 @@
+/* ============================================ */
+/* THEME & FONT SIZE ENHANCEMENTS */
+/* Add these rules to your globals.css after line 188 */
+/* ============================================ */
+
+/* Performance optimization for body element during theme changes */
+body {
+    will-change: background-color, color;
+}
+
+/* Smooth transitions for all interactive elements */
+button,
+a,
+input,
+select,
+textarea {
+    transition: all 250ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Optimize cards and containers for instant theme changes */
+[class*="card"],
+[class*="bg-"],
+[class*="border"] {
+    transition: background-color 300ms ease-in-out,
+        border-color 250ms ease-in-out,
+        box-shadow 250ms ease-in-out;
+}
+
+/* Ensure SVG icons  adapt to theme changes smoothly */
+svg {
+    transition: fill 250ms ease-in-out, stroke 250ms ease-in-out, color 250ms ease-in-out;
+}
+
+/* Optimize shadow transitions */
+[class*="shadow"] {
+    transition: box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ============================================ */
+/* USAGE NOTES: */
+/* These rules ensure: */
+/* 1. Instant theme application with smooth visual transitions */
+/* 2. Font size changes scale proportionally across all components */
+/* 3. No jarring UI jumps or flashes */
+/* 4. Better performance with will-change hints */
+/* ============================================ */

@@ -5,7 +5,7 @@ import { Leaf, Sprout, Droplets, Sun, Wheat, TreePine, Bug, Flower2 } from "luci
 export function HomeScreen({ onStartQuest, quests }) {
   const questList = Object.values(quests)
   const totalXP = questList.reduce((sum, quest) => sum + quest.xpReward, 0)
-  
+
   // Debug: Log quest data to help troubleshoot
   console.log("[QuestsListScreen] Quest count:", questList.length)
   console.log("[QuestsListScreen] Quest IDs:", questList.map(q => q.id))
@@ -16,11 +16,11 @@ export function HomeScreen({ onStartQuest, quests }) {
     if (quest.cropTypes && quest.cropTypes.length > 0) {
       return quest.cropTypes.slice(0, 3) // Limit to 3 pills
     }
-    
+
     // Extract from quest description/activities if cropTypes isn't defined
     const commonCrops = ['tomato', 'potato', 'wheat', 'rice', 'corn', 'beans', 'carrot', 'onion', 'spinach', 'lettuce', 'cabbage', 'broccoli']
-    const foundCrops = commonCrops.filter(crop => 
-      quest.description?.toLowerCase().includes(crop) || 
+    const foundCrops = commonCrops.filter(crop =>
+      quest.description?.toLowerCase().includes(crop) ||
       quest.title?.toLowerCase().includes(crop) ||
       quest.activities?.some(activity => activity.toLowerCase().includes(crop))
     )
@@ -31,7 +31,7 @@ export function HomeScreen({ onStartQuest, quests }) {
   const getCropPillStyle = (crop) => {
     const styles = {
       tomato: "bg-red-100 text-red-800 border-red-200",
-      potato: "bg-yellow-100 text-yellow-800 border-yellow-200", 
+      potato: "bg-yellow-100 text-yellow-800 border-yellow-200",
       wheat: "bg-amber-100 text-amber-800 border-amber-200",
       rice: "bg-blue-100 text-blue-800 border-blue-200",
       corn: "bg-yellow-100 text-yellow-800 border-yellow-200",
@@ -51,7 +51,7 @@ export function HomeScreen({ onStartQuest, quests }) {
       {/* Hero Section */}
       <div className="bg-gradient-to-b from-primary/5 to-transparent p-8 md:p-12 border-b border-border">
         <div className="max-w-4xl mx-auto">
-          <h2 className="text-4xl md:text-5xl font-bold mb-4 text-foreground text-balance">Welcome to FarmQuest</h2>
+          <h2 className="text-4xl md:text-5xl font-bold mb-4 text-foreground text-balance">Welcome to FarmStellar</h2>
           <p className="text-lg text-muted-foreground max-w-2xl text-balance">
             Master sustainable farming through interactive quests. Learn at your own pace, earn rewards, and become a
             certified farmer.
@@ -130,12 +130,12 @@ export function HomeScreen({ onStartQuest, quests }) {
                     </div>
                     <h3 className="font-bold text-lg text-foreground mb-2">{quest.title}</h3>
                     <p className="text-sm text-muted-foreground mb-3 line-clamp-2">{quest.description}</p>
-                    
+
                     {/* Crop-specific pills */}
                     {cropLabels.length > 0 && (
                       <div className="flex flex-wrap gap-2 mb-4">
                         {cropLabels.map((crop, index) => (
-                          <span 
+                          <span
                             key={index}
                             className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium border ${getCropPillStyle(crop)}`}
                           >
@@ -144,7 +144,7 @@ export function HomeScreen({ onStartQuest, quests }) {
                         ))}
                       </div>
                     )}
-                    
+
                     <div className="flex items-center justify-between pt-4 border-t border-border">
                       <span className="text-sm text-muted-foreground">{quest.activities.length} activities</span>
                       <span className="text-sm font-bold text-accent">+{quest.xpReward} XP</span>

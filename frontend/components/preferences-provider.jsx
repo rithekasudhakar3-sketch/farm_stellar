@@ -8,6 +8,24 @@ const PreferencesContext = React.createContext({
     setFontSize: () => null,
 })
 
+// Internal component to sync theme changes with DOM
+function ThemeSync() {
+    const { resolvedTheme } = useTheme()
+
+    React.useEffect(() => {
+        // Sync theme with data attribute for instant CSS updates
+        if (resolvedTheme) {
+            document.documentElement.setAttribute("data-theme", resolvedTheme)
+
+            // Emit custom event for components that need to react to theme changes
+            const event = new CustomEvent("themeChange", { detail: { theme: resolvedTheme } })
+            window.dispatchEvent(event)
+        }
+    }, [resolvedTheme])
+
+    return null
+}
+
 export function PreferencesProvider({ children, ...props }) {
     const [fontSize, setFontSize] = React.useState("medium")
     const [mounted, setMounted] = React.useState(false)
@@ -48,6 +66,10 @@ export function PreferencesProvider({ children, ...props }) {
 
         // Apply immediately to html element for instant effect
         document.documentElement.setAttribute("data-font-size", size)
+
+        // Emit custom event for font size changes
+        const event = new CustomEvent("fontSizeChange", { detail: { fontSize: size } })
+        window.dispatchEvent(event)
     }, [])
 
     if (!mounted) {
@@ -60,11 +82,12 @@ export function PreferencesProvider({ children, ...props }) {
             attribute="class"
             defaultTheme="system"
             enableSystem
-            themes={["light", "dark", "deep-forest"]}
+            themes={["light", "dark"]}
             storageKey="farmquest_theme"
             {...props}
         >
             <PreferencesContext.Provider value={{ fontSize, setFontSize: handleSetFontSize }}>
+                <ThemeSync />
                 {children}
             </PreferencesContext.Provider>
         </NextThemesProvider>
