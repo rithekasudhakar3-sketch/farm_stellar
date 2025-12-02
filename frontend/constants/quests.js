@@ -114,7 +114,68 @@ export const QUESTS_DATA = {
     difficulty: "Beginner",
     cropType: "General",
     xpReward: 75,
-    badgeName: "Crop Explorer"
+    badgeName: "Crop Explorer",
+    steps: [
+      {
+        title: "Step 1 — Check Climate & Soil",
+        objective: "Find out what kind of weather and soil you have.",
+        subSteps: [
+          "CLIMATE: Is your area hot, cold, or medium? Rainy or dry?",
+          "SIMPLE TEST: If you sweat a lot = hot. Need blankets = cold. Coconuts grow = hot. Apples grow = cold.",
+          "GRAB SOIL: Take a handful and squeeze it.",
+          "SANDY: Falls apart, rough feel → Good for carrots, radish",
+          "CLAY: Sticky, holds shape → Good for rice, wheat",
+          "LOAMY: Forms ball but breaks gently → Best! Good for everything",
+          "Any soil can improve with compost!"
+        ],
+        tip: "Ask neighbors what grows well in your area - they're the best teachers!",
+        image: "/images/quests/crop_quest/step1.jpg"
+      },
+      {
+        title: "Step 2 — Pick 3 Easy Crops",
+        objective: "Choose your first 3 crops based on your climate, soil, and water.",
+        subSteps: [
+          "START EASY: Pick fast-growing crops that don't need much care",
+          "BEST FOR BEGINNERS: Radish (25 days), Spinach (30 days), Beans (60 days)",
+          "PICK VARIETY: 1 leafy + 1 root + 1 fruiting vegetable",
+          "HOT CLIMATE: Spinach + Radish + Tomato",
+          "LESS WATER: Amaranth + Radish + Cluster Beans",
+          "LOTS OF WATER: Lettuce + Carrot + Beans",
+          "Why 3? If one fails, you have two backups!"
+        ],
+        reason: "Growing 3 crops well is better than growing 10 badly. Start small, learn, then expand!",
+        image: "/images/quests/crop_quest/step2.jpg"
+      },
+      {
+        title: "Step 3 — Know When to Plant",
+        objective: "Plant at the right time for best results.",
+        subSteps: [
+          "KHARIF (Monsoon): June-October → Rice, corn, beans",
+          "RABI (Winter): November-March → Wheat, peas, carrots",
+          "ZAID (Summer): March-June → Cucumber, watermelon",
+          "YEAR-ROUND CROPS: Radish, spinach, coriander (great for beginners!)",
+          "CHECK SEED PACKET: It tells you the best month to plant",
+          "Start with year-round crops first!"
+        ],
+        tip: "Leafy vegetables like cool weather. Fruiting vegetables like warm weather. Simple!",
+        image: "/images/quests/crop_quest/step3.jpg"
+      },
+      {
+        title: "Step 4 — Plant & Grow",
+        objective: "Get your crops in the ground and watch them grow!",
+        subSteps: [
+          "SPACE NEEDED: Even 10x10 feet works! Or use pots/buckets",
+          "SUNLIGHT: Pick a spot with 4-6 hours of sun daily",
+          "SPACING: Leafy (6 inches), Root (4 inches), Fruiting (18 inches) apart",
+          "PLANT IN ROWS: Makes watering and weeding easier",
+          "WATER: Keep soil moist but not soggy",
+          "NEXT STEPS: Buy seeds → Prepare soil → Plant → Water → Harvest!",
+          "Your first harvest will be YOURS! Start today!"
+        ],
+        tip: "No land? No problem! Many crops grow great in pots, buckets, or grow bags on a balcony!",
+        image: "/images/quests/crop_quest/step4.jpg"
+      }
+    ]
   },
 
   compost_kickoff: {
@@ -135,7 +196,42 @@ export const QUESTS_DATA = {
     difficulty: "Beginner",
     cropType: "General",
     xpReward: 40,
-    badgeName: "Compost Master"
+    steps: [
+      {
+        title: "Step 1 — Pick a Spot",
+        objective: "Find a place for your compost.",
+        subSteps: [
+          "Pick a shady corner on the ground.",
+          "Use a bin, a pit, or just a pile.",
+          "Put some twigs at the bottom for air."
+        ],
+        tip: "Touching the soil helps worms get in!",
+        image: "/images/quests/compost_kickoff/step1.jpg"
+      },
+      {
+        title: "Step 2 — Mix Greens & Browns",
+        objective: "Mix wet and dry waste together.",
+        subSteps: [
+          "GREENS (Wet): Fruit peels, veggie scraps, tea bags.",
+          "BROWNS (Dry): Dry leaves, paper, cardboard.",
+          "Mix 1 handful of Greens with 2 handfuls of Browns.",
+          "IMPORTANT: No meat, dairy, or oil!"
+        ],
+        reason: "Greens rot fast, Browns rot slow. Mixing them makes perfect compost.",
+        image: "/images/quests/compost_kickoff/step2.jpg"
+      },
+      {
+        title: "Step 3 — Water & Wait",
+        objective: "Keep it damp and let nature work.",
+        subSteps: [
+          "Sprinkle water so it feels like a damp sponge.",
+          "Turn the pile every week to let air in.",
+          "Wait 2-3 months. When it looks like dark earth, it's ready!",
+          "Use it to feed your plants."
+        ],
+        image: "/images/quests/compost_kickoff/step3.jpg"
+      }
+    ]
   },
 
   zero_waste: {
@@ -155,7 +251,60 @@ export const QUESTS_DATA = {
     difficulty: "Beginner",
     cropType: "General",
     xpReward: 85,
-    badgeName: "Zero Waste Warrior"
+    badgeName: "Zero Waste Warrior",
+    steps: [
+      {
+        title: "Step 1 — Sort Your Waste",
+        objective: "Learn what goes where.",
+        subSteps: [
+          "Get 3 bins or bags: Green, Brown, and Trash.",
+          "GREEN BIN: Kitchen scraps (peels, leftovers, tea bags).",
+          "BROWN BIN: Dry stuff (leaves, paper, cardboard, twigs).",
+          "TRASH BIN: Plastic, metal, glass (recycle if possible).",
+          "NO-NO: Don't mix them! Keep them separate."
+        ],
+        tip: "Label your bins with pictures if it helps!",
+        image: "/images/quests/zero_waste/step1.jpg"
+      },
+      {
+        title: "Step 2 — Set Up Your Waste Station",
+        objective: "Create a simple sorting spot at home.",
+        subSteps: [
+          "Pick a corner near your kitchen or garden.",
+          "Place your 3 bins side by side.",
+          "Put a small bucket in the kitchen for daily scraps.",
+          "Empty the kitchen bucket into the GREEN bin every evening.",
+          "Keep it clean and covered to avoid smells or flies."
+        ],
+        reason: "A waste station makes sorting easy and becomes a daily habit!",
+        image: "/images/quests/zero_waste/step2.jpg"
+      },
+      {
+        title: "Step 3 — Use Your Waste Wisely",
+        objective: "Turn waste into something useful!",
+        subSteps: [
+          "GREEN waste → Add to compost pile (makes fertilizer).",
+          "BROWN waste → Use as mulch around plants (keeps soil moist).",
+          "DRY LEAVES → Spread on garden beds or mix with compost.",
+          "PAPER/CARDBOARD → Tear into small pieces, add to compost.",
+          "TRASH → Reduce, reuse, or recycle what you can."
+        ],
+        tip: "In 2-3 months, your green and brown waste becomes rich soil for your plants!",
+        image: "/images/quests/zero_waste/step3.jpg"
+      },
+      {
+        title: "Step 4 — Track Your Progress",
+        objective: "See how much waste you're saving!",
+        subSteps: [
+          "Check your trash bin each week.",
+          "Goal: Less trash = More composting!",
+          "Celebrate: If your trash bin is half empty, you're winning!",
+          "Share your success with family and friends.",
+          "Keep going! Zero waste is a journey, not a race."
+        ],
+        image: "/images/quests/zero_waste/step4.jpg"
+      }
+    ]
   },
 
   mini_garden: {
@@ -176,7 +325,59 @@ export const QUESTS_DATA = {
     difficulty: "Beginner",
     cropType: "General",
     xpReward: 100,
-    badgeName: "Garden Starter"
+    badgeName: "Garden Starter",
+    steps: [
+      {
+        title: "Step 1 — Pick Your Top 5",
+        objective: "Choose 5 friends for your garden.",
+        subSteps: [
+          "1. The Fast One: Radish (Ready in 25 days!)",
+          "2. The Leafy One: Spinach or Lettuce (Yummy salads)",
+          "3. The Tasty One: Tomato or Brinjal",
+          "4. The Smell-Good One: Coriander or Mint",
+          "5. The Protector: Marigold (Scares bad bugs away!)"
+        ],
+        tip: "These 5 grow great together! Start with what you like to eat.",
+        image: "/images/quests/mini_garden/step1.jpg"
+      },
+      {
+        title: "Step 2 — Make the Bed",
+        objective: "Get the soil ready for planting.",
+        subSteps: [
+          "Find a sunny spot (needs 4-6 hours of sun).",
+          "Clear away grass and stones.",
+          "Dig up the soil to make it soft and loose.",
+          "Mix in 2 handfuls of compost or cow manure.",
+          "Level it out with your hand or a rake."
+        ],
+        reason: "Soft soil helps roots grow deep and strong!",
+        image: "/images/quests/mini_garden/step2.jpg"
+      },
+      {
+        title: "Step 3 — Plant Your Map",
+        objective: "Put everyone in the right place.",
+        subSteps: [
+          "Back Row: Plant Tomato/Brinjal (They get tall).",
+          "Middle: Plant Marigold and Radish.",
+          "Front Row: Plant Spinach/Coriander (They stay short).",
+          "How to Plant: Poke a hole -> Drop seed -> Cover gently.",
+          "Don't bury them too deep! (Just a little soil on top)."
+        ],
+        image: "/images/quests/mini_garden/step3.jpg"
+      },
+      {
+        title: "Step 4 — The Magic Touch",
+        objective: "Water, protect, and watch them grow.",
+        subSteps: [
+          "Water: Sprinkle water gently (don't drown them!).",
+          "Mulch: Cover bare soil with dry leaves (keeps water in).",
+          "Wait: In 3-5 days, you will see tiny green sprouts!",
+          "Harvest: Pick leaves gently when they are big enough."
+        ],
+        tip: "Talk to your plants! It helps them grow happy.",
+        image: "/images/quests/mini_garden/step4.jpg"
+      }
+    ]
   },
 
   mulch_master: {
@@ -196,7 +397,48 @@ export const QUESTS_DATA = {
     difficulty: "Beginner",
     cropType: "General",
     xpReward: 60,
-    badgeName: "Mulch Master"
+    badgeName: "Mulch Master",
+    steps: [
+      {
+        title: "Step 1 — Collect Mulch",
+        objective: "Gather natural materials to cover your soil.",
+        subSteps: [
+          "Look for dry leaves, straw, or grass clippings.",
+          "You can also use shredded paper or cardboard.",
+          "Collect enough to cover the soil around your plants.",
+          "Fill 2-3 bags or a basket.",
+          "Make sure the materials are dry, not wet or moldy."
+        ],
+        tip: "Free mulch! Use fallen leaves from your yard or ask neighbors.",
+        image: "/images/quests/mulch_master/step1.jpg"
+      },
+      {
+        title: "Step 2 — Spread the Mulch",
+        objective: "Cover the soil around your plants.",
+        subSteps: [
+          "Spread mulch around plants in a circle.",
+          "Make it 2-3 inches thick (about finger-length).",
+          "Keep mulch away from plant stems (leave 2-inch gap).",
+          "Cover bare soil between plants too.",
+          "Don't pile it too high—just a thin blanket!"
+        ],
+        reason: "Mulch acts like a blanket—keeps soil cool, moist, and stops weeds!",
+        image: "/images/quests/mulch_master/step2.jpg"
+      },
+      {
+        title: "Step 3 — Water & Watch",
+        objective: "Settle the mulch and see the magic happen!",
+        subSteps: [
+          "Sprinkle water lightly over the mulch.",
+          "This helps it settle and stay in place.",
+          "Check after a few days—soil should feel moist underneath.",
+          "Add more mulch if it gets thin (every 2-3 months).",
+          "Enjoy! Less watering, fewer weeds, happy plants!"
+        ],
+        tip: "Mulch breaks down over time and feeds the soil. Win-win!",
+        image: "/images/quests/mulch_master/step3.jpg"
+      }
+    ]
   },
 
   boll_keeper: {
@@ -649,7 +891,114 @@ export const QUESTS_DATA = {
     difficulty: "Pro",
     cropType: "General",
     xpReward: 185,
-    badgeName: "Water Saver"
+    badgeName: "Water Saver",
+    steps: [
+      {
+        title: "Step 1 — Site Assessment & Planning",
+        objective: "Evaluate your roof and plan the optimal rainwater collection setup.",
+        subSteps: [
+          "ROOF INSPECTION: Check roof material - Metal, tile, or concrete works best. Avoid asbestos or chemically treated roofs.",
+          "CATCHMENT AREA: Measure roof area. Formula: 1 sq meter roof + 1mm rain = 1 liter water. 100 sq m roof in 50mm rain = 5000 liters!",
+          "GUTTER CHECK: Inspect existing gutters and downspouts. Clean out leaves, debris, and check for leaks.",
+          "IDENTIFY COLLECTION POINT: Find downspout closest to where you need water (garden, field, storage area).",
+          "SPACE ASSESSMENT: Ensure 2x2 feet flat ground space near downspout for barrel placement.",
+          "RAINFALL DATA: Check your area's annual rainfall. Even 500mm/year can yield 50,000 liters from 100 sq m roof!",
+          "WATER NEEDS: Calculate daily water needs for plants/crops to size your storage appropriately."
+        ],
+        tip: "Pro Tip: Position barrel on the shadier side of the house to reduce algae growth and water evaporation.",
+        image: "/images/quests/rainwater_hero/step1.jpg"
+      },
+      {
+        title: "Step 2 — Barrel Selection & Preparation",
+        objective: "Choose and prepare a suitable storage container for rainwater.",
+        subSteps: [
+          "BARREL OPTIONS: 200L plastic drum (most common), 500L tank, or repurposed food-grade containers.",
+          "FOOD-GRADE ONLY: Use only food-grade plastic (HDPE - High-Density Polyethylene). Check for recycling symbol #2.",
+          "AVOID: Never use barrels that stored chemicals, oils, or toxic substances - contamination risk!",
+          "CLEANING: Scrub interior with baking soda solution. Rinse 3-4 times with clean water until no odor remains.",
+          "DRILLING HOLES: Drill 1-inch hole near bottom for tap. Drill 2-inch hole near top for overflow pipe.",
+          "DRILL INLET: Cut 4-inch hole on top or upper side for downspout connection.",
+          "LID/COVER: Ensure barrel has tight-fitting lid to prevent mosquito breeding and debris entry."
+        ],
+        reason: "Why Food-Grade? Non-food-grade plastics can leach harmful chemicals into water, especially when heated by sun. Your plants (and you) deserve clean water!",
+        image: "/images/quests/rainwater_hero/step2.jpg"
+      },
+      {
+        title: "Step 3 — Filter Installation (Critical Step)",
+        objective: "Install filtration to keep debris, insects, and contaminants out of stored water.",
+        subSteps: [
+          "FIRST FLUSH DIVERTER: Install a 'first flush' pipe that diverts the first 10-20 liters of rain (washes roof dirt away).",
+          "HOW IT WORKS: T-junction on downspout with a vertical pipe (capped at bottom). First rain fills this pipe, then clean rain flows to barrel.",
+          "MESH SCREEN: Install fine mesh (1mm holes) at barrel inlet. Use stainless steel or nylon mesh - prevents leaves/insects.",
+          "GRAVEL FILTER (Optional): Layer of gravel at barrel bottom acts as settling filter for fine particles.",
+          "OVERFLOW FILTER: Install mesh on overflow pipe outlet to prevent mosquitoes entering through overflow.",
+          "MAINTENANCE ACCESS: Ensure filters are easily removable for cleaning every 2-3 months."
+        ],
+        tip: "DIY First Flush: Use a 2-liter plastic bottle with a small hole at bottom. Fills first, then overflows to barrel. Simple but effective!",
+        image: "/images/quests/rainwater_hero/step3.jpg"
+      },
+      {
+        title: "Step 4 — Barrel Positioning & Connection",
+        objective: "Securely install the barrel and connect it to your downspout system.",
+        subSteps: [
+          "PLATFORM: Build stable platform using concrete blocks or bricks. Height: 1-2 feet (gravity helps water flow from tap).",
+          "LEVEL CHECK: Use spirit level to ensure platform is perfectly flat. Tilted barrel = uneven pressure = leaks.",
+          "POSITION BARREL: Place barrel on platform. Ensure tap hole faces outward for easy bucket access.",
+          "DOWNSPOUT CONNECTION: Cut downspout at appropriate height. Attach elbow joint directing water into barrel inlet.",
+          "SEAL CONNECTIONS: Use waterproof sealant/rubber gaskets at all connection points to prevent leaks.",
+          "OVERFLOW PIPE: Connect overflow pipe (from top hole) and direct it away from house foundation - at least 6 feet away.",
+          "STABILITY: Secure barrel with straps or brackets if in windy area. Full barrel weighs 200+ kg!"
+        ],
+        reason: "Why Elevate? Every 1 foot of height = 0.43 PSI water pressure. Higher barrel = stronger flow from tap = easier watering!",
+        image: "/images/quests/rainwater_hero/step4.jpg"
+      },
+      {
+        title: "Step 5 — Tap Installation & Testing",
+        objective: "Install outlet tap and test the entire system for leaks and functionality.",
+        subSteps: [
+          "TAP SELECTION: Use brass or plastic ball valve tap (3/4 inch standard). Avoid cheap taps - they leak!",
+          "INSTALLATION: Insert tap through bottom hole from outside. Secure with rubber washer inside + lock nut.",
+          "SEALANT: Apply plumber's tape (Teflon tape) on tap threads before tightening. Prevents leaks.",
+          "TIGHTEN: Hand-tighten firmly, then use wrench for final quarter turn. Don't over-tighten (cracks plastic).",
+          "HOSE CONNECTION (Optional): Attach garden hose adapter to tap for direct irrigation.",
+          "LEAK TEST: Fill barrel with 20-30 liters water. Check all connections, tap, overflow for leaks.",
+          "PRESSURE TEST: Open tap fully and check flow rate. Should fill 10L bucket in 30-60 seconds from elevated barrel."
+        ],
+        tip: "Winter Prep: In freezing climates, drain barrel before winter or insulate it. Frozen water expands and cracks plastic!",
+        image: "/images/quests/rainwater_hero/step5.jpg"
+      },
+      {
+        title: "Step 6 — Usage, Maintenance & Benefits",
+        objective: "Learn to use and maintain your rainwater harvesting system for long-term success.",
+        subSteps: [
+          "USAGE: Use collected water for irrigation, washing tools, livestock, or (if filtered/treated) even drinking.",
+          "MONTHLY CLEANING: Remove and clean inlet mesh filter. Flush first-flush diverter pipe.",
+          "ALGAE PREVENTION: Keep barrel covered and in shade. If algae appears, add 1 tablespoon bleach per 200L, wait 24hrs, drain.",
+          "MOSQUITO CHECK: Inspect weekly for mosquito larvae. Ensure all openings are screened. Add mosquito dunks if needed.",
+          "SEASONAL PREP: Before monsoon, clean roof, gutters, and all filters thoroughly for maximum collection.",
+          "WATER QUALITY: For plant use, rainwater is excellent (soft, no chlorine). For drinking, boil or use additional filtration.",
+          "EXPANSION: Once successful, add more barrels in series (overflow of one feeds next) for greater storage!"
+        ],
+        reason: "The Impact: A 100 sq m roof in area with 800mm annual rainfall can harvest 80,000 liters/year! That's ₹4000-8000 saved on water bills, plus drought resilience.",
+        image: "/images/quests/rainwater_hero/step6.jpg"
+      },
+      {
+        title: "Conclusion & Environmental Impact",
+        objective: "You've become a Rainwater Hero! Understand the broader benefits of your system.",
+        subSteps: [
+          "WATER INDEPENDENCE: You've reduced dependence on municipal water or groundwater by 30-50% for outdoor use.",
+          "COST SAVINGS: Initial investment ₹2000-5000. Annual savings ₹5000-10,000 on water bills. ROI in 6-12 months!",
+          "GROUNDWATER RECHARGE: Overflow water (if directed to soil) recharges groundwater instead of running off as waste.",
+          "FLOOD REDUCTION: Rainwater harvesting reduces stormwater runoff, decreasing urban flooding risk.",
+          "PLANT HEALTH: Rainwater is naturally soft, pH neutral, and free of chlorine - plants thrive on it!",
+          "CLIMATE ACTION: You're adapting to climate change by building water resilience for dry periods.",
+          "SCALE UP: Inspire neighbors to install systems. Community-level harvesting can recharge entire watersheds!",
+          "NEXT LEVEL: Explore underground storage tanks, drip irrigation integration, or greywater recycling."
+        ],
+        tip: "Advocacy Tip: Share your water savings data with neighbors. Seeing real numbers (liters saved, money saved) motivates others to become Rainwater Heroes too!",
+        image: null
+      }
+    ]
   },
 
   biochar_maker: {
@@ -670,7 +1019,88 @@ export const QUESTS_DATA = {
     difficulty: "Pro",
     cropType: "General",
     xpReward: 200,
-    badgeName: "Biochar Master"
+    badgeName: "Biochar Master",
+    steps: [
+      {
+        title: "Step 1 — Material Collection & Pit Prep",
+        objective: "Gather your raw materials and prepare the combustion chamber.",
+        subSteps: [
+          "BIOMASS: Collect dry woody waste - twigs, stalks, corn cobs, coconut shells. Avoid leaves (they burn too fast).",
+          "DRYNESS IS KEY: Material must be sun-dried. Wet wood = smoke + poor char.",
+          "THE PIT: Dig a cone-shaped pit in the ground. Top diameter: 1m, Depth: 0.5m, Bottom diameter: 0.2m.",
+          "WHY CONE SHAPE? It creates a natural draft that burns smoke from the bottom layers as it rises.",
+          "SAFETY FIRST: Keep a bucket of water and a shovel nearby. Clear dry grass from 2m around the pit.",
+          "TOOLS: Shovel, long stick (for poking), matchbox, water/cow dung slurry."
+        ],
+        tip: "Size Matters: Chop larger branches into 6-inch pieces. Uniform size ensures uniform charring.",
+        image: "/images/quests/biochar_maker/step1.jpg"
+      },
+      {
+        title: "Step 2 — The Initial Burn",
+        objective: "Start the fire correctly to establish the heat core.",
+        subSteps: [
+          "START SMALL: Place a small pile of highly flammable twigs/dry grass at the very bottom of the pit.",
+          "LIGHT IT UP: Ignite the bottom pile. Let it burn until it's flaming vigorously.",
+          "ESTABLISH HEAT: You need a strong, hot fire at the base before adding more material.",
+          "SMOKE CHECK: Initially, there will be white smoke (steam/volatiles). This is normal."
+        ],
+        reason: "The Principle: We are doing 'Top-Lit Up-Draft' (TLUD) or a variation. We want heat, but limited oxygen reaching the bottom layers later.",
+        image: "/images/quests/biochar_maker/step2.jpg"
+      },
+      {
+        title: "Step 3 — Layering (The Art of Pyrolysis)",
+        objective: "Build the biochar pile without turning it into ash.",
+        subSteps: [
+          "ADD LAYERS: Once the bottom pile is glowing red/white, throw in a layer of biomass to cover it.",
+          "WATCH THE SMOKE: The new layer will smoke. As the heat rises, the smoke will ignite (burn off).",
+          "WHEN TO ADD MORE: As soon as the top layer turns white/grey (ash) on the edges, cover it immediately with a new layer of wood.",
+          "REPEAT: Keep adding layers. The fire stays on TOP, while the wood BELOW cooks in low oxygen (Pyrolysis).",
+          "NO ASH: If you see too much white ash, you are burning it too long. Cover faster!",
+          "NO UNBURNT WOOD: If you cover too fast, the wood won't char. Find the rhythm."
+        ],
+        tip: "The flame should look clean and yellow/blue, not heavy thick smoke. The flame eats the smoke!",
+        image: "/images/quests/biochar_maker/step3.jpg"
+      },
+      {
+        title: "Step 4 — Quenching (Stopping the Process)",
+        objective: "Stop the burning at the perfect moment to save the carbon.",
+        subSteps: [
+          "FULL PIT: When the pit is full and the top layer is glowing red, it's time to stop.",
+          "KILL THE FIRE: You must cut off oxygen or cool it down instantly. Otherwise, it all turns to ash.",
+          "METHOD A (Water): Spray water (or cow dung slurry) evenly over the pit until steam stops. CAUTION: Steam burns!",
+          "METHOD B (Soil): Cover the pit completely with 6 inches of soil. Stamp it down. Leave for 24 hours to cool.",
+          "CHECK: Ensure no embers remain burning. Biochar can re-ignite if dry and hot!"
+        ],
+        reason: "Why Quench? We want Carbon (C), not Ash (Minerals). Quenching freezes the structure of the wood, creating microscopic pores.",
+        image: "/images/quests/biochar_maker/step4.jpg"
+      },
+      {
+        title: "Step 5 — Crushing & Activation",
+        objective: "Turn raw charcoal into a soil super-charger.",
+        subSteps: [
+          "HARVEST: Once cooled, remove the black charcoal. Separate any unburnt wood (re-use next time).",
+          "CRUSH IT: Crush the char into small pieces (pea-size or powder). Use a stone or hammer.",
+          "WHY CRUSH? Increases surface area for microbes and water holding.",
+          "ACTIVATION (Crucial!): Raw biochar acts like a sponge - it will steal nutrients from soil initially.",
+          "CHARGE IT: Mix biochar with compost, cow urine, or Jeevamrutham. Let it soak for 3-7 days.",
+          "THE RESULT: The porous biochar absorbs the nutrients and microbes, becoming a slow-release fertilizer battery."
+        ],
+        tip: "Biochar + Urine = Gold. The char absorbs the nitrogen and prevents it from evaporating as ammonia.",
+        image: "/images/quests/biochar_maker/step5.jpg"
+      },
+      {
+        title: "Conclusion & Application",
+        objective: "Apply your 'Black Gold' to the soil and reap the benefits.",
+        subSteps: [
+          "APPLICATION: Spread the activated biochar on your garden beds (approx 1 kg per sq meter).",
+          "INCORPORATE: Mix it into the top 4-6 inches of soil.",
+          "PERMANENCE: Unlike compost, biochar stays in the soil for 100+ years!",
+          "BENEFITS: Holds water (drought resistance), houses microbes, prevents nutrient leaching, reduces acidity.",
+          "CARBON CREDIT: You just locked atmospheric carbon into the soil. You are a climate hero!"
+        ],
+        image: "/images/quests/biochar_maker/step6.jpg"
+      }
+    ]
   },
 
   jeevamrutham: {
