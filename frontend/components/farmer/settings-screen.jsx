@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { ArrowLeft, User, Lock, MapPin, Leaf, Globe, Sun, Moon, Monitor, Check, Trash2, Trees } from "lucide-react"
+import { ArrowLeft, User, Lock, MapPin, Leaf, Globe, Sun, Moon, Monitor, Check, Trash2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -195,7 +195,6 @@ export function SettingsScreen({ userData, onBack }) {
                 {[
                   { value: "light", icon: Sun, label: "Light" },
                   { value: "dark", icon: Moon, label: "Dark" },
-                  { value: "deep-forest", icon: Trees, label: "Deep Forest" },
                   { value: "system", icon: Monitor, label: "Auto" },
                 ].map((option) => (
                   <button
@@ -218,12 +217,13 @@ export function SettingsScreen({ userData, onBack }) {
               <Label className="text-small text-muted-foreground mb-2">Font Size</Label>
               <div className="flex gap-2 mt-2">
                 {[
-                  { value: "small", label: "Small", desc: "14px" },
-                  { value: "medium", label: "Medium", desc: "16px" },
-                  { value: "large", label: "Large", desc: "18px" }
+                  { value: "small", label: "Small" },
+                  { value: "medium", label: "Medium" },
+                  { value: "large", label: "Large" }
                 ].map((size) => (
                   <button
                     key={size.value}
+
                     onClick={() => {
                       setFontSize(size.value)
                       showSuccessToast(`Font size changed to ${size.label}`)
@@ -232,7 +232,6 @@ export function SettingsScreen({ userData, onBack }) {
                       }`}
                   >
                     <div className="font-semibold">{size.label}</div>
-                    <div className="text-xs opacity-75">{size.desc}</div>
                   </button>
                 ))}
               </div>
