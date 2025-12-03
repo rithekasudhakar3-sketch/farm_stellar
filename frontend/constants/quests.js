@@ -2,17 +2,17 @@ export const QUESTS_DATA = {
   soil_scout: {
     id: "soil_scout",
     title: "Meet the Soil",
-    description: "Analyze the physical health of your garden soil to understand what plants will thrive in it.",
+    description: "Get to know your garden soil! Learn what type of soil you have and what plants will grow best in it.",
     activities: [
       "Collect soil samples",
-      "Perform texture test (sand/silt/clay)",
-      "Check moisture levels",
-      "Evaluate smell and color"
+      "Do a simple texture test",
+      "Check how wet or dry it is",
+      "Look at the color and smell"
     ],
     outcomes: [
-      "Understand soil composition",
-      "Identify soil quality indicators",
-      "Recognize healthy vs poor soil"
+      "Know what type of soil you have",
+      "Learn what makes soil healthy",
+      "Tell the difference between good and bad soil"
     ],
     difficulty: "Beginner",
     cropType: "General",
@@ -20,77 +20,77 @@ export const QUESTS_DATA = {
     badgeName: "Soil Scout",
     steps: [
       {
-        title: "Preparation & Gear Check",
-        objective: "Before you head out, gather your kit.",
+        title: "Get Ready & Gather Your Tools",
+        objective: "Let's collect everything you need before we start!",
         subSteps: [
-          "Small trowel or sturdy spoon",
-          "3 Clean jars or Ziploc bags",
-          "Permanent marker",
-          "Water bottle",
-          "Notebook & Camera (Phone)",
-          "Optional: Ruler & Gloves"
+          "A small shovel or strong spoon",
+          "3 clean jars or plastic bags",
+          "A marker to label things",
+          "A bottle of water",
+          "Your phone (for notes and photos)",
+          "Optional: A ruler and gloves"
         ],
-        tip: "Pro Tip: Soil tests are best done when the soil is slightly damp, but not soaking wet from heavy rain.",
+        tip: "Helpful Hint: The best time to test soil is when it's a little damp - not too dry and not soaking wet from rain.",
         image: "/images/quests/soil_scout/step1.png"
       },
       {
-        title: "Step 1 — The Harvest (Sampling)",
-        objective: "Collect a representative sample of your soil.",
+        title: "Step 1 — Collect Your Soil Samples",
+        objective: "Let's gather some soil from different spots in your garden.",
         subSteps: [
-          "Select 3 Spots: Pick three distinct areas in your plot (e.g., near a plant, center of the row, and an empty corner).",
-          "Dig: Clear away surface leaves/mulch. Dig 6–10 cm deep (about finger-length).",
-          "Collect: Scoop about 1 cup of soil from each spot into separate bags/jars.",
-          "Label: Mark them clearly: S1, S2, S3."
+          "Pick 3 Different Spots: Choose three areas (like near a plant, the middle of your garden, and an empty corner).",
+          "Dig a Little: Remove any leaves on top. Dig down about as deep as your finger (6-10 cm).",
+          "Scoop Some Soil: Take about 1 cup of soil from each spot and put it in separate bags or jars.",
+          "Label Them: Write S1, S2, and S3 on each container so you know which is which."
         ],
-        reason: "Why? Soil changes across a garden. Three spots give you an average, not an anomaly.",
+        reason: "Why do this? Soil can be different in different parts of your garden. Testing 3 spots gives you a better overall picture!",
         image: "/images/quests/soil_scout/step2.jpg"
       },
       {
-        title: "Step 2 — Texture Analysis (The Physics)",
-        objective: "Determine if your soil is Sandy, Silty, or Clay-heavy.",
+        title: "Step 2 — Feel the Texture",
+        objective: "Let's find out if your soil is sandy, silty, or has clay in it.",
         subSteps: [
-          "Method A: Take a moist pinch of soil (add a drop of water if needed).",
-          "Knead it into a ball, then press it between your thumb and finger to push out a 'ribbon.'",
-          "Check Ribbon: Sandy (No ribbon), Silty (Weak ribbon), Clay (Strong ribbon >2cm).",
-          "Method B: Fill a clear jar 2/3 with soil and top with water.",
-          "Add a pinch of salt and shake vigorously for 2 minutes.",
-          "Wait 24 Hours and observe layers (Sand bottom, Silt middle, Clay top)."
+          "Easy Method: Take a small amount of damp soil (add a drop of water if it's dry).",
+          "Make a ball with it, then try to squeeze it into a ribbon shape between your thumb and finger.",
+          "What You'll See: Sandy soil won't form a ribbon. Silty soil makes a weak ribbon. Clay soil makes a strong ribbon (longer than 2cm).",
+          "Jar Method: Fill a clear jar 2/3 full with soil, then add water to the top.",
+          "Add a tiny pinch of salt and shake it really well for 2 minutes.",
+          "Let it sit for 24 hours. You'll see layers: Sand settles at the bottom, silt in the middle, clay on top."
         ],
         image: "/images/quests/soil_scout/step3.png"
       },
       {
-        title: "Step 3 — Hydration Check",
-        objective: "Check water retention and drainage.",
+        title: "Step 3 — Check the Moisture",
+        objective: "See how well your soil holds water.",
         subSteps: [
-          "The Squeeze Test: Pick up a handful of soil and squeeze gently. Open your hand.",
-          "Check if Dry: Falls apart immediately (Needs irrigation).",
-          "Check if Moist: Holds loose shape but crumbles (Ideal).",
-          "Check if Wet: Drips water, sticky blob (Poor drainage)."
+          "The Squeeze Test: Grab a handful of soil and squeeze it gently. Then open your hand.",
+          "Too Dry? If it falls apart right away, it needs more water.",
+          "Just Right? If it holds its shape loosely but breaks apart easily, that's perfect!",
+          "Too Wet? If water drips out and it's sticky like mud, it has poor drainage."
         ],
         image: "/images/quests/soil_scout/step4.png"
       },
       {
-        title: "Step 4 — Sensory Check (Color & Smell)",
-        objective: "Assess organic health and aeration.",
+        title: "Step 4 — Smell and Color Check",
+        objective: "Use your nose and eyes to check if the soil is healthy.",
         subSteps: [
-          "Smell Test: Earthy/Fresh (Good) vs Sour/Rotten (Bad/Anaerobic).",
-          "Color Code: Dark Brown/Black (Rich Organic Matter).",
-          "Color Code: Red/Yellow (High Iron).",
-          "Color Code: Gray/Blue-ish (Waterlogged).",
-          "Color Code: Pale/White (Leached/Salty)."
+          "Smell It: Good soil smells fresh and earthy. Bad soil smells sour or rotten.",
+          "Dark Brown or Black Color: This means lots of good organic matter (nutrients)!",
+          "Red or Yellow Color: This means it has iron in it.",
+          "Gray or Bluish Color: This means it's too wet and waterlogged.",
+          "Pale or White Color: This means nutrients have washed away or it's too salty."
         ],
         image: "/images/quests/soil_scout/step5.png"
       },
       {
-        title: "Conclusion & Learning Summary",
-        objective: "Mission Complete! Compile your notes.",
+        title: "You Did It! Summary Time",
+        objective: "Great job! Now let's write down what you learned.",
         subSteps: [
-          "Determine Texture (e.g., Sandy Loam)",
-          "Determine Moisture (e.g., Well-drained)",
-          "Determine Health (e.g., Dark & Earthy)",
-          "Review: Texture dictates strategy.",
-          "Review: Color indicates diet.",
-          "Review: Smell reveals breath."
+          "What texture is it? (Example: Sandy, Clay, or Loam)",
+          "How's the moisture? (Example: Well-drained, Dry, or Wet)",
+          "Is it healthy? (Example: Dark color and earthy smell)",
+          "Remember: The texture tells you what plants will grow best.",
+          "Remember: The color shows you what nutrients are in the soil.",
+          "Remember: The smell tells you if the soil is breathing well."
         ],
         image: null
       }
@@ -99,17 +99,17 @@ export const QUESTS_DATA = {
 
   crop_quest: {
     id: "crop_quest",
-    title: "Crops that Fits",
-    description: "Discover the best sustainable crops for your region.",
+    title: "Crops that Fit",
+    description: "Find the best crops that will grow well in your area!",
     activities: [
-      "Browse recommended crops",
-      "Choose 3 crops suited to your climate",
-      "Check water and season needs"
+      "Look at recommended crops for your area",
+      "Pick 3 crops that match your weather",
+      "Learn when and how much to water them"
     ],
     outcomes: [
-      "Identify suitable crops",
-      "Understand seasonal planting",
-      "Learn water requirements"
+      "Know which crops are right for you",
+      "Learn the best time to plant",
+      "Understand how much water they need"
     ],
     difficulty: "Beginner",
     cropType: "General",
@@ -117,60 +117,60 @@ export const QUESTS_DATA = {
     badgeName: "Crop Explorer",
     steps: [
       {
-        title: "Step 1 — Check Climate & Soil",
-        objective: "Find out what kind of weather and soil you have.",
+        title: "Step 1 — Check Your Weather & Soil",
+        objective: "Let's find out what kind of weather and soil you have.",
         subSteps: [
-          "CLIMATE: Is your area hot, cold, or medium? Rainy or dry?",
-          "SIMPLE TEST: If you sweat a lot = hot. Need blankets = cold. Coconuts grow = hot. Apples grow = cold.",
-          "GRAB SOIL: Take a handful and squeeze it.",
-          "SANDY: Falls apart, rough feel → Good for carrots, radish",
-          "CLAY: Sticky, holds shape → Good for rice, wheat",
-          "LOAMY: Forms ball but breaks gently → Best! Good for everything",
-          "Any soil can improve with compost!"
+          "WEATHER: Is your area hot, cold, or somewhere in between? Does it rain a lot or is it dry?",
+          "SIMPLE TEST: If you sweat a lot = hot weather. Need blankets = cold weather. Coconuts grow = hot. Apples grow = cold.",
+          "GRAB SOME SOIL: Take a handful and squeeze it.",
+          "SANDY SOIL: Falls apart, feels rough → Good for carrots and radish",
+          "CLAY SOIL: Sticky, holds its shape → Good for rice and wheat",
+          "LOAMY SOIL: Forms a ball but breaks gently → Best! Good for almost everything",
+          "Good news: You can improve any soil by adding compost!"
         ],
-        tip: "Ask neighbors what grows well in your area - they're the best teachers!",
+        tip: "Ask your neighbors what grows well in your area - they're the best teachers!",
         image: "/images/quests/crop_quest/step1.jpg"
       },
       {
-        title: "Step 2 — Pick 3 Easy Crops",
-        objective: "Choose your first 3 crops based on your climate, soil, and water.",
+        title: "Step 2 — Pick Your First 3 Crops",
+        objective: "Choose 3 easy crops based on your weather, soil, and water supply.",
         subSteps: [
           "START EASY: Pick fast-growing crops that don't need much care",
-          "BEST FOR BEGINNERS: Radish (25 days), Spinach (30 days), Beans (60 days)",
-          "PICK VARIETY: 1 leafy + 1 root + 1 fruiting vegetable",
-          "HOT CLIMATE: Spinach + Radish + Tomato",
-          "LESS WATER: Amaranth + Radish + Cluster Beans",
-          "LOTS OF WATER: Lettuce + Carrot + Beans",
-          "Why 3? If one fails, you have two backups!"
+          "BEST FOR BEGINNERS: Radish (ready in 25 days!), Spinach (30 days), Beans (60 days)",
+          "PICK VARIETY: Choose 1 leafy vegetable + 1 root vegetable + 1 fruiting vegetable",
+          "HOT WEATHER: Try Spinach + Radish + Tomato",
+          "LESS WATER AVAILABLE: Try Amaranth + Radish + Cluster Beans",
+          "LOTS OF WATER: Try Lettuce + Carrot + Beans",
+          "Why only 3? If one doesn't work out, you still have two others growing!"
         ],
-        reason: "Growing 3 crops well is better than growing 10 badly. Start small, learn, then expand!",
+        reason: "It's better to grow 3 crops really well than to grow 10 crops poorly. Start small, learn as you go, then grow more!",
         image: "/images/quests/crop_quest/step2.jpg"
       },
       {
-        title: "Step 3 — Know When to Plant",
-        objective: "Plant at the right time for best results.",
+        title: "Step 3 — Know the Right Time to Plant",
+        objective: "Plant at the right time for the best results!",
         subSteps: [
-          "KHARIF (Monsoon): June-October → Rice, corn, beans",
-          "RABI (Winter): November-March → Wheat, peas, carrots",
-          "ZAID (Summer): March-June → Cucumber, watermelon",
-          "YEAR-ROUND CROPS: Radish, spinach, coriander (great for beginners!)",
-          "CHECK SEED PACKET: It tells you the best month to plant",
-          "Start with year-round crops first!"
+          "MONSOON SEASON (June-October): Rice, corn, beans grow well",
+          "WINTER SEASON (November-March): Wheat, peas, carrots grow well",
+          "SUMMER SEASON (March-June): Cucumber, watermelon grow well",
+          "YEAR-ROUND CROPS: Radish, spinach, coriander (perfect for beginners!)",
+          "CHECK THE SEED PACKET: It will tell you the best month to plant",
+          "Our tip: Start with year-round crops first - they're the easiest!"
         ],
-        tip: "Leafy vegetables like cool weather. Fruiting vegetables like warm weather. Simple!",
+        tip: "Easy rule: Leafy vegetables like cool weather. Fruiting vegetables like warm weather. Simple!",
         image: "/images/quests/crop_quest/step3.jpg"
       },
       {
-        title: "Step 4 — Plant & Grow",
-        objective: "Get your crops in the ground and watch them grow!",
+        title: "Step 4 — Plant & Watch Them Grow",
+        objective: "Get your crops in the ground and watch the magic happen!",
         subSteps: [
-          "SPACE NEEDED: Even 10x10 feet works! Or use pots/buckets",
-          "SUNLIGHT: Pick a spot with 4-6 hours of sun daily",
-          "SPACING: Leafy (6 inches), Root (4 inches), Fruiting (18 inches) apart",
-          "PLANT IN ROWS: Makes watering and weeding easier",
-          "WATER: Keep soil moist but not soggy",
+          "SPACE NEEDED: Even a 10x10 feet area works! Or use pots and buckets",
+          "SUNLIGHT: Pick a spot that gets 4-6 hours of sun each day",
+          "SPACING: Leafy vegetables (6 inches apart), Root vegetables (4 inches), Fruiting vegetables (18 inches)",
+          "PLANT IN ROWS: This makes watering and weeding much easier",
+          "WATER: Keep the soil moist but not soggy (like a damp sponge)",
           "NEXT STEPS: Buy seeds → Prepare soil → Plant → Water → Harvest!",
-          "Your first harvest will be YOURS! Start today!"
+          "Your first harvest will be grown by YOU! Why not start today?"
         ],
         tip: "No land? No problem! Many crops grow great in pots, buckets, or grow bags on a balcony!",
         image: "/images/quests/crop_quest/step4.jpg"
@@ -181,17 +181,17 @@ export const QUESTS_DATA = {
   compost_kickoff: {
     id: "compost_kickoff",
     title: "Soil Booster",
-    description: "Turn organic waste into nutrient-rich compost.",
+    description: "Turn your kitchen scraps into amazing food for your plants!",
     activities: [
-      "Choose compost spot",
-      "Add kitchen waste",
-      "Mix with dry leaves",
-      "Maintain moisture"
+      "Pick a spot for your compost",
+      "Add kitchen scraps",
+      "Mix in dry leaves",
+      "Keep it damp (not wet)"
     ],
     outcomes: [
-      "Start composting",
-      "Reduce household waste",
-      "Produce organic fertilizer"
+      "Start making your own compost",
+      "Reduce your household waste",
+      "Make free fertilizer for your plants"
     ],
     difficulty: "Beginner",
     cropType: "General",
@@ -237,16 +237,16 @@ export const QUESTS_DATA = {
   zero_waste: {
     id: "zero_waste",
     title: "Zero Waste Warrior",
-    description: "Learn to segregate waste for eco-friendly farming.",
+    description: "Learn to sort your waste the smart way - good for your garden and the planet!",
     activities: [
       "Separate organic and non-organic waste",
       "Collect dry leaves for mulch",
       "Prepare a mini waste station at home"
     ],
     outcomes: [
-      "Adopt zero-waste habits",
-      "Reduce farm waste",
-      "Improve sustainability"
+      "Build zero-waste habits",
+      "Reduce waste in your garden",
+      "Help the environment"
     ],
     difficulty: "Beginner",
     cropType: "General",
@@ -444,19 +444,19 @@ export const QUESTS_DATA = {
   boll_keeper: {
     id: "boll_keeper",
     title: "Boll Keeper Mastery Challenge",
-    description: "Master the art of cotton boll retention through strategic interventions. Learn to prevent premature shedding and maximize yield from every square.",
+    description: "Learn how to keep your cotton bolls healthy and prevent them from falling off too early. This will help you get more cotton from your field!",
     activities: [
-      "Scout for early boll shedding patterns",
-      "Identify stress factors causing shedding",
-      "Apply balanced foliar nutrition",
-      "Manage pest damage to bolls",
-      "Monitor and track boll retention rates"
+      "Check your field regularly for falling bolls",
+      "Find out what's causing the problem",
+      "Give your plants the right nutrients through their leaves",
+      "Protect bolls from pests",
+      "Keep track of how many bolls you're saving"
     ],
     outcomes: [
-      "Increase boll retention by 15-25%",
-      "Improve cotton yield by 2-3 quintals/acre",
-      "Reduce premature shedding by 40%",
-      "Boost farmer income by ₹8,000-12,000/acre"
+      "Save 15-25% more bolls (cotton buds)",
+      "Get 2-3 quintals more cotton per acre",
+      "Reduce early boll drop by 40%",
+      "Earn ₹8,000-12,000 more per acre"
     ],
     difficulty: "Pro",
     cropType: "Cotton",
@@ -464,8 +464,8 @@ export const QUESTS_DATA = {
     badgeName: "Boll Keeper Master",
     steps: [
       {
-        title: "Step 1 — Field Scouting for Shedding Patterns",
-        objective: "Identify WHERE, WHEN, and HOW MUCH shedding is occurring in your field.",
+        title: "Step 1 — Check Your Field for Falling Bolls",
+        objective: "Find out where, when, and how many bolls are falling off in your field.",
         subSteps: [
           "TIMING: Scout every 5-7 days starting from square formation (40-50 days after sowing)",
           "SAMPLE SIZE: Select 10 random plants diagonally across the field (avoid edges)",
@@ -479,8 +479,8 @@ export const QUESTS_DATA = {
         image: "/images/quests/boll_keeper/step2.jpg"
       },
       {
-        title: "Step 2 — Diagnosing the Root Cause",
-        objective: "Use simple field tests to identify what's stressing your cotton plants.",
+        title: "Step 2 — Find Out Why Bolls Are Falling",
+        objective: "Use simple tests to figure out what's stressing your cotton plants.",
         subSteps: [
           "WATER STRESS TEST: Dig 6 inches near root zone. Soil should be moist like a wrung sponge. Dry = water stress. Soggy = waterlogging",
           "LEAF COLOR CHECK: Dark green = excess nitrogen (vegetative growth, less fruiting). Light green/yellow = nitrogen deficiency",
@@ -494,8 +494,8 @@ export const QUESTS_DATA = {
         image: "/images/quests/boll_keeper/step3.jpg"
       },
       {
-        title: "Step 3 — Irrigation Management for Retention",
-        objective: "Optimize water supply during critical boll development period.",
+        title: "Step 3 — Water Your Plants the Right Way",
+        objective: "Give your plants the right amount of water when they need it most.",
         subSteps: [
           "CRITICAL STAGE: Flowering to boll development (60-90 days after sowing) - DO NOT stress plants here",
           "IRRIGATION FREQUENCY: Every 7-10 days depending on soil type. Sandy soil = 7 days. Clay = 10 days",
@@ -509,8 +509,8 @@ export const QUESTS_DATA = {
         image: "/images/quests/boll_keeper/step4.jpg"
       },
       {
-        title: "Step 4 — Foliar Nutrition for Boll Retention",
-        objective: "Provide quick-acting nutrients directly through leaves to stop shedding.",
+        title: "Step 4 — Feed Your Plants Through Their Leaves",
+        objective: "Give your plants quick nutrients through their leaves to stop bolls from falling.",
         subSteps: [
           "BORON SPRAY (Most Critical): Mix 0.5g Borax per liter of water (500g per 1000L). Spray at square formation and boll development",
           "WHY BORON? Strengthens pollen tubes for fertilization. Deficiency = poor pollination = boll shedding. Apply 2-3 sprays, 15 days apart",
@@ -524,8 +524,8 @@ export const QUESTS_DATA = {
         image: "/images/quests/boll_keeper/step5.jpg"
       },
       {
-        title: "Step 5 — Pest Management for Boll Protection",
-        objective: "Protect bolls from pest damage that triggers premature shedding.",
+        title: "Step 5 — Protect Your Bolls from Pests",
+        objective: "Keep pests away so they don't damage your bolls and make them fall off.",
         subSteps: [
           "TARGET PESTS: Pink bollworm (internal damage), American bollworm (external), Jassids (sap sucking causes stress)",
           "SCOUTING: Check 10 plants for pest eggs/larvae. Egg threshold = 5 eggs per plant for spray decision",
@@ -539,8 +539,8 @@ export const QUESTS_DATA = {
         image: "/images/quests/boll_keeper/step6.jpg"
       },
       {
-        title: "Step 6 — Monitoring Retention Success",
-        objective: "Track boll retention improvements and measure intervention impact.",
+        title: "Step 6 — Track Your Progress",
+        objective: "Keep track of how many bolls you're saving and see the results!",
         subSteps: [
           "BASELINE RECORDING: Before intervention - Count total bolls + shedding rate on 10 tagged plants",
           "WEEKLY TRACKING: Count new bolls formed vs bolls shed on same tagged plants",
@@ -554,8 +554,8 @@ export const QUESTS_DATA = {
         image: "/images/quests/boll_keeper/step7.jpg"
       },
       {
-        title: "Conclusion & Season-End Review",
-        objective: "You've completed the Boll Keeper Challenge! Review learnings and plan for next season.",
+        title: "You Did It! What You Learned",
+        objective: "Congratulations! You've completed the Boll Keeper Challenge! Let's review what you learned and plan for next season.",
         subSteps: [
           "INTEGRATED APPROACH WORKS: No single factor - Water + Nutrition + Pest control = Maximum boll retention",
           "BORON IS KING: Single most important micronutrient for cotton. 2-3 foliar sprays can increase retention by 20-30%",
@@ -617,19 +617,19 @@ export const QUESTS_DATA = {
   rust_shield: {
     id: "rust_shield",
     title: "Rust Shield Challenge",
-    description: "Protect your wheat crop from devastating rust disease using integrated organic management practices. Learn to identify, prevent, and control rust infections naturally.",
+    description: "Protect your wheat crop from rust disease using natural, organic methods. Learn to spot it early, prevent it, and control it without harsh chemicals!",
     activities: [
-      "Scout and identify rust symptoms early",
-      "Remove and destroy infected plant parts",
-      "Improve air circulation and spacing",
-      "Apply organic fungicidal treatments",
-      "Monitor and track disease progression"
+      "Look for rust signs on your wheat plants",
+      "Remove and destroy infected parts",
+      "Improve air flow between plants",
+      "Apply natural fungus-fighting sprays",
+      "Keep track of the disease"
     ],
     outcomes: [
-      "Reduce rust infection by 60-70%",
-      "Protect wheat yield and quality",
+      "Reduce rust disease by 60-70%",
+      "Protect your wheat harvest and quality",
       "Build long-term disease resistance",
-      "Save on chemical fungicide costs"
+      "Save money on chemical fungicides"
     ],
     difficulty: "Pro",
     cropType: "Wheat",
@@ -637,8 +637,8 @@ export const QUESTS_DATA = {
     badgeName: "Rust Shield Guardian",
     steps: [
       {
-        title: "Step 1 — Field Scouting & Identification",
-        objective: "Learn to identify rust symptoms early before it spreads across your entire field.",
+        title: "Step 1 — Look for Rust on Your Plants",
+        objective: "Learn to spot rust disease early before it spreads across your whole field.",
         subSteps: [
           "WHEN TO SCOUT: Start from 30 days after sowing, scout weekly during tillering stage",
           "LEAF RUST: Small circular/oval orange-brown pustules scattered on upper leaf surface",
@@ -652,8 +652,8 @@ export const QUESTS_DATA = {
         image: "/images/quests/rust_shield/step2.jpg"
       },
       {
-        title: "Step 2 — Sanitation & Removal",
-        objective: "Remove the source of infection to prevent spore multiplication.",
+        title: "Step 2 — Remove Infected Parts",
+        objective: "Remove the sick parts to stop the disease from spreading.",
         subSteps: [
           "EARLY STAGE (Less than 5% infection): Remove only the infected lower leaves",
           "Cut or pluck infected leaves carefully to avoid shaking spores onto healthy plants",
@@ -667,8 +667,8 @@ export const QUESTS_DATA = {
         image: "/images/quests/rust_shield/step3.jpg"
       },
       {
-        title: "Step 3 — Cultural Practices for Prevention",
-        objective: "Modify your field environment to make it unfavorable for rust fungus.",
+        title: "Step 3 — Help Your Plants Breathe Better",
+        objective: "Change how you manage your field to make it harder for rust to grow.",
         subSteps: [
           "SPACING: Ensure proper row spacing (20-23cm for wheat) to improve air circulation",
           "AVOID OVER-CROWDING: Reduce seed rate if you're planting too densely",
@@ -682,8 +682,8 @@ export const QUESTS_DATA = {
         image: "/images/quests/rust_shield/step4.jpg"
       },
       {
-        title: "Step 4 — Organic Fungicidal Spray Preparation",
-        objective: "Prepare effective organic fungicides using locally available materials.",
+        title: "Step 4 — Make Natural Disease-Fighting Sprays",
+        objective: "Prepare effective natural sprays using things you can find locally.",
         subSteps: [
           "OPTION 1 - Neem Solution: Mix 30ml neem oil + 5ml liquid soap in 10L water (Azadirachtin inhibits spore germination)",
           "OPTION 2 - Garlic-Chili Spray: Blend 100g garlic + 50g green chili in 1L water, strain, dilute to 10L (antifungal compounds)",
@@ -696,8 +696,8 @@ export const QUESTS_DATA = {
         image: "/images/quests/rust_shield/step5.jpg"
       },
       {
-        title: "Step 5 — Application Protocol",
-        objective: "Apply organic fungicides correctly for maximum disease suppression.",
+        title: "Step 5 — Apply Your Sprays Correctly",
+        objective: "Use your natural sprays the right way to fight the disease.",
         subSteps: [
           "FREQUENCY: Spray every 7-10 days once rust is detected, continue for 3-4 weeks",
           "TIMING: Spray early morning (6-9 AM) or evening (4-6 PM) - never in hot sun",
@@ -711,8 +711,8 @@ export const QUESTS_DATA = {
         image: "/images/quests/rust_shield/step6.jpg"
       },
       {
-        title: "Step 6 — Monitoring & Record Keeping",
-        objective: "Track disease progression and treatment effectiveness.",
+        title: "Step 6 — Track the Disease",
+        objective: "Keep records of the disease and see if your treatments are working.",
         subSteps: [
           "SEVERITY SCORING: Count infected leaves in random 10 plants weekly",
           "Note: 0-5% = Trace, 5-20% = Low, 20-40% = Moderate, 40%+ = Severe",
@@ -726,8 +726,8 @@ export const QUESTS_DATA = {
         image: "/images/quests/rust_shield/step7.jpg"
       },
       {
-        title: "Conclusion & Season-End Review",
-        objective: "You've completed the Rust Shield Challenge! Review your learnings and plan for future seasons.",
+        title: "You Did It! What You Learned",
+        objective: "Congratulations! You've completed the Rust Shield Challenge! Let's review what you learned.",
         subSteps: [
           "INTEGRATED APPROACH WINS: No single method works - combining scouting, sanitation, cultural practices, and sprays gives 60-70% control",
           "PREVENTION > CURE: Rust-resistant varieties + proper spacing + balanced nutrition = 80% of the battle",
@@ -746,19 +746,19 @@ export const QUESTS_DATA = {
   biodiversity_strip: {
     id: "biodiversity_strip",
     title: "Biodiversity Bloom Bar",
-    description: "Create a vibrant strip of flowering plants to attract beneficial insects, pollinators, and natural predators - your farm's living defense system.",
+    description: "Create a colorful strip of flowers to attract helpful insects, pollinators, and natural pest fighters - your farm's living defense team!",
     activities: [
-      "Select 5-7 pollinator-friendly native plants",
-      "Prepare 1-meter wide biodiversity strip",
-      "Plant flowers in species clusters",
-      "Mulch, water, and maintain regularly",
-      "Monitor beneficial insect activity"
+      "Pick 5-7 flowering plants that attract good insects",
+      "Prepare a 1-meter wide flower strip",
+      "Plant flowers in groups",
+      "Add mulch, water, and maintain",
+      "Watch for helpful insects"
     ],
     outcomes: [
-      "Increase beneficial insect presence by 300%",
+      "Get 300% more helpful insects in your garden",
       "Improve natural pest control",
       "Boost pollination and crop yields",
-      "Create a beautiful, functional farm ecosystem"
+      "Create a beautiful, working farm ecosystem"
     ],
     difficulty: "Pro",
     cropType: "General",
@@ -876,17 +876,17 @@ export const QUESTS_DATA = {
   rainwater_hero: {
     id: "rainwater_hero",
     title: "Rainwater Hero",
-    description: "Set up a simple rainwater collection system.",
+    description: "Set up a simple system to collect rainwater and use it for your plants!",
     activities: [
-      "Place barrel under roof edge",
-      "Attach filter mesh",
-      "Install outlet tap",
-      "Use water for plants"
+      "Put a barrel under your roof",
+      "Add a filter to keep it clean",
+      "Install a tap at the bottom",
+      "Use the water for your plants"
     ],
     outcomes: [
-      "Reduce water usage",
-      "Increase self-sufficiency",
-      "Improve sustainability"
+      "Use less tap or well water",
+      "Become more self-sufficient",
+      "Help the environment"
     ],
     difficulty: "Pro",
     cropType: "General",
@@ -1004,17 +1004,17 @@ export const QUESTS_DATA = {
   biochar_maker: {
     id: "biochar_maker",
     title: "Biochar Mastery Challenge",
-    description: "Create biochar using farm waste to enrich soil.",
+    description: "Turn farm waste into biochar - a special charcoal that makes your soil super healthy!",
     activities: [
-      "Collect woody waste",
-      "Burn in low-oxygen pit",
-      "Crush cooled charcoal",
-      "Mix with compost"
+      "Collect dry twigs and branches",
+      "Burn them in a special pit with low oxygen",
+      "Crush the cooled charcoal",
+      "Mix it with compost"
     ],
     outcomes: [
-      "Improve soil fertility",
-      "Increase carbon storage",
-      "Boost microbial activity"
+      "Make your soil more fertile",
+      "Store carbon in the soil",
+      "Boost helpful microbes in your soil"
     ],
     difficulty: "Pro",
     cropType: "General",
@@ -1106,16 +1106,16 @@ export const QUESTS_DATA = {
   jeevamrutham: {
     id: "jeevamrutham",
     title: "Panchakavya",
-    description: "Create a batch of panchakavya, a potent traditional microbial culture that acts as an immunity booster for your garden.",
+    description: "Make a powerful natural fertilizer using cow dung, cow urine, and jaggery - a traditional recipe that boosts your soil's health!",
     activities: [
-      "Mix cow dung & urine",
-      "Add jaggery + flour",
-      "Ferment for 5–7 days",
-      "Apply near root zone"
+      "Mix cow dung and cow urine",
+      "Add jaggery (sweet) and flour",
+      "Let it ferment for 5-7 days",
+      "Apply it near plant roots"
     ],
     outcomes: [
-      "Boost soil microbial life",
-      "Enhance nutrient availability",
+      "Boost helpful microbes in your soil",
+      "Make nutrients more available to plants",
       "Increase crop health"
     ],
     difficulty: "Pro",
@@ -1201,20 +1201,20 @@ export const QUESTS_DATA = {
   coconut_bioenzyme: {
     id: "coconut_bioenzyme",
     title: "Coconut Water Bio-Elixir",
-    description: "Create a powerful bio-enzyme from tender coconut water - a natural growth promoter, disease controller, and soil conditioner all in one fermented solution.",
+    description: "Make a powerful natural spray from coconut water - it helps plants grow, fights diseases, and improves your soil!",
     activities: [
-      "Collect fresh tender coconut water",
-      "Add jaggery and starter culture",
-      "Ferment for 30-45 days with weekly stirring",
-      "Strain and bottle the bio-enzyme",
-      "Apply as foliar spray or soil drench"
+      "Collect fresh coconut water",
+      "Add jaggery and a starter culture",
+      "Let it ferment for 30-45 days with weekly stirring",
+      "Strain it and bottle it",
+      "Use as a spray or soil treatment"
     ],
     outcomes: [
-      "Create multi-purpose organic bio-enzyme",
-      "Boost plant immunity and growth",
-      "Control fungal and bacterial diseases",
-      "Improve soil microbial diversity",
-      "Save ₹5000-8000 on chemical inputs"
+      "Make a multi-purpose natural spray",
+      "Help plants grow stronger and healthier",
+      "Control fungal and bacterial diseases naturally",
+      "Improve helpful microbes in your soil",
+      "Save ₹5,000-8,000 on chemical products"
     ],
     difficulty: "Pro",
     cropType: "General",
