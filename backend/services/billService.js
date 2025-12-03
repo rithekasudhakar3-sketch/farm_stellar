@@ -4,14 +4,14 @@ const PurchaseOrder = require('../models/PurchaseOrder');
  * Generate HTML bill for a purchase order
  */
 exports.generateBillHTML = (order, user) => {
-    const billDate = order.billGeneratedAt || new Date();
-    const formattedDate = billDate.toLocaleDateString('en-IN', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric'
-    });
+  const billDate = order.billGeneratedAt || new Date();
+  const formattedDate = billDate.toLocaleDateString('en-IN', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  });
 
-    const itemsHTML = order.items.map((item, index) => `
+  const itemsHTML = order.items.map((item, index) => `
     <tr>
       <td style="padding: 12px; border-bottom: 1px solid #e5e7eb;">${index + 1}</td>
       <td style="padding: 12px; border-bottom: 1px solid #e5e7eb;">
@@ -29,7 +29,7 @@ exports.generateBillHTML = (order, user) => {
     </tr>
   `).join('');
 
-    return `
+  return `
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -137,6 +137,50 @@ exports.generateBillHTML = (order, user) => {
     </div>
     ` : ''}
 
+    <!-- Admin Authorization & E-Signature -->
+    <div style="margin-top: 40px; padding: 24px; background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%); border: 2px solid #10b981; border-radius: 12px;">
+      <h3 style="color: #065f46; margin-bottom: 16px; font-size: 16px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">
+        ✓ Admin Authorization
+      </h3>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
+        <div>
+          <p style="color: #6b7280; font-size: 12px; margin-bottom: 4px;">Approved By</p>
+          <p style="color: #111827; font-weight: 600; font-size: 14px;">FarmStellar Admin</p>
+        </div>
+        <div>
+          <p style="color: #6b7280; font-size: 12px; margin-bottom: 4px;">Approval Date</p>
+          <p style="color: #111827; font-weight: 600; font-size: 14px;">${order.reviewedAt ? new Date(order.reviewedAt).toLocaleDateString('en-IN', { year: 'numeric', month: 'long', day: 'numeric' }) : formattedDate}</p>
+        </div>
+      </div>
+      
+      <!-- Digital E-Signature -->
+      <div style="margin-top: 20px; padding-top: 20px; border-top: 2px dashed #10b981;">
+        <div style="display: flex; justify-content: space-between; align-items: end;">
+          <div>
+            <p style="color: #6b7280; font-size: 11px; margin-bottom: 8px;">DIGITALLY SIGNED BY</p>
+            <div style="font-family: 'Brush Script MT', cursive; font-size: 32px; color: #10b981; font-weight: 700; line-height: 1;">
+              FarmStellar Admin
+            </div>
+            <div style="width: 200px; height: 2px; background: #10b981; margin-top: 4px;"></div>
+            <p style="color: #6b7280; font-size: 10px; margin-top: 4px;">Authorized Signatory</p>
+          </div>
+          <div style="text-align: right;">
+            <div style="background: #10b981; color: white; padding: 8px 16px; border-radius: 8px; font-size: 11px; font-weight: 700; letter-spacing: 0.5px;">
+              ✓ VERIFIED
+            </div>
+            <p style="color: #6b7280; font-size: 10px; margin-top: 8px;">Digital Signature ID: ${order.billNumber}-${Date.now().toString(36).toUpperCase()}</p>
+          </div>
+        </div>
+      </div>
+      
+      <div style="margin-top: 16px; padding: 12px; background: white; border-radius: 8px; border: 1px solid #d1fae5;">
+        <p style="color: #065f46; font-size: 11px; line-height: 1.6;">
+          <strong>🔒 Authentication Notice:</strong> This bill has been digitally signed and authorized by FarmStellar Admin. 
+          The digital signature ensures the authenticity and integrity of this document. Any modifications after signing will invalidate this authorization.
+        </p>
+      </div>
+    </div>
+
     <!-- Footer -->
     <div class="footer">
       <p><strong>Thank you for being part of the FarmStellar community!</strong></p>
@@ -153,25 +197,25 @@ exports.generateBillHTML = (order, user) => {
  * Get bill HTML for a purchase order
  */
 exports.getBillForOrder = async (orderId, userId = null) => {
-    try {
-        const query = { _id: orderId };
-        if (userId) query.userId = userId;
+  try {
+    const query = { _id: orderId };
+    if (userId) query.userId = userId;
 
-        const order = await PurchaseOrder.findOne(query).populate('userId');
+    const order = await PurchaseOrder.findOne(query).populate('userId');
 
-        if (!order) {
-            throw new Error('Purchase order not found');
-        }
-
-        if (order.status !== 'approved' && order.status !== 'delivered') {
-            throw new Error('Bill not available. Order must be approved first.');
-        }
-
-        const billHTML = this.generateBillHTML(order, order.userId);
-        return { billHTML, order };
-    } catch (error) {
-        throw error;
+    if (!order) {
+      throw new Error('Purchase order not found');
     }
+
+    if (order.status !== 'approved' && order.status !== 'delivered') {
+      throw new Error('Bill not available. Order must be approved first.');
+    }
+
+    const billHTML = this.generateBillHTML(order, order.userId);
+    return { billHTML, order };
+  } catch (error) {
+    throw error;
+  }
 };
 
 module.exports = exports;

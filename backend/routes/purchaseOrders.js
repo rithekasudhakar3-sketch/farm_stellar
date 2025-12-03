@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const purchaseOrderController = require('../controllers/purchaseOrderController');
 const authMiddleware = require('../middleware/authMiddleware');
-const adminMiddleware = require('../middleware/adminMiddleware');
+const { verifyAdmin } = require('../middleware/adminAuth');
 
 // User routes
 router.post('/', authMiddleware, purchaseOrderController.createPurchaseOrder);
@@ -11,11 +11,11 @@ router.get('/:orderId', authMiddleware, purchaseOrderController.getPurchaseOrder
 router.get('/:orderId/bill', authMiddleware, purchaseOrderController.getBill);
 
 // Admin routes
-router.get('/admin/pending', adminMiddleware, purchaseOrderController.getPendingOrders);
-router.get('/admin/all', adminMiddleware, purchaseOrderController.getAllOrders);
-router.post('/admin/:orderId/approve', adminMiddleware, purchaseOrderController.approvePurchaseOrder);
-router.post('/admin/:orderId/reject', adminMiddleware, purchaseOrderController.rejectPurchaseOrder);
-router.post('/admin/:orderId/deliver', adminMiddleware, purchaseOrderController.markAsDelivered);
-router.get('/admin/:orderId/bill', adminMiddleware, purchaseOrderController.getBill);
+router.get('/admin/pending', verifyAdmin, purchaseOrderController.getPendingOrders);
+router.get('/admin/all', verifyAdmin, purchaseOrderController.getAllOrders);
+router.post('/admin/:orderId/approve', verifyAdmin, purchaseOrderController.approvePurchaseOrder);
+router.post('/admin/:orderId/reject', verifyAdmin, purchaseOrderController.rejectPurchaseOrder);
+router.post('/admin/:orderId/deliver', verifyAdmin, purchaseOrderController.markAsDelivered);
+router.get('/admin/:orderId/bill', verifyAdmin, purchaseOrderController.getBill);
 
 module.exports = router;
