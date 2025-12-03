@@ -159,7 +159,7 @@ export function NavigationMenu({
           <div className="p-6 border-t border-border mt-auto">
             <div className="bg-accent/10 rounded-xl p-4">
               <p className="text-medium text-muted-foreground text-center">
-                FarmQuest v1.0.0
+                FarmStellar
                 <br />
                 Empowering sustainable farming
               </p>

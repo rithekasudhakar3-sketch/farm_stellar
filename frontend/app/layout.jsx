@@ -6,7 +6,7 @@ const _quicksand = Quicksand({ weight: ["400", "600", "700"], subsets: ["latin"]
 const _mali = Mali({ weight: ["400", "600", "700"], subsets: ["latin"] })
 
 export const metadata = {
-  title: "FarmQuest - Learn Sustainable Farming",
+  title: "FarmStellar - Learn Sustainable Farming",
   description: "Gamified farming education app for beginners",
   // icons: {
   //   icon: [

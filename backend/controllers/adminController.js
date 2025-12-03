@@ -182,10 +182,26 @@ exports.getPendingSubmissions = async (req, res) => {
       .populate('userId', 'name phone email')
       .sort({ createdAt: -1 });
 
-    // Generate signed URLs for images
+    // Fetch all quests for mapping
+    const Quest = require('../models/Quest');
+    const quests = await Quest.find();
+    const questMap = {};
+    quests.forEach(q => {
+      if (q._id) {
+        questMap[q._id.toString()] = q.title;
+      }
+      if (q.slug) {
+        questMap[q.slug] = q.title;
+      }
+    });
+
+    // Generate signed URLs for images and add quest titles
     const submissionsWithSignedUrls = await Promise.all(
       submissions.map(async (submission) => {
         const submissionObj = submission.toObject();
+        
+        // Add quest title
+        submissionObj.questTitle = questMap[submissionObj.questId] || submissionObj.questId;
         
         // If submission has media with S3 keys, generate signed URLs
         if (submissionObj.media && submissionObj.media.length > 0) {
@@ -251,25 +267,10 @@ exports.approveSubmission = async (req, res) => {
       return res.status(404).json({ message: 'Submission not found' });
     }
 
-    // Quest XP rewards mapping
-    const questXPRewards = {
-      'crops': 60,
-      'soil': 5,
-      'compost': 45,
-      'pest_control': 40,
-      'irrigation': 55,
-      'organic_fertilizer': 50,
-      'crop_rotation': 85,
-      'mulching': 85,
-      'rainwater_harvesting': 35,
-      'greenhouse': 90,
-      'seed_selection': 45,
-      'pruning': 80,
-      'vertical_farming': 100,
-      'biogas': 60
-    };
-
-    const xpReward = questXPRewards[submission.questId] || 0;
+    // Fetch quest to get XP reward
+    const Quest = require('../models/Quest');
+    const quest = await Quest.findById(submission.questId);
+    const xpReward = quest?.xpReward || 0;
 
     // Update user's quest progress and award XP
     const user = await User.findByIdAndUpdate(
@@ -279,7 +280,7 @@ exports.approveSubmission = async (req, res) => {
           'questsProgress.$[elem].status': 'completed'
         },
         $inc: {
-          xpPoints: xpReward
+          xp: xpReward
         },
         $addToSet: {
           completedQuests: submission.questId
@@ -293,12 +294,13 @@ exports.approveSubmission = async (req, res) => {
 
     // Calculate new level based on XP
     if (user) {
-      const newLevel = Math.floor(user.xpPoints / 100) + 1;
+      const newLevel = Math.floor(user.xp / 100) + 1;
       if (newLevel !== user.xpLevel) {
         await User.findByIdAndUpdate(submission.userId, { xpLevel: newLevel });
       }
     }
 
+    console.log('Submission approved:', submissionId, 'XP awarded:', xpReward);
     res.status(200).json({ 
       message: 'Submission approved successfully',
       submission,

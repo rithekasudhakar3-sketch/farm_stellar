@@ -1,4 +1,46 @@
 const s3Service = require('../services/s3Service');
+const multer = require('multer');
+
+// Configure multer for memory storage
+const storage = multer.memoryStorage();
+const upload = multer({
+  storage: storage,
+  limits: {
+    fileSize: 10 * 1024 * 1024 // 10MB limit
+  },
+  fileFilter: (req, file, cb) => {
+    const allowedMimeTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'video/mp4', 'video/quicktime'];
+    if (allowedMimeTypes.includes(file.mimetype)) {
+      cb(null, true);
+    } else {
+      cb(new Error('Invalid file type'));
+    }
+  }
+});
+
+// Export multer middleware
+exports.uploadMiddleware = upload.single('file');
+
+// Handle file upload to S3
+exports.uploadFile = async (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ message: 'No file provided' });
+    }
+
+    const { buffer, mimetype, size } = req.file;
+    const fileType = req.body.fileType || 'general';
+
+    // Upload to S3
+    const { key, url } = await s3Service.uploadFile(buffer, mimetype, fileType);
+    
+    console.log('File uploaded to S3:', key);
+    res.status(200).json({ key, url, mimetype, size });
+  } catch (error) {
+    console.error('File upload error:', error);
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
 
 exports.getPresignedUrl = async (req, res) => {
   try {

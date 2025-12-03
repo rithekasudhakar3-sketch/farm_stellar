@@ -15,7 +15,7 @@ export function QuestIntroScreen({ quest, onStart, onBack, isCompleted }) {
           <ChevronLeft className="w-6 h-6" />
         </button>
         <div className="flex items-center gap-2">
-          <div className="px-3 py-1 rounded-full bg-accent/10 text-accent text-xs font-bold uppercase tracking-wider border border-accent/20">
+          <div className="px-3 py-1 rounded-full bg-accent/10 text-foreground text-xs font-bold uppercase tracking-wider border border-accent/20">
             {quest.difficulty} Quest
           </div>
           {isCompleted && (

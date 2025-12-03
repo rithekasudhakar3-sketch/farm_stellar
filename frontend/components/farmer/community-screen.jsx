@@ -1,89 +1,234 @@
 "use client"
 
-import { useState } from "react"
-import { ArrowLeft, Plus, Heart, MessageCircle, MapPin, Send, ImageIcon, X, Leaf, Flower2 } from "lucide-react"
+import { useState, useEffect } from "react"
+import { ArrowLeft, Plus, Heart, MessageCircle, MapPin, Send, ImageIcon, X, Leaf, Flower2, Camera } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 
 export function CommunityScreen({ onBack }) {
-  const [posts, setPosts] = useState([
-    {
-      id: 1,
-      author: "Priya Singh",
-      district: "Ludhiana",
-      content:
-        "Just completed my first composting quest! The results are amazing. Any tips for faster decomposition? 🌱",
-      likes: 12,
-      comments: 5,
-      timestamp: "2 hours ago",
-      avatar: "PS",
-      images: ["/composting-pile-with-organic-waste.jpg"],
-    },
-    {
-      id: 2,
-      author: "Amit Verma",
-      district: "Amritsar",
-      content: "Water-saving tip: Try drip irrigation! Reduced my water usage by 40% this season. 💧",
-      likes: 24,
-      comments: 8,
-      timestamp: "5 hours ago",
-      avatar: "AV",
-    },
-    {
-      id: 3,
-      author: "Sunita Kaur",
-      district: "Jalandhar",
-      content: "Looking for organic pest control methods. What works best for tomatoes? 🍅",
-      likes: 8,
-      comments: 12,
-      timestamp: "1 day ago",
-      avatar: "SK",
-      images: ["/tomato-plants-in-garden.jpg", "/organic-pest-control-spray.jpg"],
-    },
-  ])
+  const [posts, setPosts] = useState([])
+  const [loading, setLoading] = useState(true)
   const [showPostModal, setShowPostModal] = useState(false)
+  const [showCommentModal, setShowCommentModal] = useState(false)
+  const [selectedPost, setSelectedPost] = useState(null)
+  const [newComment, setNewComment] = useState("")
   const [newPost, setNewPost] = useState("")
+  const [newTitle, setNewTitle] = useState("")
   const [uploadedImages, setUploadedImages] = useState([])
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [userData, setUserData] = useState(null)
+
+  useEffect(() => {
+    fetchPosts()
+    fetchUserData()
+  }, [])
+
+  const fetchUserData = async () => {
+    try {
+      const token = localStorage.getItem("token")
+      if (!token) return
+
+      const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:4000"
+      const response = await fetch(`${backendUrl}/api/users/me`, {
+        headers: { "Authorization": `Bearer ${token}` }
+      })
+
+      if (response.ok) {
+        const user = await response.json()
+        setUserData(user)
+      }
+    } catch (error) {
+      console.error("Error fetching user data:", error)
+    }
+  }
+
+  const fetchPosts = async () => {
+    try {
+      const token = localStorage.getItem("token")
+      if (!token) {
+        setLoading(false)
+        return
+      }
+
+      const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:4000"
+      const response = await fetch(`${backendUrl}/api/community/posts`, {
+        headers: { "Authorization": `Bearer ${token}` }
+      })
+
+      if (response.ok) {
+        const data = await response.json()
+        setPosts(data.posts || [])
+      }
+    } catch (error) {
+      console.error("Error fetching posts:", error)
+    } finally {
+      setLoading(false)
+    }
+  }
 
   const handleImageUpload = (e) => {
-    const files = Array.from(e.target.files)
+    const files = Array.from(e.target.files || [])
     if (files.length + uploadedImages.length > 4) {
-      alert("You can upload a maximum of 4 images")
+      alert("Maximum 4 images allowed")
       return
     }
-
-    files.forEach((file) => {
-      const reader = new FileReader()
-      reader.onload = (e) => {
-        setUploadedImages((prev) => [...prev, e.target.result])
-      }
-      reader.readAsDataURL(file)
-    })
+    setUploadedImages([...uploadedImages, ...files])
   }
 
   const removeImage = (index) => {
-    setUploadedImages((prev) => prev.filter((_, i) => i !== index))
+    setUploadedImages(uploadedImages.filter((_, i) => i !== index))
   }
 
-  const handleCreatePost = () => {
-    if (newPost.trim()) {
-      setPosts([
-        {
-          id: Date.now(),
-          author: "Raj Kumar",
-          district: "Patiala",
-          content: newPost,
-          likes: 0,
-          comments: 0,
-          timestamp: "Just now",
-          avatar: "RK",
-          images: uploadedImages.length > 0 ? uploadedImages : undefined,
+  const handleCreatePost = async () => {
+    if (!newTitle.trim() || !newPost.trim()) {
+      alert("Please provide a title and description")
+      return
+    }
+
+    setIsSubmitting(true)
+
+    try {
+      const token = localStorage.getItem("token")
+      const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:4000"
+
+      // Get user location
+      let locationData = null
+      try {
+        if (navigator.geolocation) {
+          const position = await new Promise((resolve, reject) => {
+            navigator.geolocation.getCurrentPosition(resolve, reject)
+          })
+          locationData = {
+            coordinates: [position.coords.longitude, position.coords.latitude]
+          }
+        }
+      } catch (error) {
+        console.log("Location access denied or unavailable")
+      }
+
+      // Upload images to S3 first
+      const uploadedImageKeys = []
+      for (const file of uploadedImages) {
+        const formData = new FormData()
+        formData.append("file", file)
+        formData.append("fileType", "community")
+
+        const uploadResponse = await fetch(`${backendUrl}/api/upload`, {
+          method: "POST",
+          headers: { "Authorization": `Bearer ${token}` },
+          body: formData,
+        })
+
+        if (uploadResponse.ok) {
+          const { key } = await uploadResponse.json()
+          uploadedImageKeys.push({
+            key,
+            mimeType: file.type,
+            sizeBytes: file.size
+          })
+        }
+      }
+
+      // Create post with image keys and location
+      const createResponse = await fetch(`${backendUrl}/api/community/posts`, {
+        method: "POST",
+        headers: {
+          "Authorization": `Bearer ${token}`,
+          "Content-Type": "application/json"
         },
-        ...posts,
-      ])
-      setNewPost("")
-      setUploadedImages([])
-      setShowPostModal(false)
+        body: JSON.stringify({
+          title: newTitle,
+          content: newPost,
+          images: uploadedImageKeys,
+          location: locationData,
+          district: userData?.district || ""
+        })
+      })
+
+      if (createResponse.ok) {
+        setShowPostModal(false)
+        setNewPost("")
+        setNewTitle("")
+        setUploadedImages([])
+        fetchPosts() // Refresh posts
+      } else {
+        const error = await createResponse.json()
+        alert(error.message || "Failed to create post")
+      }
+    } catch (error) {
+      console.error("Error creating post:", error)
+      alert("Failed to create post")
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
+
+  const toggleLike = async (postId, isLiked) => {
+    try {
+      const token = localStorage.getItem("token")
+      const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:4000"
+
+      const response = await fetch(`${backendUrl}/api/community/posts/${postId}/like`, {
+        method: "POST",
+        headers: { "Authorization": `Bearer ${token}` }
+      })
+
+      if (response.ok) {
+        const data = await response.json()
+        // Update post in state
+        setPosts(posts.map(post => 
+          post._id === postId 
+            ? { ...post, likesCount: data.likesCount, isLiked: data.isLiked }
+            : post
+        ))
+      }
+    } catch (error) {
+      console.error("Error toggling like:", error)
+    }
+  }
+
+  const openCommentModal = (post) => {
+    setSelectedPost(post)
+    setShowCommentModal(true)
+  }
+
+  const submitComment = async () => {
+    if (!newComment.trim()) {
+      alert("Please enter a comment")
+      return
+    }
+
+    try {
+      const token = localStorage.getItem("token")
+      const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:4000"
+
+      const response = await fetch(`${backendUrl}/api/community/posts/${selectedPost._id}/comments`, {
+        method: "POST",
+        headers: {
+          "Authorization": `Bearer ${token}`,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ content: newComment })
+      })
+
+      if (response.ok) {
+        const data = await response.json()
+        // Update post in state
+        setPosts(posts.map(post => 
+          post._id === selectedPost._id 
+            ? { ...post, commentsCount: data.commentsCount }
+            : post
+        ))
+        setNewComment("")
+        setShowCommentModal(false)
+        setSelectedPost(null)
+      } else {
+        const error = await response.json()
+        alert(error.message || "Failed to add comment")
+      }
+    } catch (error) {
+      console.error("Error adding comment:", error)
+      alert("Failed to add comment")
     }
   }
 
@@ -123,28 +268,43 @@ export function CommunityScreen({ onBack }) {
 
         {/* Posts Feed */}
         <div className="space-y-5">
-          {posts.map((post, idx) => (
+          {loading ? (
+            <div className="bg-card border-[1.5px] border-border rounded-2xl p-12 text-center shadow-[0_2px_8px_rgba(107,166,115,0.08),0_1px_3px_rgba(107,166,115,0.04)]">
+              <p className="text-muted-foreground">Loading posts...</p>
+            </div>
+          ) : posts.length === 0 ? (
+            <div className="bg-card border-[1.5px] border-border rounded-2xl p-12 text-center shadow-[0_2px_8px_rgba(107,166,115,0.08),0_1px_3px_rgba(107,166,115,0.04)]">
+              <Flower2 className="w-16 h-16 mx-auto text-muted-foreground/30 mb-4" />
+              <h3 className="text-lg font-semibold text-foreground mb-2">No posts yet</h3>
+              <p className="text-muted-foreground">Be the first to share your farming story! 🌱</p>
+            </div>
+          ) : (
+            posts.map((post, idx) => (
             <div
-              key={post.id}
+              key={post._id}
               className="bg-card border-[1.5px] border-border rounded-2xl p-6 shadow-[0_2px_8px_rgba(107,166,115,0.08),0_1px_3px_rgba(107,166,115,0.04)] hover:shadow-[0_4px_12px_rgba(107,166,115,0.12),0_2px_6px_rgba(107,166,115,0.08)] hover:-translate-y-0.5 transition-all relative before:content-[''] before:absolute before:inset-[-2px] before:border-2 before:border-primary before:rounded-2xl before:opacity-0 hover:before:opacity-20 before:transition-opacity animate-grow"
               style={{ animationDelay: `${idx * 100}ms` }}
             >
               <div className="flex items-start gap-3 mb-4">
                 <div className="w-12 h-12 rounded-full bg-gradient-to-br from-primary/30 to-accent/30 flex items-center justify-center text-foreground font-bold border-2 border-primary/20">
-                  {post.avatar}
+                  {post.userId?.name?.substring(0, 2).toUpperCase() || "U"}
                 </div>
                 <div className="flex-1">
                   <h3 className="font-semibold text-foreground" style={{ fontFamily: "'Segoe UI', sans-serif" }}>
-                    {post.author}
+                    {post.userId?.name || "Unknown User"}
                   </h3>
                   <div className="flex items-center gap-2 text-sm text-muted-foreground">
                     <MapPin className="w-3 h-3" />
-                    <span>{post.district}</span>
+                    <span>{post.district || post.userId?.district || "Unknown"}</span>
                     <span>•</span>
-                    <span>{post.timestamp}</span>
+                    <span>{new Date(post.createdAt).toLocaleDateString()}</span>
                   </div>
                 </div>
               </div>
+              
+              {post.title && (
+                <h4 className="font-bold text-foreground mb-2 text-lg">{post.title}</h4>
+              )}
               <p className="text-foreground mb-4 leading-relaxed">{post.content}</p>
 
               {post.images && post.images.length > 0 && (
@@ -152,52 +312,72 @@ export function CommunityScreen({ onBack }) {
                   {post.images.map((img, idx) => (
                     <img
                       key={idx}
-                      src={img || "/placeholder.svg"}
+                      src={img.url || img.key || "/placeholder.svg"}
                       alt={`Post image ${idx + 1}`}
                       className="w-full h-52 object-cover rounded-2xl border-2 border-primary/10 hover:border-primary/30 transition-colors"
+                      onError={(e) => {
+                        e.target.onerror = null
+                        e.target.src = "/placeholder.svg"
+                      }}
                     />
                   ))}
                 </div>
               )}
 
               <div className="flex items-center gap-6 text-muted-foreground pt-3 border-t-2 border-dashed border-border">
-                <button className="flex items-center gap-2 hover:text-primary transition-colors group">
-                  <Heart className="w-5 h-5 group-hover:fill-primary group-hover:scale-110 transition-all" />
-                  <span className="text-sm font-medium">{post.likes} 💚</span>
+                <button 
+                  onClick={() => toggleLike(post._id, post.isLiked)}
+                  className={`flex items-center gap-2 hover:text-primary transition-colors group ${post.isLiked ? 'text-primary' : ''}`}
+                >
+                  <Heart className={`w-5 h-5 group-hover:scale-110 transition-all ${post.isLiked ? 'fill-primary' : ''}`} />
+                  <span className="text-sm font-medium">{post.likesCount || 0} 💚</span>
                 </button>
-                <button className="flex items-center gap-2 hover:text-primary transition-colors group">
+                <button 
+                  onClick={() => openCommentModal(post)}
+                  className="flex items-center gap-2 hover:text-primary transition-colors group"
+                >
                   <MessageCircle className="w-5 h-5 group-hover:scale-110 transition-transform" />
-                  <span className="text-sm font-medium">{post.comments} 💬</span>
+                  <span className="text-sm font-medium">{post.commentsCount || 0} 💬</span>
                 </button>
               </div>
             </div>
-          ))}
+          )))}
         </div>
       </div>
 
       {showPostModal && (
         <>
           <div className="fixed inset-0 bg-primary/10 backdrop-blur-sm z-40" onClick={() => setShowPostModal(false)} />
-          <div className="fixed inset-x-4 top-1/2 -translate-y-1/2 max-w-lg mx-auto bg-card border-[1.5px] border-border rounded-2xl p-6 shadow-[0_2px_8px_rgba(107,166,115,0.08),0_1px_3px_rgba(107,166,115,0.04)] shadow-2xl z-50 max-h-[80vh] overflow-y-auto relative before:content-[''] before:absolute before:inset-[-2px] before:border-2 before:border-primary before:rounded-2xl before:opacity-0 hover:before:opacity-20 before:transition-opacity soft-glow">
+          <div className="fixed inset-x-4 top-1/2 -translate-y-1/2 max-w-lg mx-auto bg-card border-[1.5px] border-border rounded-2xl p-6 shadow-2xl z-50 relative">
             <div className="flex items-center gap-2 mb-4">
               <Leaf className="w-5 h-5 text-primary" />
               <h2 className="text-xl font-bold" style={{ fontFamily: "Mali, cursive" }}>
                 Share Your Story
               </h2>
             </div>
-            <Textarea
+            
+            <input
+              type="text"
+              value={newTitle}
+              onChange={(e) => setNewTitle(e.target.value)}
+              placeholder="Post Title"
+              className="w-full p-3 mb-3 rounded-2xl border-2 border-border focus:border-primary focus:outline-none bg-background text-foreground"
+              autoComplete="off"
+            />
+            
+            <textarea
               value={newPost}
               onChange={(e) => setNewPost(e.target.value)}
               placeholder="Share your farming tips, questions, or experiences... 🌿"
-              className="min-h-32 mb-4 rounded-2xl border-2 border-border focus:border-primary resize-none"
+              className="w-full min-h-32 mb-4 p-3 rounded-2xl border-2 border-border focus:border-primary focus:outline-none resize-none bg-background text-foreground"
             />
 
             {uploadedImages.length > 0 && (
               <div className="grid grid-cols-2 gap-3 mb-4">
-                {uploadedImages.map((img, idx) => (
+                {uploadedImages.map((file, idx) => (
                   <div key={idx} className="relative group">
                     <img
-                      src={img || "/placeholder.svg"}
+                      src={URL.createObjectURL(file)}
                       alt={`Upload ${idx + 1}`}
                       className="w-full h-32 object-cover rounded-2xl border-2 border-border"
                     />
@@ -215,7 +395,7 @@ export function CommunityScreen({ onBack }) {
 
             <div className="mb-4">
               <label className="flex items-center justify-center gap-2 p-4 border-2 border-dashed border-primary/30 rounded-2xl cursor-pointer hover:bg-primary/5 transition-colors">
-                <ImageIcon className="w-5 h-5 text-primary" />
+                <Camera className="w-5 h-5 text-primary" />
                 <span className="text-sm text-muted-foreground font-medium">
                   Add Photos ({uploadedImages.length}/4) 📸
                 </span>
@@ -231,14 +411,68 @@ export function CommunityScreen({ onBack }) {
             </div>
 
             <div className="flex gap-3">
-              <Button onClick={handleCreatePost} className="flex-1 bg-primary hover:bg-primary/90 rounded-2xl h-11">
+              <Button 
+                onClick={handleCreatePost} 
+                className="flex-1 bg-primary hover:bg-primary/90 rounded-2xl h-11"
+                disabled={isSubmitting}
+              >
                 <Send className="w-4 h-4 mr-2" />
-                Post
+                {isSubmitting ? "Posting..." : "Post"}
               </Button>
               <Button
                 onClick={() => {
                   setShowPostModal(false)
                   setUploadedImages([])
+                  setNewTitle("")
+                  setNewPost("")
+                }}
+                variant="outline"
+                className="flex-1 rounded-2xl h-11 border-2"
+              >
+                Cancel
+              </Button>
+            </div>
+          </div>
+        </>
+      )}
+
+      {showCommentModal && selectedPost && (
+        <>
+          <div className="fixed inset-0 bg-primary/10 backdrop-blur-sm z-40" onClick={() => setShowCommentModal(false)} />
+          <div className="fixed inset-x-4 top-1/2 -translate-y-1/2 max-w-lg mx-auto bg-card border-[1.5px] border-border rounded-2xl p-6 shadow-2xl z-50 relative">
+            <div className="flex items-center gap-2 mb-4">
+              <MessageCircle className="w-5 h-5 text-primary" />
+              <h2 className="text-xl font-bold" style={{ fontFamily: "Mali, cursive" }}>
+                Add Comment
+              </h2>
+            </div>
+            
+            <div className="mb-4 p-4 bg-muted/30 rounded-2xl">
+              <p className="font-semibold text-sm mb-1">{selectedPost.userId?.name}</p>
+              <p className="text-sm text-muted-foreground line-clamp-2">{selectedPost.content}</p>
+            </div>
+            
+            <textarea
+              value={newComment}
+              onChange={(e) => setNewComment(e.target.value)}
+              placeholder="Write your comment... 💬"
+              className="w-full min-h-24 mb-4 p-3 rounded-2xl border-2 border-border focus:border-primary focus:outline-none resize-none bg-background text-foreground"
+              autoFocus
+            />
+
+            <div className="flex gap-3">
+              <Button 
+                onClick={submitComment} 
+                className="flex-1 bg-primary hover:bg-primary/90 rounded-2xl h-11"
+              >
+                <Send className="w-4 h-4 mr-2" />
+                Comment
+              </Button>
+              <Button
+                onClick={() => {
+                  setShowCommentModal(false)
+                  setNewComment("")
+                  setSelectedPost(null)
                 }}
                 variant="outline"
                 className="flex-1 rounded-2xl h-11 border-2"

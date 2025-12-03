@@ -7,8 +7,9 @@ export function UserProgressCard({ userData }) {
     const xpLevel = userData?.xpLevel || 0
     const currentXP = userData?.xp || userData?.currentXP || 0
     const requiredXP = userData?.requiredXP || 100
-    const level = userData?.level || 3
+    const level = userData?.level || "beginner"
     const farmerName = userData?.name || "Farmer"
+    const farmerType = level === "pro" || level === "Pro" ? "Pro" : "Beginner"
     const progressPercentage = (currentXP / requiredXP) * 100
     const xpToNextLevel = Math.max(0, requiredXP - currentXP)
     
@@ -32,8 +33,9 @@ export function UserProgressCard({ userData }) {
                         {getAvatarContent()}
                     </div>
                     <div>
-                        <p className="text-sm text-muted-foreground font-medium">{farmerName}</p>
-                        <h3 className="text-3xl font-bold text-primary">Level {xpLevel}</h3>
+                        <p className="text-xs text-muted-foreground font-semibold uppercase tracking-wide">{farmerType}</p>
+                        <h3 className="text-3xl font-bold text-foreground leading-tight">{farmerName}</h3>
+                        <p className="text-2xl font-bold text-primary mt-1">Level {xpLevel}</p>
                     </div>
                 </div>
                 <div className="text-right">
@@ -65,18 +67,15 @@ export function UserProgressCard({ userData }) {
             </div>
 
             {/* Stats Grid */}
-            <div className="grid grid-cols-3 gap-4 mt-6 pt-6 border-t border-border">
+            <div className="grid grid-cols-2 gap-6 mt-6 pt-6 border-t border-border">
                 <div className="text-center">
-                    <p className="text-2xl font-bold text-primary">{currentXP}</p>
+                    <p className="text-3xl font-bold text-primary">{currentXP}</p>
                     <p className="text-xs text-muted-foreground mt-1">Total XP</p>
                 </div>
+                
                 <div className="text-center">
-                    <p className="text-2xl font-bold text-accent">{xpLevel}</p>
-                    <p className="text-xs text-muted-foreground mt-1">Level</p>
-                </div>
-                <div className="text-center">
-                    <p className="text-2xl font-bold text-secondary">{completedQuestsCount}</p>
-                    <p className="text-xs text-muted-foreground mt-1">Quests</p>
+                    <p className="text-3xl font-bold text-secondary">{completedQuestsCount}</p>
+                    <p className="text-xs text-muted-foreground mt-1">Completed Quests</p>
                 </div>
             </div>
         </div>
