@@ -1,8 +1,8 @@
 "use client"
 
-import { ChevronLeft, Zap, Trophy, ArrowRight, CheckCircle2 } from "lucide-react"
+import { ChevronLeft, Zap, Trophy, ArrowRight } from "lucide-react"
 
-export function QuestIntroScreen({ quest, onStart, onBack, isCompleted }) {
+export function QuestIntroScreen({ quest, onStart, onBack }) {
   return (
     <div className="h-screen flex flex-col bg-background overflow-hidden relative">
       {/* Background Elements */}
@@ -14,16 +14,8 @@ export function QuestIntroScreen({ quest, onStart, onBack, isCompleted }) {
         <button onClick={onBack} className="p-2 hover:bg-muted/50 rounded-full transition-colors backdrop-blur-sm border border-border/50">
           <ChevronLeft className="w-6 h-6" />
         </button>
-        <div className="flex items-center gap-2">
-          <div className="px-3 py-1 rounded-full bg-accent/10 text-foreground text-xs font-bold uppercase tracking-wider border border-accent/20">
-            {quest.difficulty} Quest
-          </div>
-          {isCompleted && (
-            <div className="px-3 py-1 rounded-full bg-emerald-500 text-white text-xs font-bold flex items-center gap-1 shadow-md">
-              <CheckCircle2 className="w-3 h-3" />
-              Completed
-            </div>
-          )}
+        <div className="px-3 py-1 rounded-full bg-accent/10 text-accent text-xs font-bold uppercase tracking-wider border border-accent/20">
+          {quest.difficulty} Quest
         </div>
         <div className="w-10"></div>
       </div>
@@ -87,24 +79,10 @@ export function QuestIntroScreen({ quest, onStart, onBack, isCompleted }) {
 
           <button
             onClick={onStart}
-            disabled={isCompleted}
-            className={`w-full mt-6 font-bold py-4 rounded-2xl transition-all transform active:scale-[0.98] shadow-lg flex items-center justify-center gap-2 group/btn relative z-10 ${
-              isCompleted 
-                ? 'bg-emerald-500 text-white cursor-default' 
-                : 'bg-primary text-primary-foreground hover:bg-primary/90 shadow-primary/20'
-            }`}
+            className="w-full mt-6 bg-primary text-primary-foreground font-bold py-4 rounded-2xl hover:bg-primary/90 transition-all transform active:scale-[0.98] shadow-lg shadow-primary/20 flex items-center justify-center gap-2 group/btn relative z-10"
           >
-            {isCompleted ? (
-              <>
-                <CheckCircle2 className="w-5 h-5" />
-                Quest Completed
-              </>
-            ) : (
-              <>
-                Start Mission
-                <ArrowRight className="w-5 h-5 group-hover/btn:translate-x-1 transition-transform" />
-              </>
-            )}
+            Start Mission
+            <ArrowRight className="w-5 h-5 group-hover/btn:translate-x-1 transition-transform" />
           </button>
         </div>
       </div>

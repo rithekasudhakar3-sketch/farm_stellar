@@ -182,11 +182,27 @@ exports.getPendingSubmissions = async (req, res) => {
       .populate('userId', 'name phone email')
       .sort({ createdAt: -1 });
 
-    // Generate signed URLs for images
+    // Fetch all quests for mapping
+    const Quest = require('../models/Quest');
+    const quests = await Quest.find();
+    const questMap = {};
+    quests.forEach(q => {
+      if (q._id) {
+        questMap[q._id.toString()] = q.title;
+      }
+      if (q.slug) {
+        questMap[q.slug] = q.title;
+      }
+    });
+
+    // Generate signed URLs for images and add quest titles
     const submissionsWithSignedUrls = await Promise.all(
       submissions.map(async (submission) => {
         const submissionObj = submission.toObject();
-
+        
+        // Add quest title
+        submissionObj.questTitle = questMap[submissionObj.questId] || submissionObj.questId;
+        
         // If submission has media with S3 keys, generate signed URLs
         if (submissionObj.media && submissionObj.media.length > 0) {
           submissionObj.media = await Promise.all(
@@ -251,40 +267,10 @@ exports.approveSubmission = async (req, res) => {
       return res.status(404).json({ message: 'Submission not found' });
     }
 
-    // Quest XP rewards mapping - matches frontend constants/quests.js
-    const questXPRewards = {
-      'soil_scout': 10,
-      'crop_quest': 75,
-      'compost_kickoff': 40,
-      'zero_waste': 85,
-      'mini_garden': 100,
-      'mulch_master': 60,
-      'boll_keeper': 150,
-      'coconut_basin': 140,
-      'coconut_bioenzyme': 180,
-      'rust_shield': 160,
-      'biodiversity_strip': 190,
-      'rainwater_hero': 185,
-      'biochar_maker': 200,
-      'jeevamrutham': 150,
-      // Legacy quest IDs (if any old submissions exist)
-      'crops': 75,
-      'soil': 10,
-      'compost': 40,
-      'pest_control': 40,
-      'irrigation': 55,
-      'organic_fertilizer': 50,
-      'crop_rotation': 85,
-      'mulching': 60,
-      'rainwater_harvesting': 185,
-      'greenhouse': 90,
-      'seed_selection': 45,
-      'pruning': 80,
-      'vertical_farming': 100,
-      'biogas': 60
-    };
-
-    const xpReward = questXPRewards[submission.questId] || 0;
+    // Fetch quest to get XP reward
+    const Quest = require('../models/Quest');
+    const quest = await Quest.findById(submission.questId);
+    const xpReward = quest?.xpReward || 0;
 
     // Update user's quest progress and award XP
     const user = await User.findByIdAndUpdate(
@@ -295,6 +281,7 @@ exports.approveSubmission = async (req, res) => {
         },
         $inc: {
           xp: xpReward
+
         },
         $addToSet: {
           completedQuests: submission.questId
@@ -314,7 +301,8 @@ exports.approveSubmission = async (req, res) => {
       }
     }
 
-    res.status(200).json({
+    console.log('Submission approved:', submissionId, 'XP awarded:', xpReward);
+    res.status(200).json({ 
       message: 'Submission approved successfully',
       submission,
       xpAwarded: xpReward,

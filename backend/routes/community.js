@@ -1,0 +1,14 @@
+const express = require('express');
+const router = express.Router();
+const communityController = require('../controllers/communityController');
+const authMiddleware = require('../middleware/authMiddleware');
+
+// All routes require authentication
+router.post('/posts', authMiddleware, communityController.createPost);
+router.get('/posts', authMiddleware, communityController.getPosts);
+router.get('/posts/:id', authMiddleware, communityController.getPostById);
+router.post('/posts/:id/like', authMiddleware, communityController.toggleLike);
+router.post('/posts/:id/comments', authMiddleware, communityController.addComment);
+router.delete('/posts/:id', authMiddleware, communityController.deletePost);
+
+module.exports = router;
