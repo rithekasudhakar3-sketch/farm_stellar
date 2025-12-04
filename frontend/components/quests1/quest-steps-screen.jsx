@@ -1,5 +1,3 @@
-"use client"
-
 import { ChevronLeft, CheckCircle2, Circle, ChevronRight, Check, Zap, Trophy } from "lucide-react"
 import { useState, useEffect, useCallback } from "react"
 import { useRouter, useSearchParams, usePathname } from "next/navigation"
