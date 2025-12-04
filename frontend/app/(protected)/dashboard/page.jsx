@@ -106,7 +106,7 @@ export default function DashboardPage() {
             "community": "/community",
             "rewards": "/rewards",
             "farmer-profile": "/profile",
-            "settings": "/settings",
+            "settings": "/profile", // Redirects to profile since settings are integrated there
             "impact-tracker": "/rewards",
         }
 
