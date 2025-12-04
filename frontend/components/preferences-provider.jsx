@@ -83,7 +83,7 @@ export function PreferencesProvider({ children, ...props }) {
         <NextThemesProvider
             attribute="class"
             defaultTheme="light"
-            enableSystem
+            enableSystem={false}
             themes={["light", "dark"]}
             storageKey="farmquest_theme"
             {...props}
