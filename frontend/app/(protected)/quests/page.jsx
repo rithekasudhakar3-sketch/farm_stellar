@@ -70,28 +70,43 @@ export default function QuestsPage() {
 
                 const questsData = await questsRes.json()
                 
-                console.log('Fetched quests from API:', questsData.length, 'quests')
-                console.log('Quest details:', questsData.map(q => ({ id: q._id, title: q.title, active: q.active })))
+                console.log('===== QUEST DEBUG =====')
+                console.log('Raw API response:', questsData)
+                console.log('Is array?', Array.isArray(questsData))
+                console.log('Type:', typeof questsData)
+                console.log('Length:', questsData?.length)
+                console.log('Keys:', Object.keys(questsData || {}))
+                console.log('========================')
                 
-                // Transform quests to match frontend format - use array instead of object
-                const transformedQuests = questsData.map(q => ({
-                    _id: q._id,
-                    id: q._id,
-                    slug: q.slug,
-                    title: q.title,
-                    description: q.description,
-                    activities: q.activities || [],
-                    outcomes: q.outcomes || [],
-                    difficulty: q.difficulty,
-                    cropType: q.cropType,
-                    xpReward: q.xpReward,
-                    badgeName: q.badgeName,
-                    stages: q.stages || []
-                }))
-                
-                console.log('Transformed quests array:', transformedQuests)
-                console.log('Transformed quests count:', transformedQuests.length)
-                setQuests(transformedQuests)
+                if (!questsData || !Array.isArray(questsData) || questsData.length === 0) {
+                    console.warn('No quests returned from API or invalid format')
+                    console.log('Setting empty quests array')
+                    setQuests([])
+                } else {
+                    console.log('Fetched quests from API:', questsData.length, 'quests')
+                    console.log('Quest details:', questsData.map(q => ({ id: q._id, customId: q.id, title: q.title, active: q.active })))
+                    
+                    // Transform quests to match frontend format - use array instead of object
+                    const transformedQuests = questsData.map(q => ({
+                        _id: q._id,
+                        id: q.id || q._id,
+                        slug: q.slug,
+                        title: q.title,
+                        description: q.description,
+                        activities: q.activities || [],
+                        outcomes: q.outcomes || [],
+                        difficulty: q.difficulty,
+                        cropType: q.cropType,
+                        xpReward: q.xpReward,
+                        badgeName: q.badgeName,
+                        stages: q.steps || q.stages || [],
+                        steps: q.steps || q.stages || []
+                    }))
+                    
+                    console.log('Transformed quests array:', transformedQuests)
+                    console.log('Transformed quests count:', transformedQuests.length)
+                    setQuests(transformedQuests)
+                }
             } catch (error) {
                 console.error("Error fetching data:", error)
                 const data = JSON.parse(localStorage.getItem("farmquest_userdata") || "{}")

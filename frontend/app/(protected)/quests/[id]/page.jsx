@@ -23,6 +23,7 @@ function QuestContent() {
     const [loading, setLoading] = useState(true)
     const [showToast, setShowToast] = useState(false)
     const [toastMessage, setToastMessage] = useState("")
+    const [verificationData, setVerificationData] = useState(null)
 
     useEffect(() => {
         const fetchData = async () => {
@@ -74,11 +75,12 @@ function QuestContent() {
                 setAllQuests(questsData)
 
                 // Find the current quest
-                const currentQuest = questsData.find(q => q._id === questId || q.slug === questId)
+                const currentQuest = questsData.find(q => q._id === questId || q.id === questId || q.slug === questId)
                 if (currentQuest) {
                     // Transform quest data to match frontend format
                     const transformedQuest = {
-                        id: currentQuest._id,
+                        id: currentQuest.id || currentQuest._id,
+                        _id: currentQuest._id,
                         slug: currentQuest.slug,
                         title: currentQuest.title,
                         description: currentQuest.description,
@@ -88,8 +90,8 @@ function QuestContent() {
                         cropType: currentQuest.cropType,
                         xpReward: currentQuest.xpReward,
                         badgeName: currentQuest.badgeName,
-                        stages: currentQuest.stages || [],
-                        steps: currentQuest.steps || []
+                        stages: currentQuest.steps || currentQuest.stages || [],
+                        steps: currentQuest.steps || currentQuest.stages || []
                     }
                     setQuest(transformedQuest)
                 }
@@ -269,7 +271,8 @@ function QuestContent() {
                 ) : (
                     <SubmitProofScreen
                         quest={quest}
-                        onSubmit={() => {
+                        onSubmit={(verificationResult) => {
+                            setVerificationData(verificationResult)
                             showSuccessToast("✅ Submitted! Admin will review within 24 hours 🌱")
                             navigateToStep("verification")
                         }}
@@ -281,6 +284,7 @@ function QuestContent() {
             {step === "verification" && (
                 <VerificationScreen
                     quest={quest}
+                    verificationData={verificationData}
                     onContinue={() => {
                         // For auto-verified quests (like crops), go to reward screen
                         if (quest.id === "crops" || quest.id === "soil_scout") {

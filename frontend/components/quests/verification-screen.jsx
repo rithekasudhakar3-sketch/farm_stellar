@@ -3,7 +3,7 @@
 import { CheckCircle2, Sparkles, Brain, Eye, Zap } from "lucide-react"
 import { useState, useEffect } from "react"
 
-export function VerificationScreen({ quest, onContinue, isAutoVerified = false }) {
+export function VerificationScreen({ quest, onContinue, isAutoVerified = false, verificationData = null }) {
   const [verificationStage, setVerificationStage] = useState(0)
   const [isComplete, setIsComplete] = useState(false)
   const [verificationResults, setVerificationResults] = useState([])
@@ -16,26 +16,73 @@ export function VerificationScreen({ quest, onContinue, isAutoVerified = false }
   ]
 
   useEffect(() => {
-    // Simulate AI verification process
+    // Process verification results from API or simulate
     const runVerification = async () => {
       for (let i = 0; i < stages.length; i++) {
         setVerificationStage(i)
         await new Promise(resolve => setTimeout(resolve, stages[i].duration))
       }
 
-      // Set verification results
-      setVerificationResults([
-        { label: "Image Quality", status: "Excellent", color: "text-green-500" },
-        { label: "Completion Steps", status: "All Verified", color: "text-green-500" },
-        { label: "Authenticity", status: "Confirmed", color: "text-green-500" },
-        { label: "Overall Score", status: "95/100", color: "text-primary" }
-      ])
+      // Use actual verification data from API if available
+      if (verificationData) {
+        console.log('Displaying verification data from API:', verificationData)
+        
+        // Map API response to display format
+        const results = []
+        
+        // Add all fields from the verification response
+        Object.entries(verificationData).forEach(([key, value]) => {
+          if (key === 'verified' || key === 'success') {
+            results.push({
+              label: 'Verification Status',
+              status: value ? 'Verified ✓' : 'Failed',
+              color: value ? 'text-green-500' : 'text-red-500'
+            })
+          } else if (key === 'score') {
+            results.push({
+              label: 'Overall Score',
+              status: `${value}/100`,
+              color: value >= 80 ? 'text-green-500' : value >= 60 ? 'text-yellow-500' : 'text-red-500'
+            })
+          } else if (key === 'confidence') {
+            results.push({
+              label: 'Confidence',
+              status: `${Math.round(value * 100)}%`,
+              color: value >= 0.8 ? 'text-green-500' : value >= 0.6 ? 'text-yellow-500' : 'text-red-500'
+            })
+          } else if (key === 'message' || key === 'feedback') {
+            // Skip message field, we'll display it separately
+          } else if (typeof value === 'boolean') {
+            results.push({
+              label: key.split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' '),
+              status: value ? 'Passed ✓' : 'Failed',
+              color: value ? 'text-green-500' : 'text-red-500'
+            })
+          } else if (typeof value === 'string' || typeof value === 'number') {
+            results.push({
+              label: key.split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' '),
+              status: String(value),
+              color: 'text-primary'
+            })
+          }
+        })
+        
+        setVerificationResults(results)
+      } else {
+        // Fallback to mock data if no API response
+        setVerificationResults([
+          { label: "Image Quality", status: "Excellent", color: "text-green-500" },
+          { label: "Completion Steps", status: "All Verified", color: "text-green-500" },
+          { label: "Authenticity", status: "Confirmed", color: "text-green-500" },
+          { label: "Overall Score", status: "95/100", color: "text-primary" }
+        ])
+      }
 
       setIsComplete(true)
     }
 
     runVerification()
-  }, [])
+  }, [verificationData])
 
   const CurrentIcon = stages[verificationStage]?.icon || Sparkles
 
@@ -125,7 +172,7 @@ export function VerificationScreen({ quest, onContinue, isAutoVerified = false }
               </div>
               <div className="bg-gradient-to-r from-green-500/10 to-emerald-500/10 border border-green-500/20 rounded-lg p-4 text-center">
                 <p className="text-sm font-bold text-green-600 dark:text-green-400">
-                  🎉 Excellent work! Your quest has been verified successfully.
+                  {verificationData?.message || verificationData?.feedback || '🎉 Excellent work! Your quest has been verified successfully.'}
                 </p>
               </div>
             </div>

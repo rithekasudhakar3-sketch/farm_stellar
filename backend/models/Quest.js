@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const QuestSchema = new mongoose.Schema({
-  slug: { type: String, required: true, unique: true },
+  id: { type: String, unique: true, sparse: true },
   title: { type: String, required: true },
   description: { type: String },
   activities: [{ type: String }],
@@ -10,7 +10,7 @@ const QuestSchema = new mongoose.Schema({
   cropType: { type: String },
   xpReward: { type: Number, default: 0 },
   badgeName: { type: String },
-  stages: [
+  steps: [
     {
       title: { type: String },
       objective: { type: String },
@@ -20,7 +20,12 @@ const QuestSchema = new mongoose.Schema({
       image: { type: String }
     }
   ],
+  verification_data: {
+    task_name: { type: String },
+    success_criteria: { type: String },
+    use_before_image: { type: Boolean, default: false }
+  },
   active: { type: Boolean, default: true }
-}, { timestamps: true });
+}, { timestamps: true, strict: false });
 
 module.exports = mongoose.model('Quest', QuestSchema);

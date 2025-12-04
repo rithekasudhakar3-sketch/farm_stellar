@@ -10,6 +10,7 @@ export function SubmitProofScreen({ quest, onSubmit, onBack }) {
   const [isUploading, setIsUploading] = useState(false)
   const [location, setLocation] = useState(null)
   const [isCameraActive, setIsCameraActive] = useState(false)
+  const [verificationResult, setVerificationResult] = useState(null)
 
   const videoRef = useRef(null)
   const streamRef = useRef(null)
@@ -233,6 +234,43 @@ export function SubmitProofScreen({ quest, onSubmit, onBack }) {
 
       console.log('Submitting proof for quest:', questId, quest)
 
+      // Step 1: Send photo to verification endpoint if we have verification_data
+      let verificationResult = null
+      if (uploadedImage && quest?.verification_data) {
+        try {
+          console.log('Sending to verification endpoint:', quest.verification_data)
+          
+          // Prepare verification payload
+          const verificationPayload = {
+            task_name: quest.verification_data.task_name,
+            success_criteria: quest.verification_data.success_criteria,
+            use_before_image: quest.verification_data.use_before_image || false,
+            image_url: uploadedImage.url || uploadedImage.preview
+          }
+
+          console.log('Verification payload:', verificationPayload)
+
+          const verifyResponse = await fetch('http://127.0.0.1:8000/verify', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(verificationPayload)
+          })
+
+          if (verifyResponse.ok) {
+            verificationResult = await verifyResponse.json()
+            console.log('Verification result:', verificationResult)
+          } else {
+            console.warn('Verification endpoint returned error:', verifyResponse.status)
+          }
+        } catch (verifyError) {
+          console.warn('Verification endpoint not available:', verifyError)
+          // Continue with submission even if verification fails
+        }
+      }
+
+      // Step 2: Submit to backend as normal
       const submissionData = {
         questId: questId,
         proofType: uploadedImage ? "photo" : "text",
@@ -250,6 +288,11 @@ export function SubmitProofScreen({ quest, onSubmit, onBack }) {
             sizeBytes: uploadedImage.sizeBytes || 0
           }
         ]
+      }
+
+      // Add verification result if available
+      if (verificationResult) {
+        submissionData.verificationResult = verificationResult
       }
 
       console.log('Submission payload:', submissionData)
@@ -274,7 +317,9 @@ export function SubmitProofScreen({ quest, onSubmit, onBack }) {
 
       // small delay for UX
       await new Promise((resolve) => setTimeout(resolve, 500))
-      onSubmit()
+      
+      // Pass verification result to parent
+      onSubmit(verificationResult)
     } catch (error) {
       console.error("Error submitting proof:", error)
       alert(`Failed to submit proof: ${error.message}. Please try again.`)
