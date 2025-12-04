@@ -499,3 +499,52 @@
     @apply grid gap-8;
   }
 }
+
+@layer utilities {
+  .high-contrast {
+    --background: oklch(1 0 0) !important;
+    --foreground: oklch(0 0 0) !important;
+    --card: oklch(1 0 0) !important;
+    --card-foreground: oklch(0 0 0) !important;
+    --popover: oklch(1 0 0) !important;
+    --popover-foreground: oklch(0 0 0) !important;
+    --primary: oklch(0 0 0) !important;
+    --primary-foreground: oklch(1 0 0) !important;
+    --secondary: oklch(0.9 0 0) !important;
+    --secondary-foreground: oklch(0 0 0) !important;
+    --muted: oklch(0.95 0 0) !important;
+    --muted-foreground: oklch(0.2 0 0) !important;
+    --accent: oklch(0 0 0) !important;
+    --accent-foreground: oklch(1 0 0) !important;
+    --destructive: oklch(0.6 0.2 25) !important;
+    --destructive-foreground: oklch(1 0 0) !important;
+    --border: oklch(0 0 0) !important;
+    --input: oklch(0 0 0) !important;
+    --ring: oklch(0 0 0) !important;
+
+    /* Ensure borders are visible */
+    * {
+      border-color: currentColor !important;
+    }
+  }
+
+  .dark.high-contrast {
+    --background: oklch(0 0 0) !important;
+    --foreground: oklch(1 0 0) !important;
+    --card: oklch(0 0 0) !important;
+    --card-foreground: oklch(1 0 0) !important;
+    --popover: oklch(0 0 0) !important;
+    --popover-foreground: oklch(1 0 0) !important;
+    --primary: oklch(1 0 0) !important;
+    --primary-foreground: oklch(0 0 0) !important;
+    --secondary: oklch(0.2 0 0) !important;
+    --secondary-foreground: oklch(1 0 0) !important;
+    --muted: oklch(0.1 0 0) !important;
+    --muted-foreground: oklch(0.8 0 0) !important;
+    --accent: oklch(1 0 0) !important;
+    --accent-foreground: oklch(0 0 0) !important;
+    --border: oklch(1 0 0) !important;
+    --input: oklch(1 0 0) !important;
+    --ring: oklch(1 0 0) !important;
+  }
+}

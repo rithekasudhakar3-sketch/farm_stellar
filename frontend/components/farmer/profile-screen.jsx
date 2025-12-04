@@ -11,7 +11,7 @@ import { Switch } from "@/components/ui/switch"
 import { usePreferences } from "@/components/preferences-provider"
 
 export function FarmerProfileScreen({ onBack }) {
-  const { theme, setTheme, fontSize, setFontSize } = usePreferences()
+  const { theme, setTheme, fontSize, setFontSize, highContrast, setHighContrast } = usePreferences()
   const [isEditing, setIsEditing] = useState(false)
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false)
   const [isSaving, setIsSaving] = useState(false)
@@ -531,20 +531,35 @@ export function FarmerProfileScreen({ onBack }) {
 
               <div>
                 <Label className="text-small text-muted-foreground mb-2">Theme Preference</Label>
-                <div className="flex gap-2 mt-2 flex-wrap">
+                <div className="grid grid-cols-3 gap-3 mt-2">
                   {[
-                    { value: "light", icon: Sun, label: "Light" },
-                    { value: "dark", icon: Moon, label: "Dark" },
-                    { value: "system", icon: Monitor, label: "Auto" },
+                    { value: "light", label: "Light", bg: "bg-white", border: "border-gray-200", text: "text-slate-900", accent: "bg-green-500" },
+                    { value: "dark", label: "Dark", bg: "bg-slate-950", border: "border-slate-800", text: "text-slate-100", accent: "bg-green-600" },
+                    { value: "system", label: "Auto", bg: "bg-gradient-to-br from-white to-slate-950", border: "border-gray-300", text: "text-slate-900", accent: "bg-blue-500" },
                   ].map((option) => (
                     <button
                       key={option.value}
                       onClick={() => handleThemeChange(option.value)}
-                      className={`flex-1 flex flex-col items-center gap-2 py-3 px-4 rounded-2xl border-2 font-medium min-w-[100px] transition-all ${theme === option.value ? "bg-primary text-primary-foreground border-primary" : "border-border hover:border-primary/50"
+                      className={`relative group flex flex-col items-center gap-2 p-2 rounded-xl border-2 transition-all ${theme === option.value
+                          ? "border-primary ring-2 ring-primary/20 scale-[1.02]"
+                          : "border-transparent hover:border-primary/50 hover:scale-[1.02]"
                         }`}
                     >
-                      <option.icon className="icon-md" />
-                      {option.label}
+                      <div className={`w-full aspect-video rounded-lg ${option.bg} ${option.border} border shadow-sm relative overflow-hidden`}>
+                        {/* Mock UI for preview */}
+                        <div className="absolute top-2 left-2 right-2 h-2 rounded-full bg-current opacity-10"></div>
+                        <div className="absolute top-6 left-2 w-8 h-8 rounded-full bg-current opacity-10"></div>
+                        <div className="absolute top-6 left-12 right-2 h-16 rounded-lg bg-current opacity-5"></div>
+                        {/* Active indicator */}
+                        {theme === option.value && (
+                          <div className="absolute inset-0 bg-primary/10 flex items-center justify-center">
+                            <div className="bg-primary text-primary-foreground rounded-full p-1 shadow-lg">
+                              <Check className="w-4 h-4" />
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                      <span className="text-sm font-medium">{option.label}</span>
                     </button>
                   ))}
                 </div>
@@ -554,9 +569,9 @@ export function FarmerProfileScreen({ onBack }) {
                 <Label className="text-small text-muted-foreground mb-2">Font Size</Label>
                 <div className="flex gap-2 mt-2">
                   {[
-                    { value: "small", label: "Small" },
-                    { value: "medium", label: "Medium" },
-                    { value: "large", label: "Large" }
+                    { value: "small", label: "Small", size: "text-sm" },
+                    { value: "medium", label: "Medium", size: "text-base" },
+                    { value: "large", label: "Large", size: "text-lg" }
                   ].map((size) => (
                     <button
                       key={size.value}
@@ -564,10 +579,44 @@ export function FarmerProfileScreen({ onBack }) {
                       className={`flex-1 flex flex-col items-center gap-1 py-3 px-4 rounded-2xl border-2 font-medium transition-all ${fontSize === size.value ? "bg-primary text-primary-foreground border-primary" : "border-border hover:border-primary/50"
                         }`}
                     >
-                      <div className="font-semibold">{size.label}</div>
+                      <div className={size.size}>Aa</div>
+                      <div className="text-xs opacity-80">{size.label}</div>
                     </button>
                   ))}
                 </div>
+
+                {/* Font Size Sample Text Preview */}
+                <div className="mt-4 p-4 rounded-xl bg-muted/30 border-2 border-dashed border-border">
+                  <p className="text-muted-foreground text-xs mb-2 font-medium uppercase tracking-wider">Preview</p>
+                  <p
+                    className="text-foreground leading-relaxed transition-all duration-300"
+                    style={{
+                      fontSize: fontSize === 'small' ? '14px' : fontSize === 'large' ? '18px' : '16px'
+                    }}
+                  >
+                    The quick brown fox jumps over the lazy dog. 🌱
+                  </p>
+                </div>
+              </div>
+
+              {/* High Contrast Mode Toggle */}
+              <div className="flex items-center justify-between p-4 bg-muted/30 rounded-2xl border border-border/50">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-full bg-background border-2 border-foreground flex items-center justify-center">
+                    <div className="w-5 h-5 rounded-full bg-foreground"></div>
+                  </div>
+                  <div>
+                    <div className="font-medium">High Contrast</div>
+                    <div className="text-xs text-muted-foreground">Increase visibility and reduce eye strain</div>
+                  </div>
+                </div>
+                <Switch
+                  checked={highContrast}
+                  onCheckedChange={(checked) => {
+                    setHighContrast(checked)
+                    showSuccessToast(checked ? "High contrast mode enabled" : "High contrast mode disabled")
+                  }}
+                />
               </div>
             </div>
           )}
@@ -656,8 +705,8 @@ export function FarmerProfileScreen({ onBack }) {
       {showToast && (
         <div className="fixed top-4 left-1/2 -translate-x-1/2 z-[100] animate-slide-down">
           <div className={`px-6 py-3 rounded-2xl shadow-2xl border-2 flex items-center gap-2 ${toastType === 'success' ? 'bg-accent text-accent-foreground border-accent/30' :
-              toastType === 'error' ? 'bg-destructive text-destructive-foreground border-destructive/30' :
-                'bg-primary text-primary-foreground border-primary/30'
+            toastType === 'error' ? 'bg-destructive text-destructive-foreground border-destructive/30' :
+              'bg-primary text-primary-foreground border-primary/30'
             }`}>
             {toastType === 'success' && <Check className="w-4 h-4" />}
             {toastType === 'error' && <X className="w-4 h-4" />}
