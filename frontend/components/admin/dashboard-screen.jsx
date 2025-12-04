@@ -1,10 +1,12 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Users, UserPlus, Activity, Target, Search, Eye, X, ChevronLeft } from "lucide-react"
+import { Users, Activity, Target, Search, Eye, X, LogOut, ChevronDown, Package } from "lucide-react"
 import { SCREENS } from "@/constants/app"
+import { useRouter } from "next/navigation"
 
 export function AdminDashboardScreen({ onNavigate }) {
+  const router = useRouter()
   const [selectedFarmer, setSelectedFarmer] = useState(null)
   const [farmers, setFarmers] = useState([])
   const [stats, setStats] = useState({
@@ -15,6 +17,7 @@ export function AdminDashboardScreen({ onNavigate }) {
   })
   const [loading, setLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState("")
+  const [showManageMenu, setShowManageMenu] = useState(false)
 
   useEffect(() => {
     fetchDashboardData()
@@ -50,6 +53,15 @@ export function AdminDashboardScreen({ onNavigate }) {
     }
   }
 
+  const handleLogout = () => {
+    // Clear all admin authentication data
+    localStorage.removeItem('farmquest_admin_token')
+    localStorage.removeItem('farmquest_admin')
+
+    // Redirect to welcome page
+    router.push('/welcome')
+  }
+
   const filteredFarmers = farmers.filter(farmer =>
     farmer.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
     farmer.email?.toLowerCase().includes(searchQuery.toLowerCase())
@@ -57,103 +69,227 @@ export function AdminDashboardScreen({ onNavigate }) {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
-      <div className="bg-gradient-to-r from-primary to-secondary px-6 py-6 text-primary-foreground border-b border-border/20 shadow-sm">
+      {/* Top Bar - Simple with Manage and Logout */}
+      <div className="bg-card border-b border-border px-6 py-4 sticky top-0 z-10 shadow-sm">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div>
-            <h2 className="text-2xl font-bold mb-1">Admin Dashboard</h2>
-            <p className="text-sm opacity-90">Manage farmers and track progress</p>
+            <h1 className="text-2xl font-bold text-foreground">Admin Dashboard</h1>
+            <p className="text-sm text-muted-foreground">Monitor and manage your platform</p>
           </div>
-          <button
-            onClick={() => onNavigate(SCREENS.HOME)}
-            className="p-2 hover:bg-primary-foreground/10 rounded-xl transition-colors"
-          >
-            <ChevronLeft className="w-5 h-5" />
-          </button>
+
+          <div className="flex items-center gap-3">
+            {/* Manage Dropdown */}
+            <div className="relative">
+              <button
+                onClick={() => setShowManageMenu(!showManageMenu)}
+                className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-xl font-medium hover:bg-primary/90 transition-colors"
+              >
+                <Package className="w-4 h-4" />
+                Manage
+                <ChevronDown className={`w-4 h-4 transition-transform ${showManageMenu ? 'rotate-180' : ''}`} />
+              </button>
+
+              {showManageMenu && (
+                <>
+                  {/* Backdrop */}
+                  <div
+                    className="fixed inset-0 z-10"
+                    onClick={() => setShowManageMenu(false)}
+                  />
+
+                  {/* Dropdown Menu */}
+                  <div className="absolute right-0 mt-2 w-56 bg-card border border-border rounded-xl shadow-lg overflow-hidden z-20">
+
+
+                    <button
+                      onClick={() => {
+                        setShowManageMenu(false)
+                        onNavigate(SCREENS.ADMIN_QUESTS)
+                      }}
+                      className="w-full px-4 py-3 text-left hover:bg-muted transition-colors flex items-center gap-3"
+                    >
+                      <Target className="w-4 h-4 text-accent" />
+                      <div>
+                        <p className="font-medium text-foreground text-sm">Manage Quests</p>
+                        <p className="text-xs text-muted-foreground">Create and edit quest content</p>
+                      </div>
+                    </button>
+
+                    <button
+                      onClick={() => {
+                        setShowManageMenu(false)
+                        onNavigate(SCREENS.ADMIN_REWARDS)
+                      }}
+                      className="w-full px-4 py-3 text-left hover:bg-muted transition-colors flex items-center gap-3 border-t border-border"
+                    >
+                      <Package className="w-4 h-4 text-secondary" />
+                      <div>
+                        <p className="font-medium text-foreground text-sm">Manage Rewards</p>
+                        <p className="text-xs text-muted-foreground">Adjust XP and badge rewards</p>
+                      </div>
+                    </button>
+
+
+                  </div>
+                </>
+              )}
+            </div>
+
+            {/* Logout Button */}
+            <button
+              onClick={handleLogout}
+              className="flex items-center gap-2 px-4 py-2 border border-border rounded-xl font-medium hover:bg-muted transition-colors text-foreground"
+            >
+              <LogOut className="w-4 h-4" />
+              Logout
+            </button>
+          </div>
         </div>
       </div>
 
       {/* Main Content */}
       <div className="p-6 space-y-6 max-w-7xl mx-auto">
-        {/* Quick Actions */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-          <button
-            onClick={() => onNavigate(SCREENS.ADMIN_FARMERS)}
-            className="bg-card rounded-2xl p-6 border border-border shadow-sm hover:shadow-md transition-all text-left"
-          >
-            <Users className="w-8 h-8 text-primary mb-3" />
-            <p className="font-bold text-foreground">Manage Farmers</p>
-            <p className="text-xs text-muted-foreground mt-1">View and manage farmer profiles</p>
-          </button>
+        {/* Stats Section - Prominent Display with Charts */}
+        <div>
+          <h2 className="text-xl font-bold text-foreground mb-4">Platform Statistics</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {/* Total Farmers */}
+            <div className="bg-gradient-to-br from-primary/10 to-primary/5 rounded-2xl p-6 border border-primary/20 shadow-sm">
+              <div className="flex items-start justify-between mb-4">
+                <div className="p-3 bg-primary/20 rounded-xl">
+                  <Users className="w-6 h-6 text-primary" />
+                </div>
+              </div>
+              <p className="text-4xl font-bold text-foreground mb-1">{loading ? '...' : stats.totalFarmers}</p>
+              <p className="text-sm text-muted-foreground mb-3">Total Farmers</p>
 
-          <button
-            onClick={() => onNavigate(SCREENS.ADMIN_QUESTS)}
-            className="bg-card rounded-2xl p-6 border border-border shadow-sm hover:shadow-md transition-all text-left"
-          >
-            <Target className="w-8 h-8 text-accent mb-3" />
-            <p className="font-bold text-foreground">Manage Quests</p>
-            <p className="text-xs text-muted-foreground mt-1">Create and edit quest content</p>
-          </button>
+              {/* Visual Chart - Bar */}
+              <div className="space-y-1">
+                <div className="h-2 bg-primary/20 rounded-full overflow-hidden">
+                  <div
+                    className="h-full bg-primary rounded-full transition-all duration-1000"
+                    style={{ width: loading ? '0%' : '100%' }}
+                  />
+                </div>
+              </div>
 
-          <button
-            onClick={() => onNavigate(SCREENS.ADMIN_VERIFICATION)}
-            className="bg-card rounded-2xl p-6 border border-border shadow-sm hover:shadow-md transition-all text-left"
-          >
-            <Activity className="w-8 h-8 text-secondary mb-3" />
-            <p className="font-bold text-foreground">Verify Activities</p>
-            <p className="text-xs text-muted-foreground mt-1">Review farmer quest submissions</p>
-          </button>
-
-          <button
-            onClick={() => onNavigate(SCREENS.ADMIN_REWARDS)}
-            className="bg-card rounded-2xl p-6 border border-border shadow-sm hover:shadow-md transition-all text-left"
-          >
-            <Target className="w-8 h-8 text-accent mb-3" />
-            <p className="font-bold text-foreground">Manage Rewards</p>
-            <p className="text-xs text-muted-foreground mt-1">Adjust XP and badge rewards</p>
-          </button>
-        </div>
-
-        {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          <div className="bg-card rounded-2xl p-6 border border-border shadow-sm">
-            <div className="flex items-start justify-between mb-4">
-              <div className="p-3 bg-primary/10 rounded-xl">
-                <Users className="w-6 h-6 text-primary" />
+              <div className="mt-3 pt-3 border-t border-primary/20">
+                <p className="text-xs text-muted-foreground">Registered users on platform</p>
               </div>
             </div>
-            <p className="text-3xl font-bold text-foreground">{loading ? '...' : stats.totalFarmers}</p>
-            <p className="text-sm text-muted-foreground mt-1">Total Farmers</p>
-          </div>
 
-          <div className="bg-card rounded-2xl p-6 border border-border shadow-sm">
-            <div className="flex items-start justify-between mb-4">
-              <div className="p-3 bg-accent/10 rounded-xl">
-                <UserPlus className="w-6 h-6 text-accent" />
+            {/* New Signups */}
+            <div className="bg-gradient-to-br from-accent/10 to-accent/5 rounded-2xl p-6 border border-accent/20 shadow-sm">
+              <div className="flex items-start justify-between mb-4">
+                <div className="p-3 bg-accent/20 rounded-xl">
+                  <Users className="w-6 h-6 text-accent" />
+                </div>
+              </div>
+              <p className="text-4xl font-bold text-foreground mb-1">{loading ? '...' : stats.newSignups}</p>
+              <p className="text-sm text-muted-foreground mb-3">New Signups</p>
+
+              {/* Visual Chart - Mini Line Chart */}
+              <div className="h-12 flex items-end gap-1">
+                {[20, 35, 25, 45, 30, 50, stats.newSignups || 40].map((height, i) => (
+                  <div
+                    key={i}
+                    className="flex-1 bg-accent/30 rounded-t transition-all duration-500"
+                    style={{
+                      height: loading ? '0%' : `${(height / 50) * 100}%`,
+                      transitionDelay: `${i * 100}ms`
+                    }}
+                  />
+                ))}
+              </div>
+
+              <div className="mt-3 pt-3 border-t border-accent/20">
+                <p className="text-xs text-muted-foreground">This week's registrations</p>
               </div>
             </div>
-            <p className="text-3xl font-bold text-foreground">{loading ? '...' : stats.newSignups}</p>
-            <p className="text-sm text-muted-foreground mt-1">New Signups (This Week)</p>
-          </div>
 
-          <div className="bg-card rounded-2xl p-6 border border-border shadow-sm">
-            <div className="flex items-start justify-between mb-4">
-              <div className="p-3 bg-secondary/10 rounded-xl">
-                <Activity className="w-6 h-6 text-secondary" />
+            {/* Active Users */}
+            <div className="bg-gradient-to-br from-secondary/10 to-secondary/5 rounded-2xl p-6 border border-secondary/20 shadow-sm">
+              <div className="flex items-start justify-between mb-4">
+                <div className="p-3 bg-secondary/20 rounded-xl">
+                  <Activity className="w-6 h-6 text-secondary" />
+                </div>
+              </div>
+              <p className="text-4xl font-bold text-foreground mb-1">{loading ? '...' : stats.activeUsers}</p>
+              <p className="text-sm text-muted-foreground mb-3">Active Users</p>
+
+              {/* Visual Chart - Donut Chart */}
+              <div className="flex items-center justify-center gap-4">
+                <div className="relative">
+                  <svg className="w-24 h-24 transform -rotate-90" viewBox="0 0 100 100">
+                    {/* Background circle */}
+                    <circle
+                      cx="50"
+                      cy="50"
+                      r="40"
+                      stroke="currentColor"
+                      strokeWidth="12"
+                      fill="none"
+                      className="text-secondary/10"
+                    />
+                    {/* Progress circle */}
+                    <circle
+                      cx="50"
+                      cy="50"
+                      r="40"
+                      stroke="currentColor"
+                      strokeWidth="12"
+                      fill="none"
+                      className="text-secondary transition-all duration-1000 ease-out"
+                      strokeDasharray={`${2 * Math.PI * 40}`}
+                      strokeDashoffset={loading ? `${2 * Math.PI * 40}` : `${2 * Math.PI * 40 * (1 - (stats.activeUsers / stats.totalFarmers || 0.7))}`}
+                      strokeLinecap="round"
+                    />
+                  </svg>
+                  {/* Center percentage */}
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <span className="text-lg font-bold text-secondary">
+                      {loading ? '...' : Math.round((stats.activeUsers / stats.totalFarmers || 0.7) * 100)}%
+                    </span>
+                  </div>
+                </div>
+                <div className="text-xs text-muted-foreground">
+                  <div className="font-medium">Activity Rate</div>
+                  <div className="text-secondary">{loading ? '...' : stats.activeUsers} / {loading ? '...' : stats.totalFarmers}</div>
+                </div>
+              </div>
+
+              <div className="mt-3 pt-3 border-t border-secondary/20">
+                <p className="text-xs text-muted-foreground">Currently engaged farmers</p>
               </div>
             </div>
-            <p className="text-3xl font-bold text-foreground">{loading ? '...' : stats.activeUsers}</p>
-            <p className="text-sm text-muted-foreground mt-1">Active Users</p>
-          </div>
 
-          <div className="bg-card rounded-2xl p-6 border border-border shadow-sm">
-            <div className="flex items-start justify-between mb-4">
-              <div className="p-3 bg-accent/10 rounded-xl">
-                <Target className="w-6 h-6 text-accent" />
+            {/* Quests Completed */}
+            <div className="bg-gradient-to-br from-accent/10 to-accent/5 rounded-2xl p-6 border border-accent/20 shadow-sm">
+              <div className="flex items-start justify-between mb-4">
+                <div className="p-3 bg-accent/20 rounded-xl">
+                  <Target className="w-6 h-6 text-accent" />
+                </div>
+              </div>
+              <p className="text-4xl font-bold text-foreground mb-1">{loading ? '...' : stats.totalQuestsCompleted}</p>
+              <p className="text-sm text-muted-foreground mb-3">Quests Completed</p>
+
+              {/* Visual Chart - Stacked Bars */}
+              <div className="space-y-1.5">
+                <div className="flex gap-1">
+                  <div className="h-2 flex-1 bg-accent rounded-full" style={{ opacity: 0.9 }} />
+                  <div className="h-2 flex-1 bg-accent rounded-full" style={{ opacity: 0.7 }} />
+                  <div className="h-2 flex-1 bg-accent rounded-full" style={{ opacity: 0.5 }} />
+                </div>
+                <div className="flex gap-1">
+                  <div className="h-2 flex-1 bg-accent rounded-full" style={{ opacity: 0.8 }} />
+                  <div className="h-2 flex-1 bg-accent rounded-full" style={{ opacity: 0.6 }} />
+                </div>
+              </div>
+
+              <div className="mt-3 pt-3 border-t border-accent/20">
+                <p className="text-xs text-muted-foreground">Total quest submissions</p>
               </div>
             </div>
-            <p className="text-3xl font-bold text-foreground">{loading ? '...' : stats.totalQuestsCompleted}</p>
-            <p className="text-sm text-muted-foreground mt-1">Quests Completed</p>
           </div>
         </div>
 
@@ -161,7 +297,10 @@ export function AdminDashboardScreen({ onNavigate }) {
         <div className="bg-card rounded-2xl border border-border shadow-sm overflow-hidden">
           <div className="p-6 border-b border-border">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="font-bold text-foreground text-lg">Registered Farmers</h3>
+              <div>
+                <h3 className="font-bold text-foreground text-lg">Recent Farmers</h3>
+                <p className="text-sm text-muted-foreground">Latest registered farmers on the platform</p>
+              </div>
               <div className="relative">
                 <Search className="w-4 h-4 text-muted-foreground absolute left-3 top-1/2 -translate-y-1/2" />
                 <input

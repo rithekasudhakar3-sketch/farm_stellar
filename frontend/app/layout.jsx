@@ -2,6 +2,7 @@ import { Analytics } from "@vercel/analytics/next"
 import { Quicksand, Mali } from "next/font/google"
 import "./globals.css"
 import { PreferencesProvider } from "@/components/preferences-provider"
+import { ChatbotWidget } from "@/components/chatbot-widget"
 
 const _quicksand = Quicksand({ weight: ["400", "600", "700"], subsets: ["latin"] })
 const _mali = Mali({ weight: ["400", "600", "700"], subsets: ["latin"] })
@@ -34,6 +35,7 @@ export default function RootLayout({ children }) {
       <body className={`font-sans antialiased`}>
         <PreferencesProvider>
           {children}
+          <ChatbotWidget />
           <Analytics />
         </PreferencesProvider>
       </body>

@@ -6,10 +6,13 @@ import { ThemeProvider as NextThemesProvider, useTheme } from "next-themes"
 const PreferencesContext = React.createContext({
     fontSize: "medium",
     setFontSize: () => null,
+    highContrast: false,
+    setHighContrast: () => null,
 })
 
 export function PreferencesProvider({ children, ...props }) {
     const [fontSize, setFontSize] = React.useState("medium")
+    const [highContrast, setHighContrast] = React.useState(false)
     const [mounted, setMounted] = React.useState(false)
 
     // Load font size from localStorage on mount
@@ -22,12 +25,19 @@ export function PreferencesProvider({ children, ...props }) {
                 setFontSize(storedFontSize)
                 document.documentElement.setAttribute("data-font-size", storedFontSize)
             } else {
-                // Set default font size
                 document.documentElement.setAttribute("data-font-size", "medium")
                 localStorage.setItem("farmquest_fontsize", "medium")
             }
+
+            const storedHighContrast = localStorage.getItem("farmquest_high_contrast") === "true"
+            setHighContrast(storedHighContrast)
+            if (storedHighContrast) {
+                document.documentElement.classList.add("high-contrast")
+            } else {
+                document.documentElement.classList.remove("high-contrast")
+            }
         } catch (error) {
-            console.error("Error loading font size preference:", error)
+            console.error("Error loading preferences:", error)
             document.documentElement.setAttribute("data-font-size", "medium")
         }
     }, [])
@@ -46,8 +56,22 @@ export function PreferencesProvider({ children, ...props }) {
             console.error("Error saving font size preference:", error)
         }
 
-        // Apply immediately to html element for instant effect
         document.documentElement.setAttribute("data-font-size", size)
+    }, [])
+
+    const handleSetHighContrast = React.useCallback((enabled) => {
+        setHighContrast(enabled)
+        try {
+            localStorage.setItem("farmquest_high_contrast", String(enabled))
+        } catch (error) {
+            console.error("Error saving high contrast preference:", error)
+        }
+
+        if (enabled) {
+            document.documentElement.classList.add("high-contrast")
+        } else {
+            document.documentElement.classList.remove("high-contrast")
+        }
     }, [])
 
     if (!mounted) {
@@ -64,7 +88,12 @@ export function PreferencesProvider({ children, ...props }) {
             storageKey="farmquest_theme"
             {...props}
         >
-            <PreferencesContext.Provider value={{ fontSize, setFontSize: handleSetFontSize }}>
+            <PreferencesContext.Provider value={{
+                fontSize,
+                setFontSize: handleSetFontSize,
+                highContrast,
+                setHighContrast: handleSetHighContrast
+            }}>
                 {children}
             </PreferencesContext.Provider>
         </NextThemesProvider>
