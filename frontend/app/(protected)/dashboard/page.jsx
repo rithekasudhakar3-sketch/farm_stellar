@@ -1,6 +1,7 @@
 "use client"
 
 import { RevampedDashboard } from "@/components/farmer/revamped-dashboard"
+import { FarmstellarChatbot } from "@/components/farmer/farmstellar-chatbot"
 import { QUESTS_DATA } from "@/constants/quests"
 import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
@@ -127,6 +128,9 @@ export default function DashboardPage() {
                 onNavigate={handleNavigate}
                 onShowToast={showSuccessToast}
             />
+
+            {/* FarmStellar Chatbot */}
+            <FarmstellarChatbot />
 
             {showToast && (
                 <div className="fixed top-4 left-1/2 -translate-x-1/2 z-[100] animate-slide-down">
