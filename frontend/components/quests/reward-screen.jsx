@@ -2,7 +2,7 @@
 
 import { Zap, Trophy, Share2, ArrowRight, Users } from "lucide-react"
 
-export function RewardScreen({ quest, onContinue, onNextQuest, onComplete }) {
+export function RewardScreen({ quest, userData, onComplete, onContinue, onNextQuest }) {
   const handleComplete = async () => {
     if (onComplete) {
       await onComplete(quest)

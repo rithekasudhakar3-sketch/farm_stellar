@@ -1,17 +1,16 @@
 "use client"
 
-import { ChevronLeft, TrendingUp, Trophy, Award, BookOpen, Target, Star, Calendar, Zap } from "lucide-react"
+import { ChevronLeft, TrendingUp, Trophy, Award, Target, Star, Calendar, Zap } from "lucide-react"
 
 export function ImpactTrackerScreen({ onBack, userData }) {
   const ACTIVITY_DATA = {
     dailyXP: [45, 65, 50, 80, 70, 90, 75],
     weeklyQuests: [1, 2, 1, 3, 2, 4, 3],
-    learningHours: [1.2, 1.8, 1.5, 2.2, 2.0, 2.6, 2.4],
   }
 
   const ACHIEVEMENT_MILESTONES = [
     { label: "First Quest", completed: true, date: "Jan 15" },
-  //  { label: "5 Day Streak", completed: true, date: "Jan 20" },
+    //  { label: "5 Day Streak", completed: true, date: "Jan 20" },
     { label: "Level 3", completed: true, date: "Jan 22" },
     { label: "10 Quests", completed: false, date: "In Progress" },
     { label: "Level 5", completed: false, date: "Locked" },
@@ -103,31 +102,7 @@ export function ImpactTrackerScreen({ onBack, userData }) {
           </div>
         </div>
 
-        <div className="bg-card rounded-2xl p-6 border border-border shadow-sm">
-          <div className="flex items-center gap-3 mb-4">
-            <div className="p-2 bg-accent/10 rounded-xl">
-              <BookOpen className="w-5 h-5 text-accent" />
-            </div>
-            <h3 className="font-bold text-foreground">Learning Hours (Daily)</h3>
-          </div>
-          <div className="bg-gradient-to-b from-accent/5 to-transparent rounded-xl p-4 h-48 flex items-end justify-around gap-2">
-            {ACTIVITY_DATA.learningHours.map((hours, idx) => (
-              <div key={idx} className="flex-1 flex flex-col items-center gap-2">
-                <div
-                  className="w-full bg-gradient-to-t from-accent to-accent/60 rounded-t-lg"
-                  style={{ height: `${(hours / 2.6) * 100}%` }}
-                ></div>
-                <span className="text-xs text-muted-foreground">
-                  {["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"][idx]}
-                </span>
-              </div>
-            ))}
-          </div>
-          <div className="mt-4 text-center">
-            <p className="text-2xl font-bold text-foreground">15.2 hrs</p>
-            <p className="text-sm text-muted-foreground">Total learning time this week</p>
-          </div>
-        </div>
+
 
         <div className="bg-card rounded-2xl p-6 border border-border shadow-sm">
           <div className="flex items-center gap-3 mb-4">
@@ -140,15 +115,13 @@ export function ImpactTrackerScreen({ onBack, userData }) {
             {ACHIEVEMENT_MILESTONES.map((milestone, idx) => (
               <div
                 key={idx}
-                className={`flex items-center justify-between p-4 rounded-xl border-2 ${
-                  milestone.completed ? "bg-accent/5 border-accent/30" : "bg-muted/50 border-border opacity-60"
-                }`}
+                className={`flex items-center justify-between p-4 rounded-xl border-2 ${milestone.completed ? "bg-accent/5 border-accent/30" : "bg-muted/50 border-border opacity-60"
+                  }`}
               >
                 <div className="flex items-center gap-3">
                   <div
-                    className={`w-8 h-8 rounded-full flex items-center justify-center ${
-                      milestone.completed ? "bg-accent text-accent-foreground" : "bg-muted text-muted-foreground"
-                    }`}
+                    className={`w-8 h-8 rounded-full flex items-center justify-center ${milestone.completed ? "bg-accent text-accent-foreground" : "bg-muted text-muted-foreground"
+                      }`}
                   >
                     {milestone.completed ? "✓" : "🔒"}
                   </div>

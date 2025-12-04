@@ -14,6 +14,8 @@ const submissionRoutes = require('./routes/submissions');
 const rewardRoutes = require('./routes/rewards');
 const leaderboardRoutes = require('./routes/leaderboard');
 const communityRoutes = require('./routes/community');
+const purchaseOrderRoutes = require('./routes/purchaseOrders');
+const chatbotRoutes = require('./routes/chatbot');
 
 const app = express();
 
@@ -42,6 +44,8 @@ app.use('/api/uploads', uploadRoutes);
 app.use('/api/submissions', submissionRoutes);
 app.use('/api/rewards', rewardRoutes);
 app.use('/api/leaderboard', leaderboardRoutes);
+app.use('/api/purchase-orders', purchaseOrderRoutes);
+app.use('/api/chatbot', chatbotRoutes);
 app.use('/api/community', communityRoutes);
 
 app.get('/api/health', (req, res) => {

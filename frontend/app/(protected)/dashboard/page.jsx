@@ -1,6 +1,8 @@
 "use client"
 
 import { RevampedDashboard } from "@/components/farmer/revamped-dashboard"
+import { FarmstellarChatbot } from "@/components/farmer/farmstellar-chatbot"
+
 import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
 
@@ -123,8 +125,8 @@ export default function DashboardPage() {
             "community": "/community",
             "rewards": "/rewards",
             "farmer-profile": "/profile",
-            "settings": "/settings",
-            "impact-tracker": "/impact",
+            "settings": "/profile", // Redirects to profile since settings are integrated there
+            "impact-tracker": "/rewards",
         }
 
         if (routes[screen]) {
@@ -145,6 +147,9 @@ export default function DashboardPage() {
                 onNavigate={handleNavigate}
                 onShowToast={showSuccessToast}
             />
+
+            {/* FarmStellar Chatbot */}
+            <FarmstellarChatbot />
 
             {showToast && (
                 <div className="fixed top-4 left-1/2 -translate-x-1/2 z-[100] animate-slide-down">

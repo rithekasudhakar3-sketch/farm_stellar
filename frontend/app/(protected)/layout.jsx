@@ -36,7 +36,7 @@ export default function ProtectedLayout({ children }) {
                 }
 
                 const user = await res.json()
-                
+
                 // Load local storage data for compatibility
                 const localData = JSON.parse(localStorage.getItem("farmquest_userdata") || "{}")
 
@@ -78,8 +78,8 @@ export default function ProtectedLayout({ children }) {
             "community": "/community",
             "rewards": "/rewards",
             "farmer-profile": "/profile",
-            "settings": "/settings",
-            "impact-tracker": "/impact",
+            "settings": "/profile", // Redirects to profile since settings are integrated there
+            "impact-tracker": "/rewards",
         }
 
         if (routes[screen]) {

@@ -11,6 +11,7 @@ const UserSchema = new mongoose.Schema({
   xp: { type: Number, default: 0 },
   xpLevel: { type: Number, default: 0 },
   farm: { type: mongoose.Schema.Types.ObjectId, ref: 'Farm' },
+  purchasedRewards: [{ type: String }], // Array of purchased reward IDs
   questsProgress: [
     {
       questId: { type: String },

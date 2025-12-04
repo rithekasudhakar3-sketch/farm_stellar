@@ -33,17 +33,17 @@ exports.adminLogin = async (req, res) => {
 
     // Generate JWT token with admin role
     const token = jwt.sign(
-      { 
-        adminId: admin._id, 
+      {
+        adminId: admin._id,
         role: admin.role,
         userType: 'admin'
-      }, 
-      process.env.JWT_SECRET, 
+      },
+      process.env.JWT_SECRET,
       { expiresIn: '24h' }
     );
 
     console.log('Admin logged in:', admin._id);
-    res.status(200).json({ 
+    res.status(200).json({
       token,
       admin: {
         id: admin._id,
@@ -63,7 +63,7 @@ exports.adminLogin = async (req, res) => {
 exports.getAllFarmers = async (req, res) => {
   try {
     const { search, experience, limit = 50, skip = 0 } = req.query;
-    
+
     const query = {};
     if (search) {
       query.$or = [
@@ -85,7 +85,7 @@ exports.getAllFarmers = async (req, res) => {
 
     const total = await User.countDocuments(query);
 
-    res.status(200).json({ 
+    res.status(200).json({
       farmers,
       total,
       hasMore: total > parseInt(skip) + farmers.length
@@ -130,9 +130,9 @@ exports.updateFarmer = async (req, res) => {
     }
 
     console.log('Farmer updated:', farmerId);
-    res.status(200).json({ 
+    res.status(200).json({
       message: 'Farmer updated successfully',
-      farmer 
+      farmer
     });
   } catch (error) {
     console.error('Update farmer error:', error);
@@ -144,12 +144,12 @@ exports.updateFarmer = async (req, res) => {
 exports.getDashboardStats = async (req, res) => {
   try {
     const totalFarmers = await User.countDocuments();
-    
+
     // Get new signups this week
     const oneWeekAgo = new Date();
     oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
-    const newSignups = await User.countDocuments({ 
-      createdAt: { $gte: oneWeekAgo } 
+    const newSignups = await User.countDocuments({
+      createdAt: { $gte: oneWeekAgo }
     });
 
     // Get active users (users with quests progress)
@@ -219,7 +219,7 @@ exports.getPendingSubmissions = async (req, res) => {
               return item;
             })
           );
-          
+
           // Update proofUrl with signed URL for backward compatibility
           if (submissionObj.media[0]?.signedUrl) {
             submissionObj.proofUrl = submissionObj.media[0].signedUrl;
@@ -236,7 +236,7 @@ exports.getPendingSubmissions = async (req, res) => {
             console.error('Error generating signed URL for proofUrl:', error);
           }
         }
-        
+
         return submissionObj;
       })
     );
@@ -252,10 +252,10 @@ exports.getPendingSubmissions = async (req, res) => {
 exports.approveSubmission = async (req, res) => {
   try {
     const { submissionId } = req.params;
-    
+
     const submission = await Submission.findByIdAndUpdate(
       submissionId,
-      { 
+      {
         status: 'approved',
         reviewedBy: req.adminId,
         reviewedAt: new Date()
@@ -281,6 +281,7 @@ exports.approveSubmission = async (req, res) => {
         },
         $inc: {
           xp: xpReward
+
         },
         $addToSet: {
           completedQuests: submission.questId
@@ -304,7 +305,8 @@ exports.approveSubmission = async (req, res) => {
     res.status(200).json({ 
       message: 'Submission approved successfully',
       submission,
-      xpAwarded: xpReward
+      xpAwarded: xpReward,
+      updatedXP: user.xp  // Return updated XP
     });
   } catch (error) {
     console.error('Approve submission error:', error);
@@ -324,7 +326,7 @@ exports.rejectSubmission = async (req, res) => {
 
     const submission = await Submission.findByIdAndUpdate(
       submissionId,
-      { 
+      {
         status: 'rejected',
         feedback,
         reviewedBy: req.adminId,
@@ -337,9 +339,9 @@ exports.rejectSubmission = async (req, res) => {
       return res.status(404).json({ message: 'Submission not found' });
     }
 
-    res.status(200).json({ 
+    res.status(200).json({
       message: 'Submission rejected successfully',
-      submission 
+      submission
     });
   } catch (error) {
     console.error('Reject submission error:', error);
@@ -362,17 +364,17 @@ exports.createAdmin = async (req, res) => {
     const passwordHash = await bcrypt.hash(password, 10);
 
     // Create admin
-    const admin = new Admin({ 
-      name, 
-      email, 
-      passwordHash, 
+    const admin = new Admin({
+      name,
+      email,
+      passwordHash,
       organization,
       role: role || 'admin'
     });
     await admin.save();
 
     console.log('Admin created:', admin._id);
-    res.status(201).json({ 
+    res.status(201).json({
       message: 'Admin created successfully',
       admin: {
         id: admin._id,
