@@ -33,14 +33,9 @@ export function UserProgressCard({ userData }) {
                         {getAvatarContent()}
                     </div>
                     <div>
-<<<<<<< HEAD
                         <p className="text-xs text-muted-foreground font-semibold uppercase tracking-wide">{farmerType}</p>
                         <h3 className="text-3xl font-bold text-foreground leading-tight">{farmerName}</h3>
                         <p className="text-2xl font-bold text-primary mt-1">Level {xpLevel}</p>
-=======
-                        <p className="text-base text-foreground font-semibold">{farmerName}</p>
-                        <h3 className="text-2xl font-bold text-primary">Level {xpLevel}</h3>
->>>>>>> 13e2b0a (your message)
                     </div>
                 </div>
                 <div className="text-right">
@@ -77,7 +72,7 @@ export function UserProgressCard({ userData }) {
                     <p className="text-3xl font-bold text-primary">{currentXP}</p>
                     <p className="text-xs text-muted-foreground mt-1">Total XP</p>
                 </div>
-                
+
                 <div className="text-center">
                     <p className="text-3xl font-bold text-secondary">{completedQuestsCount}</p>
                     <p className="text-xs text-muted-foreground mt-1">Completed Quests</p>

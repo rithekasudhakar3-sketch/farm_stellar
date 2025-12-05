@@ -38,14 +38,8 @@ export function OngoingQuestsCard({ onResumeQuest }) {
                 }
 
                 const allQuests = await questsRes.json()
-<<<<<<< HEAD
-                
                 // Filter for in-progress quests only (exclude completed and submitted)
                 // Also filter out entries without questId
-=======
-
-                // Filter for in-progress quests
->>>>>>> 13e2b0a (your message)
                 const inProgressQuests = user.questsProgress
                     ?.filter(qp => {
                         // Must have a questId

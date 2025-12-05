@@ -140,16 +140,9 @@ export function LeaderboardCard() {
                             </div>
 
                             {/* Avatar */}
-<<<<<<< HEAD
-                            <div className={`w-10 h-10 rounded-full flex items-center justify-center text-xl ${
-                                isCurrentUser ? "bg-primary/20 ring-2 ring-primary" : "bg-primary/10"
-                            }`}>
-                                {user.name?.charAt(0).toUpperCase() || "F"}
-=======
                             <div className={`w-10 h-10 rounded-full flex items-center justify-center text-xl ${isCurrentUser ? "bg-primary/20 ring-2 ring-primary" : "bg-primary/10"
                                 }`}>
                                 {getAvatar(user.name)}
->>>>>>> 13e2b0a (your message)
                             </div>
 
                             {/* User Info */}
