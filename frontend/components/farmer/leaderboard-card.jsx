@@ -14,8 +14,9 @@ export function LeaderboardCard() {
             try {
                 const token = localStorage.getItem("token")
                 const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:4000"
-                
-                // Get current user ID
+                let panchayat = ""
+
+                // Get current user ID and location
                 if (token) {
                     const userRes = await fetch(`${backendUrl}/api/users/me`, {
                         headers: {
@@ -25,11 +26,17 @@ export function LeaderboardCard() {
                     if (userRes.ok) {
                         const user = await userRes.json()
                         setCurrentUserId(user._id)
+                        panchayat = user.panchayat
                     }
                 }
-                
-                const response = await fetch(`${backendUrl}/api/leaderboard?limit=4`)
-                
+
+                let url = `${backendUrl}/api/leaderboard?limit=4`
+                if (panchayat) {
+                    url += `&level=panchayat&location=${panchayat}`
+                }
+
+                const response = await fetch(url)
+
                 if (!response.ok) {
                     throw new Error("Failed to fetch leaderboard")
                 }
@@ -103,30 +110,29 @@ export function LeaderboardCard() {
     }
 
     return (
-        <div className="bg-card border-2 border-border rounded-3xl p-6 shadow-lg hover:shadow-xl transition-all h-full">
+        <div className="bg-card border-2 border-border rounded-3xl p-6 shadow-lg hover:shadow-xl transition-all h-full flex flex-col">
             <div className="flex items-center gap-3 mb-6">
                 <div className="p-3 bg-accent/10 rounded-2xl">
                     <Trophy className="w-6 h-6 text-accent" />
                 </div>
                 <div>
-                    <h3 className="text-xl font-bold text-foreground">Leaderboard</h3>
-                    <p className="text-xs text-muted-foreground">Top Farmers This Month</p>
+                    <h3 className="text-xl font-bold text-foreground">Panchayat Leaderboard</h3>
+                    <p className="text-xs text-muted-foreground">Top Farmers in Your Area</p>
                 </div>
             </div>
 
-            <div className="space-y-3">
+            <div className="space-y-3 flex-1">
                 {leaderboardData.map((user) => {
                     const isCurrentUser = user._id === currentUserId
                     return (
                         <div
                             key={user.rank}
-                            className={`flex items-center gap-3 p-3 rounded-2xl transition-all hover:scale-[1.02] ${
-                                isCurrentUser
-                                    ? "bg-gradient-to-r from-primary/20 to-primary/5 border-2 border-primary shadow-md"
-                                    : user.rank <= 3
+                            className={`flex items-center gap-3 p-3 rounded-2xl transition-all hover:scale-[1.02] ${isCurrentUser
+                                ? "bg-gradient-to-r from-primary/20 to-primary/5 border-2 border-primary shadow-md"
+                                : user.rank <= 3
                                     ? "bg-gradient-to-r from-accent/10 to-transparent border border-accent/20"
                                     : "bg-muted/30 hover:bg-muted/50"
-                            }`}
+                                }`}
                         >
                             {/* Rank */}
                             <div className="w-8 h-8 flex items-center justify-center">
@@ -134,18 +140,23 @@ export function LeaderboardCard() {
                             </div>
 
                             {/* Avatar */}
+<<<<<<< HEAD
                             <div className={`w-10 h-10 rounded-full flex items-center justify-center text-xl ${
                                 isCurrentUser ? "bg-primary/20 ring-2 ring-primary" : "bg-primary/10"
                             }`}>
                                 {user.name?.charAt(0).toUpperCase() || "F"}
+=======
+                            <div className={`w-10 h-10 rounded-full flex items-center justify-center text-xl ${isCurrentUser ? "bg-primary/20 ring-2 ring-primary" : "bg-primary/10"
+                                }`}>
+                                {getAvatar(user.name)}
+>>>>>>> 13e2b0a (your message)
                             </div>
 
                             {/* User Info */}
                             <div className="flex-1 min-w-0">
                                 <div className="flex items-center gap-2">
-                                    <p className={`font-semibold text-sm truncate ${
-                                        isCurrentUser ? "text-primary" : "text-foreground"
-                                    }`}>
+                                    <p className={`font-semibold text-sm truncate ${isCurrentUser ? "text-primary" : "text-foreground"
+                                        }`}>
                                         {user.name}
                                     </p>
                                     {isCurrentUser && (

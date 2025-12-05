@@ -17,7 +17,7 @@ export function OngoingQuestsCard({ onResumeQuest }) {
                 }
 
                 const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:4000"
-                
+
                 // Fetch user data to get questsProgress
                 const userRes = await fetch(`${backendUrl}/api/users/me`, {
                     headers: { "Authorization": `Bearer ${token}` }
@@ -28,7 +28,7 @@ export function OngoingQuestsCard({ onResumeQuest }) {
                 }
 
                 const user = await userRes.json()
-                
+
                 // Fetch all quests
                 const questsRes = await fetch(`${backendUrl}/api/quests`, {
                     headers: { "Authorization": `Bearer ${token}` }
@@ -38,9 +38,14 @@ export function OngoingQuestsCard({ onResumeQuest }) {
                 }
 
                 const allQuests = await questsRes.json()
+<<<<<<< HEAD
                 
                 // Filter for in-progress quests only (exclude completed and submitted)
                 // Also filter out entries without questId
+=======
+
+                // Filter for in-progress quests
+>>>>>>> 13e2b0a (your message)
                 const inProgressQuests = user.questsProgress
                     ?.filter(qp => {
                         // Must have a questId
@@ -52,11 +57,11 @@ export function OngoingQuestsCard({ onResumeQuest }) {
                     .map(qp => {
                         const quest = allQuests.find(q => q._id === qp.questId || q._id === qp.questId.toString() || q.slug === qp.questId)
                         if (!quest) return null
-                        
+
                         const totalTasks = quest.stages?.length || 5
                         const completedTasks = qp.stageIndex || 0
                         const progress = Math.round((completedTasks / totalTasks) * 100)
-                        
+
                         return {
                             id: quest._id || quest.slug,
                             name: quest.title,
@@ -97,7 +102,7 @@ export function OngoingQuestsCard({ onResumeQuest }) {
     }
 
     return (
-        <div className="bg-card border-2 border-border rounded-3xl p-6 shadow-lg hover:shadow-xl transition-all">
+        <div className="bg-card border-2 border-border rounded-3xl p-6 shadow-lg hover:shadow-xl transition-all h-full flex flex-col">
             <div className="flex items-center gap-3 mb-6">
                 <div className="p-3 bg-primary/10 rounded-2xl">
                     <Leaf className="w-6 h-6 text-primary" />
@@ -108,7 +113,7 @@ export function OngoingQuestsCard({ onResumeQuest }) {
                 </div>
             </div>
 
-            <div className="space-y-4">
+            <div className="space-y-4 flex-1">
                 {ongoingQuests.map((quest) => (
                     <div
                         key={quest.id}

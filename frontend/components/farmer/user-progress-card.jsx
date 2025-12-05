@@ -12,10 +12,10 @@ export function UserProgressCard({ userData }) {
     const farmerType = level === "pro" || level === "Pro" ? "Pro" : "Beginner"
     const progressPercentage = (currentXP / requiredXP) * 100
     const xpToNextLevel = Math.max(0, requiredXP - currentXP)
-    
+
     // Count completed quests
     const completedQuestsCount = userData?.questsProgress?.filter(q => q.status === "completed")?.length || 0
-    
+
     // Generate avatar based on first letter of name
     const getAvatarContent = () => {
         if (farmerName && farmerName !== "Farmer") {
@@ -25,7 +25,7 @@ export function UserProgressCard({ userData }) {
     }
 
     return (
-        <div className="bg-card border-2 border-border rounded-3xl p-6 shadow-lg hover:shadow-xl transition-all">
+        <div className="bg-card border-2 border-border rounded-3xl p-6 shadow-lg hover:shadow-xl transition-all h-full flex flex-col">
             <div className="flex items-center justify-between mb-6">
                 <div className="flex items-center gap-4">
                     {/* Profile Avatar */}
@@ -33,9 +33,14 @@ export function UserProgressCard({ userData }) {
                         {getAvatarContent()}
                     </div>
                     <div>
+<<<<<<< HEAD
                         <p className="text-xs text-muted-foreground font-semibold uppercase tracking-wide">{farmerType}</p>
                         <h3 className="text-3xl font-bold text-foreground leading-tight">{farmerName}</h3>
                         <p className="text-2xl font-bold text-primary mt-1">Level {xpLevel}</p>
+=======
+                        <p className="text-base text-foreground font-semibold">{farmerName}</p>
+                        <h3 className="text-2xl font-bold text-primary">Level {xpLevel}</h3>
+>>>>>>> 13e2b0a (your message)
                     </div>
                 </div>
                 <div className="text-right">

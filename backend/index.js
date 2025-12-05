@@ -17,6 +17,7 @@ const communityRoutes = require('./routes/community');
 const purchaseOrderRoutes = require('./routes/purchaseOrders');
 const chatbotRoutes = require('./routes/chatbot');
 const translateRoutes = require('./routes/translate');
+const communityRoutes = require('./routes/community');
 
 const app = express();
 
