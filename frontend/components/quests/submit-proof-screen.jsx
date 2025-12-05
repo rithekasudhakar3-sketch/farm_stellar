@@ -5,6 +5,8 @@ import { useState, useRef, useEffect } from "react"
 
 
 export function SubmitProofScreen({ quest, onSubmit, onBack }) {
+  console.log("SubmitProofScreen rendered with quest:", quest)
+  
   const [notes, setNotes] = useState("")
   const [uploadedImage, setUploadedImage] = useState(null) // { url, key, preview, location? }
  // { url, key, preview, location? }
@@ -243,61 +245,12 @@ export function SubmitProofScreen({ quest, onSubmit, onBack }) {
       console.error("Upload error:", error)
       alert("Failed to upload image. Please try again.")
       setIsUploading(false)
-      const file = e?.target?.files?.[0]
-      if (!file) return
-
-      setIsUploading(true)
-      try {
-        const token = localStorage.getItem("token")
-        const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:4000"
-
-        const reader = new FileReader()
-        reader.onloadend = async () => {
-          try {
-            const uploadRes = await fetch(`${backendUrl}/api/uploads/proxy`, {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-                "Authorization": token ? `Bearer ${token}` : ""
-              },
-              body: JSON.stringify({
-                mimeType: file.type,
-                sizeBytes: file.size,
-                fileData: reader.result
-              })
-            })
-
-            if (!uploadRes.ok) {
-              const errText = await uploadRes.text().catch(() => "")
-              throw new Error(errText || "Failed to upload file")
-            }
-
-            const { key, url } = await uploadRes.json().catch(() => ({}))
-
-            setUploadedImage({
-              url: url || reader.result,
-              key: key || null,
-              preview: reader.result
-            })
-          } catch (error) {
-            console.error("Upload error:", error)
-            alert("Failed to upload image. Please try again.")
-          } finally {
-            setIsUploading(false)
-          }
-        }
-        reader.readAsDataURL(file)
-      } catch (error) {
-        console.error("Upload error:", error)
-        alert("Failed to upload image. Please try again.")
-        setIsUploading(false)
-      }
     }
+  }
 
-    const handleSubmit = async () => {
-      if (!onSubmit) return
-      if (!onSubmit) return
-      setIsSubmitting(true)
+  const handleSubmit = async () => {
+    if (!onSubmit) return
+    setIsSubmitting(true)
 
 
       try {
@@ -413,15 +366,13 @@ export function SubmitProofScreen({ quest, onSubmit, onBack }) {
           <button onClick={onBack} className="p-2 hover:bg-muted rounded-lg transition-colors">
             <ChevronLeft className="w-5 h-5" />
           </button>
-          <h1 className="text-lg font-bold">Submit Proof</h1>
-          <div className="w-9" />
           <div className="w-9" />
         </div>
 
         {/* Content */}
-        <div className="flex-1 overflow-auto px-6 py-6 space-y-6 pb-32">
-          <div>
-            <h2 className="text-2xl font-bold text-foreground mb-2">Show Your Work</h2>
+        <div className="flex-1 overflow-auto px-6 py-6 space-y-6">
+          <div className="text-center">
+            <h2 className="text-2xl font-bold text-foreground mb-2">Submit Proof</h2>
             <p className="text-sm text-muted-foreground">Submit evidence of quest completion</p>
           </div>
 
@@ -503,57 +454,31 @@ export function SubmitProofScreen({ quest, onSubmit, onBack }) {
                       <p className="text-xs text-muted-foreground mt-1">With GPS Location</p>
                     </div>
                   </button>
-
-                  <label className="block w-full">
-                    <input
-                      type="file"
-                      accept="image/*"
-                      onChange={handleImageUpload}
-                      className="hidden"
-                    />
-                  
-                  </label>
                 </div>
               )}
             </div>
           )}
 
-          {/* Notes */}
-          <div className="space-y-3">
-            <h3 className="font-bold text-foreground text-sm">Additional Notes</h3>
-            <div className="relative">
-              <MessageSquare className="absolute top-3 left-3 w-5 h-5 text-muted-foreground pointer-events-none" />
-              <textarea
-                value={notes}
-                onChange={(e) => setNotes(e.target.value)}
-                placeholder="Share any challenges, discoveries, or insights from this quest..."
-                className="w-full pl-10 pt-3 pr-4 pb-3 rounded-lg border border-border bg-card text-foreground placeholder-muted-foreground focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/20 resize-none"
-                rows={4}
-              />
-            </div>
+          {/* Submit Button */}
+          <div>
+            <button
+              onClick={handleSubmit}
+              disabled={!canSubmit || isSubmitting}
+              className={`w-full font-bold py-4 rounded-2xl transition-all shadow-lg ${canSubmit && !isSubmitting
+                ? "bg-primary text-primary-foreground hover:bg-primary/90 hover:shadow-primary/30 active:scale-95"
+                : "bg-muted text-muted-foreground cursor-not-allowed"
+                }`}
+            >
+              {isSubmitting ? (
+                <span className="flex items-center justify-center gap-2">
+                  <span className="animate-spin">⏳</span> Submitting...
+                </span>
+              ) : (
+                "Submit for Review ✓"
+              )}
+            </button>
           </div>
-        </div>
-
-        {/* Submit Button - Fixed at bottom for thumb reach */}
-        <div className="fixed bottom-0 left-0 right-0 px-6 py-4 bg-gradient-to-t from-background via-background to-transparent border-t border-border">
-          <button
-            onClick={handleSubmit}
-            disabled={!canSubmit || isSubmitting}
-            className={`w-full font-bold py-4 rounded-2xl transition-all shadow-lg ${canSubmit && !isSubmitting
-              ? "bg-primary text-primary-foreground hover:bg-primary/90 hover:shadow-primary/30 active:scale-95"
-              : "bg-muted text-muted-foreground cursor-not-allowed"
-              }`}
-          >
-            {isSubmitting ? (
-              <span className="flex items-center justify-center gap-2">
-                <span className="animate-spin">⏳</span> Submitting...
-              </span>
-            ) : (
-              "Submit for Review ✓"
-            )}
-          </button>
         </div>
       </div>
     )
-  }
 }
