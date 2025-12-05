@@ -14,8 +14,6 @@ export function WeatherAlertCard({ location }) {
                 setLoading(true)
                 setError(null)
 
-                const apiKey = "f36aabc0f660437ba1a91516250410"
-
                 // Validate location
                 if (!location || typeof location !== 'string' || !location.trim()) {
                     throw new Error("Location is required")
@@ -43,7 +41,9 @@ export function WeatherAlertCard({ location }) {
 
                 console.log("Fetching weather for:", queryLocation)
 
-                const url = `https://api.weatherapi.com/v1/forecast.json?key=${apiKey}&q=${encodeURIComponent(queryLocation)}&days=2&aqi=no&alerts=yes`
+                // Use backend proxy instead of direct API call
+                const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:4000"
+                const url = `${backendUrl}/api/weather/forecast?location=${encodeURIComponent(queryLocation)}`
 
                 const response = await fetch(url)
 

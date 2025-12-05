@@ -14,6 +14,7 @@
     "aproba": "^2.1.0",
     "are-we-there-yet": "^2.0.0",
     "array-flatten": "^1.1.1",
+    "axios": "^1.13.2",
     "balanced-match": "^1.0.2",
     "bcrypt": "^5.1.1",
     "binary-extensions": "^2.3.0",

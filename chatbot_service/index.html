@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>FarmStellar — Chat</title>
+
+<!-- Marked.js for Markdown rendering -->
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+<!-- Styling -->
+<style>
+  :root{
+    --bg1: #e8f6ea;
+    --bg2: #fff7fb;
+    --accent: #2a7a2e;
+    --user: #d9fff0;
+    --bot: #fff0f6;
+    --muted: #666;
+    --maxWidth: 720px;
+  }
+  *{box-sizing:border-box}
+  body{
+    font-family: Inter, Roboto, Arial, sans-serif;
+    background: linear-gradient(135deg, #f0fff4, #fff7fb);
+    margin:0;
+    min-height:100vh;
+    display:flex;
+    align-items:start;
+    justify-content:center;
+    padding:28px;
+  }
+
+  .container{
+    width:100%;
+    max-width:var(--maxWidth);
+    background: white;
+    border-radius:14px;
+    box-shadow: 0 10px 30px rgba(30,30,30,0.08);
+    overflow: hidden;
+    display:flex;
+    flex-direction:column;
+    height:80vh;
+  }
+
+  header{
+    padding:18px 22px;
+    border-bottom: 1px solid #f0f0f0;
+    display:flex;
+    align-items:center;
+    gap:12px;
+    background: linear-gradient(90deg,#f7fff7,#fff7fb);
+  }
+  header h1{
+    font-size:1.25rem;
+    color:var(--accent);
+    margin:0;
+  }
+  header p{margin:0;color:var(--muted);font-size:.9rem}
+
+  #chatbox{
+    flex:1;
+    padding:18px;
+    overflow-y:auto;
+    display:flex;
+    flex-direction:column;
+    gap:14px;
+    background: repeating-linear-gradient(180deg, rgba(250,250,250,0.6) 0px, rgba(250,250,250,0.6) 40px, rgba(255,255,255,0.4) 40px, rgba(255,255,255,0.4) 80px);
+  }
+
+  .bubble{
+    max-width:82%;
+    padding:12px 14px;
+    border-radius:14px;
+    box-shadow: 0 3px 8px rgba(20,20,20,0.03);
+    white-space: pre-wrap; /* preserve line breaks */
+    line-height:1.45;
+  }
+  .user {
+    align-self:flex-end;
+    background: linear-gradient(180deg, var(--user), #e6fff4);
+    border-bottom-right-radius:4px;
+  }
+  .bot {
+    align-self:flex-start;
+    background: linear-gradient(180deg, var(--bot), #fff0f6);
+    border-bottom-left-radius:4px;
+  }
+
+  .meta {
+    font-size:.8rem;
+    color:var(--muted);
+    margin-top:6px;
+  }
+
+  /* Typing indicator */
+  .typing{
+    display:inline-flex;
+    gap:6px;
+    align-items:center;
+    padding:10px 14px;
+    border-radius:14px;
+    background: linear-gradient(180deg, #fff0f6, #ffeef8);
+  }
+  .dot{
+    width:8px;height:8px;border-radius:50%;background:var(--accent);
+    animation: bounce .7s infinite alternate;
+  }
+  .dot:nth-child(2){ animation-delay:.12s }
+  .dot:nth-child(3){ animation-delay:.24s }
+
+  @keyframes bounce {
+    from { transform: translateY(0) }
+    to { transform: translateY(-6px) }
+  }
+
+  /* Input area */
+  .composer{
+    display:flex;
+    gap:8px;
+    padding:12px;
+    border-top:1px solid #f0f0f0;
+    align-items:center;
+    background: linear-gradient(180deg,#fff,#fcfffb);
+  }
+  .composer input[type="text"]{
+    flex:1;
+    padding:12px 14px;
+    border-radius:10px;
+    border:1px solid #e6e6e6;
+    font-size:1rem;
+  }
+  .composer input[type="text"]:focus{ outline:2px solid rgba(42,122,46,0.12) }
+  .btn{
+    padding:10px 14px;
+    background:var(--accent);
+    color:white;
+    border:none;
+    border-radius:10px;
+    cursor:pointer;
+    font-weight:600;
+  }
+  .btn:active{ transform: translateY(1px) }
+
+  /* Rendered markdown styling (basic) */
+  .bubble.bot h1, .bubble.bot h2, .bubble.bot h3 { margin:6px 0; color:var(--accent) }
+  .bubble.bot ul, .bubble.bot ol { margin:8px 0 8px 18px; }
+  .bubble.bot strong { font-weight:700; }
+  .bubble.bot em { font-style:italic; color:#444; }
+
+  /* Small screens */
+  @media (max-width:520px){
+    .container{ height:90vh }
+    header h1{font-size:1.05rem}
+  }
+</style>
+</head>
+<body>
+
+<div class="container" role="main">
+  <header>
+    <div style="display:flex;flex-direction:column;">
+      <h1>🌱 FarmStellar AI</h1>
+      <p>Ask about farming, crops, or the FarmStellar app</p>
+    </div>
+  </header>
+
+  <div id="chatbox" aria-live="polite"></div>
+
+  <div class="composer">
+    <input id="input" type="text" placeholder="Type your question (farming or app)..."/>
+    <button id="sendBtn" class="btn">Send</button>
+  </div>
+</div>
+
+<!-- Script -->
+<script>
+(function(){
+  const API_URL = "http://127.0.0.1:8000/ask"; // CHANGE if needed
+  const chatbox = document.getElementById("chatbox");
+  const input = document.getElementById("input");
+  const sendBtn = document.getElementById("sendBtn");
+
+  // optional small client-side buffer for UX (not server memory)
+  let localHistory = []; // stores last 10 messages locally
+
+  function addLocalHistory(role, text){
+    localHistory.push({role, text});
+    if(localHistory.length>10) localHistory.shift();
+  }
+
+  function createBubble(className, htmlContent){
+    const div = document.createElement("div");
+    div.className = `bubble ${className}`;
+    div.innerHTML = htmlContent;
+    return div;
+  }
+
+  function appendUser(text){
+    const bubble = createBubble('user', escapeHtml(text));
+    chatbox.appendChild(bubble);
+    chatbox.scrollTop = chatbox.scrollHeight;
+  }
+
+  function appendBotMarkdown(md){
+    // Use marked to convert to HTML. Use marked.parse (modern API)
+    const html = marked.parse(md || "");
+    const bubble = createBubble('bot', html);
+    chatbox.appendChild(bubble);
+    chatbox.scrollTop = chatbox.scrollHeight;
+  }
+
+  function appendTyping(){
+    const div = document.createElement("div");
+    div.className = "typing";
+    div.id = "typingIndicator";
+    div.innerHTML = '<span class="dot"></span><span class="dot"></span><span class="dot"></span>';
+    chatbox.appendChild(div);
+    chatbox.scrollTop = chatbox.scrollHeight;
+    return div;
+  }
+
+  function removeTyping(){
+    const t = document.getElementById("typingIndicator");
+    if(t) t.remove();
+  }
+
+  // minimal escaping for user-sent plain text when not using markdown
+  function escapeHtml(unsafe){
+    return unsafe
+      .replaceAll("&","&amp;")
+      .replaceAll("<","&lt;")
+      .replaceAll(">","&gt;")
+      .replaceAll('"',"&quot;")
+      .replaceAll("'", "&#039;");
+  }
+
+async function sendMessage(){
+  const text = input.value.trim();
+  if(!text) return;
+  input.value = "";
+  input.focus();
+
+  // show user
+  appendUser(text);
+  addLocalHistory('user', text);
+
+  // show typing indicator
+  const typing = appendTyping();
+
+  // create session ID (persistent in this tab)
+  if (!window.sessionId) {
+    window.sessionId = "session-" + Math.random().toString(36).slice(2);
+  }
+
+  try {
+    const resp = await fetch(API_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        session_id: window.sessionId,
+        message: text
+      })
+    });
+
+    if(!resp.ok){
+      throw new Error(`Server returned ${resp.status}`);
+    }
+
+    const data = await resp.json();
+    removeTyping();
+
+    if(!data || typeof data.answer !== "string"){
+      appendBotMarkdown("❌ Unexpected server response.");
+      return;
+    }
+
+    appendBotMarkdown(data.answer);
+    addLocalHistory('bot', data.answer);
+
+  } catch (err) {
+    removeTyping();
+    appendBotMarkdown(`❌ Error: ${escapeHtml(err.message)}`);
+  }
+}
+
+  sendBtn.addEventListener("click", sendMessage);
+
+  // initial welcome message (markdown)
+  const welcome = "**Hello!** 👋  Ask me anything about farming, crops, livestock, or the FarmStellar app.";
+  appendBotMarkdown(welcome);
+
+})();
+</script>
+
+</body>
+</html>
