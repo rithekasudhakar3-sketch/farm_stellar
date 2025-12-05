@@ -2,7 +2,7 @@
 
 import { ChevronLeft, Camera, MessageSquare, CheckCircle2, X, MapPin } from "lucide-react"
 import { useState, useRef, useEffect } from "react"
-import { useState, useRef, useEffect } from "react"
+
 
 export function SubmitProofScreen({ quest, onSubmit, onBack }) {
   const [notes, setNotes] = useState("")
