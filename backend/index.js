@@ -15,6 +15,7 @@ const rewardRoutes = require('./routes/rewards');
 const leaderboardRoutes = require('./routes/leaderboard');
 const purchaseOrderRoutes = require('./routes/purchaseOrders');
 const chatbotRoutes = require('./routes/chatbot');
+const translateRoutes = require('./routes/translate');
 
 const app = express();
 
@@ -45,6 +46,7 @@ app.use('/api/rewards', rewardRoutes);
 app.use('/api/leaderboard', leaderboardRoutes);
 app.use('/api/purchase-orders', purchaseOrderRoutes);
 app.use('/api/chatbot', chatbotRoutes);
+app.use('/api/translate', translateRoutes);
 
 app.get('/api/health', (req, res) => {
   res.status(200).json({ status: 'ok' });
