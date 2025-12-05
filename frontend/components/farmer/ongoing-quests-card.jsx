@@ -39,11 +39,18 @@ export function OngoingQuestsCard({ onResumeQuest }) {
 
                 const allQuests = await questsRes.json()
                 
-                // Filter for in-progress quests
+                // Filter for in-progress quests only (exclude completed and submitted)
+                // Also filter out entries without questId
                 const inProgressQuests = user.questsProgress
-                    ?.filter(qp => qp.status === "in-progress")
+                    ?.filter(qp => {
+                        // Must have a questId
+                        if (!qp.questId) return false
+                        // Must be in-progress status
+                        if (qp.status !== "in-progress") return false
+                        return true
+                    })
                     .map(qp => {
-                        const quest = allQuests.find(q => q._id === qp.questId || q._id === qp.questId.toString())
+                        const quest = allQuests.find(q => q._id === qp.questId || q._id === qp.questId.toString() || q.slug === qp.questId)
                         if (!quest) return null
                         
                         const totalTasks = quest.stages?.length || 5

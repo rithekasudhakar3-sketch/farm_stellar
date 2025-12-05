@@ -13,6 +13,7 @@ const uploadRoutes = require('./routes/uploads');
 const submissionRoutes = require('./routes/submissions');
 const rewardRoutes = require('./routes/rewards');
 const leaderboardRoutes = require('./routes/leaderboard');
+const communityRoutes = require('./routes/community');
 const purchaseOrderRoutes = require('./routes/purchaseOrders');
 const chatbotRoutes = require('./routes/chatbot');
 const translateRoutes = require('./routes/translate');
@@ -47,6 +48,7 @@ app.use('/api/leaderboard', leaderboardRoutes);
 app.use('/api/purchase-orders', purchaseOrderRoutes);
 app.use('/api/chatbot', chatbotRoutes);
 app.use('/api/translate', translateRoutes);
+app.use('/api/community', communityRoutes);
 
 app.get('/api/health', (req, res) => {
   res.status(200).json({ status: 'ok' });

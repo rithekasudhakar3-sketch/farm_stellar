@@ -21,12 +21,7 @@ export default function PermissionsPage() {
             const signupTempData = JSON.parse(localStorage.getItem("signup_temp_data") || "{}")
 
             // Validate that we have required data
-            if (!phone && !signupTempData.phone) {
-                setError("Phone number is missing. Please start the signup process again.")
-                setIsLoading(false)
-                setTimeout(() => router.push("/auth/signup"), 2000)
-                return
-            }
+            
 
             // Create user in backend
             const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:4000"

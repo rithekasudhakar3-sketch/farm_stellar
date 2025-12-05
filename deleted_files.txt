@@ -1,0 +1,37 @@
+﻿D	frontend/app/(protected)/settings/page.jsx
+
+D	frontend/components/farmer/settings-screen.jsx
+
+D	backend/AWS_S3_SETUP.md
+D	backend/OTP_DEVELOPMENT_MODE.md
+D	backend/README.md
+D	backend/TWILIO_SETUP.md
+D	backend/farm_stellar.postman_collection.json
+D	backend/seedAdmin.js
+D	frontend/constants/quests.js
+
+D	frontend/app/(protected)/impact/page.jsx
+
+D	frontend/.agent/DARK_THEME_FIXES.md
+D	frontend/.agent/ENHANCEMENT_SUMMARY.md
+D	frontend/.agent/ICON_VISIBILITY_ENHANCEMENTS.md
+D	frontend/.agent/LEAF_ICON_FIXES.md
+D	frontend/.agent/QUICK_REFERENCE.md
+D	frontend/.agent/TESTING_CHECKLIST.md
+D	frontend/.agent/TESTING_GUIDE.md
+D	frontend/.agent/THEME_ENHANCEMENTS.md
+D	frontend/.agent/THEME_ENHANCEMENTS_COMPLETE.md
+D	frontend/.agent/USAGE_GUIDE.md
+
+D	frontend/app/(protected)/settings/page.jsx
+D	frontend/components/farmer/settings-screen.jsx
+
+D	frontend/components/auth/aadhar-verification-screen.jsx
+
+D	frontend/app/(admin)/admin/farmers/page.jsx
+D	frontend/app/(admin)/admin/rewards/page.jsx
+D	frontend/app/(admin)/admin/verification/page.jsx
+D	frontend/app/(auth)/auth/login/page.jsx
+D	frontend/app/(auth)/auth/signup/page.jsx
+D	frontend/app/(auth)/welcome/page.jsx
+D	frontend/app/layout.jsx
