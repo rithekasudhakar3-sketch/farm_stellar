@@ -262,6 +262,7 @@
     transition: background-color 300ms ease-in-out, color 300ms ease-in-out;
   }
 
+    @keyframes float-gentle {
         0%,
         100% {
             transform: translateY(0px);
@@ -789,7 +790,7 @@
     @apply w-6 h-6;
   }
 
-}
+
 
 .goog-te-gadget-simple {
   font-family: inherit !important;
@@ -921,4 +922,4 @@
     .grid-spacious {
         @apply grid gap-8;
     }
-}
+  }

@@ -7,6 +7,8 @@ export function VerificationScreen({ quest, onContinue, isAutoVerified = false, 
   const [verificationStage, setVerificationStage] = useState(0)
   const [isComplete, setIsComplete] = useState(false)
   const [verificationResults, setVerificationResults] = useState([])
+  const [learningOutcomes, setLearningOutcomes] = useState([])
+  const [loading, setLoading] = useState(true)
 
   const stages = [
     { icon: Eye, text: "Analyzing submitted image...", duration: 2000 },
@@ -16,6 +18,41 @@ export function VerificationScreen({ quest, onContinue, isAutoVerified = false, 
   ]
 
   useEffect(() => {
+    // Fetch quest learning outcomes from backend
+    const fetchQuestData = async () => {
+      try {
+        const token = localStorage.getItem("token")
+        const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:4000"
+        const questId = quest?._id || quest?.id
+        
+        if (questId && token) {
+          const response = await fetch(`${backendUrl}/api/quests/${questId}`, {
+            headers: {
+              "Authorization": `Bearer ${token}`,
+              "Content-Type": "application/json"
+            }
+          })
+          
+          if (response.ok) {
+            const questData = await response.json()
+            console.log('Fetched quest data:', questData)
+            setLearningOutcomes(questData.outcomes || [])
+          }
+        } else {
+          // Fallback to quest prop data if available
+          setLearningOutcomes(quest?.outcomes || [])
+        }
+      } catch (error) {
+        console.error('Error fetching quest data:', error)
+        // Fallback to quest prop data
+        setLearningOutcomes(quest?.outcomes || [])
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchQuestData()
+
     // Process verification results from API or simulate
     const runVerification = async () => {
       for (let i = 0; i < stages.length; i++) {
@@ -199,7 +236,7 @@ export function VerificationScreen({ quest, onContinue, isAutoVerified = false, 
               : "bg-muted text-muted-foreground cursor-not-allowed"
             }`}
         >
-          {isAutoVerified ? "Claim Rewards" : "Back to Quests"}
+          {isAutoVerified ? "Proceed to Summary & Learning Outcomes" : "Proceed to Summary & Learning Outcomes"}
         </button>
       </div>
     </div>

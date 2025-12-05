@@ -1,23 +1,15 @@
 "use client"
 
 import { useState } from "react"
-import { Leaf, Sprout, Droplets, Sun, Wheat, TreePine, Bug, Flower2, Search, Filter, ArrowRight, Star, Trophy, ChevronDown, CheckCircle, Clock, ArrowLeft } from "lucide-react"
+import { Leaf, Sprout, Droplets, Sun, Wheat, TreePine, Bug, Flower2, Search, Filter, ArrowRight, Star, Trophy, ChevronDown } from "lucide-react"
 
-export function RevampedQuestsListScreen({ onStartQuest, quests, userData, onBack }) {
+export function RevampedQuestsListScreen({ onStartQuest, quests }) {
     const [searchQuery, setSearchQuery] = useState("")
     const [selectedCrop, setSelectedCrop] = useState("All")
     const [selectedDifficulty, setSelectedDifficulty] = useState("All")
 
-    // Handle both array and object format for quests
-    const questList = Array.isArray(quests) ? quests : Object.values(quests)
-    console.log('RevampedQuestsListScreen - quests received:', quests)
-    console.log('RevampedQuestsListScreen - questList array length:', questList.length)
-    console.log('RevampedQuestsListScreen - questList:', questList)
-    
+    const questList = Object.values(quests)
     const totalXP = questList.reduce((sum, quest) => sum + quest.xpReward, 0)
-    const userLevel = userData?.xpLevel || 0
-    const completedCount = userData?.completedQuests?.length || 0
-    const completionRate = questList.length > 0 ? Math.round((completedCount / questList.length) * 100) : 0
 
     const cropFilters = ["All", "Cotton", "Coconut", "Wheat", "General"]
     const difficultyFilters = ["All", "Beginner", "Pro"]
@@ -30,9 +22,6 @@ export function RevampedQuestsListScreen({ onStartQuest, quests, userData, onBac
 
         return matchesSearch && matchesCrop && matchesDifficulty
     })
-    
-    console.log('Filtered quests count:', filteredQuests.length)
-    console.log('Filter settings:', { searchQuery, selectedCrop, selectedDifficulty })
 
     const getBadgeStyle = (crop) => {
         const styles = {
@@ -48,28 +37,6 @@ export function RevampedQuestsListScreen({ onStartQuest, quests, userData, onBac
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20 pb-20">
-            {/* Header */}
-            {onBack && (
-                <div className="bg-card/80 backdrop-blur-lg border-b border-border shadow-sm">
-                    <div className="container mx-auto px-4 sm:px-6 py-6">
-                        <div className="flex items-center gap-3">
-                            <button 
-                                onClick={onBack}
-                                className="p-2 hover:bg-muted rounded-lg transition-colors"
-                                aria-label="Go back to dashboard"
-                            >
-                                <ArrowLeft className="w-5 h-5" />
-                            </button>
-                            <div>
-                                <h1 className="text-lg sm:text-xl font-bold text-foreground">
-                                    Farming Quests
-                                </h1>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            )}
-
             {/* Hero Section */}
             <div className="relative overflow-hidden bg-primary/5 pb-12 pt-8 md:pt-12">
                 <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/4 w-96 h-96 bg-accent/20 rounded-full blur-3xl opacity-50"></div>
@@ -91,12 +58,12 @@ export function RevampedQuestsListScreen({ onStartQuest, quests, userData, onBac
                     </div>
 
                     {/* Stats Overview */}
-                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 max-w-6xl mx-auto">
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto">
                         <div className="bg-card/80 backdrop-blur-sm border border-border rounded-2xl p-4 shadow-sm hover:shadow-md transition-all text-center group">
                             <div className="w-10 h-10 mx-auto bg-primary/10 rounded-full flex items-center justify-center mb-2 group-hover:scale-110 transition-transform">
                                 <Trophy className="w-5 h-5 text-primary" />
                             </div>
-                            <p className="text-2xl font-bold text-foreground">{userLevel}</p>
+                            <p className="text-2xl font-bold text-foreground">1</p>
                             <p className="text-xs text-muted-foreground">Current Level</p>
                         </div>
                         <div className="bg-card/80 backdrop-blur-sm border border-border rounded-2xl p-4 shadow-sm hover:shadow-md transition-all text-center group">
@@ -114,24 +81,10 @@ export function RevampedQuestsListScreen({ onStartQuest, quests, userData, onBac
                             <p className="text-xs text-muted-foreground">Total Quests</p>
                         </div>
                         <div className="bg-card/80 backdrop-blur-sm border border-border rounded-2xl p-4 shadow-sm hover:shadow-md transition-all text-center group">
-                            <div className="w-10 h-10 mx-auto bg-emerald-100 rounded-full flex items-center justify-center mb-2 group-hover:scale-110 transition-transform">
-                                <CheckCircle className="w-5 h-5 text-emerald-600" />
-                            </div>
-                            <p className="text-2xl font-bold text-foreground">{completedCount}</p>
-                            <p className="text-xs text-muted-foreground">Completed Quests</p>
-                        </div>
-                        <div className="bg-card/80 backdrop-blur-sm border border-border rounded-2xl p-4 shadow-sm hover:shadow-md transition-all text-center group">
-                            <div className="w-10 h-10 mx-auto bg-amber-100 rounded-full flex items-center justify-center mb-2 group-hover:scale-110 transition-transform">
-                                <Clock className="w-5 h-5 text-amber-600" />
-                            </div>
-                            <p className="text-2xl font-bold text-foreground">{questList.length - completedCount}</p>
-                            <p className="text-xs text-muted-foreground">Remaining Quests</p>
-                        </div>
-                        <div className="bg-card/80 backdrop-blur-sm border border-border rounded-2xl p-4 shadow-sm hover:shadow-md transition-all text-center group">
                             <div className="w-10 h-10 mx-auto bg-orange-100 rounded-full flex items-center justify-center mb-2 group-hover:scale-110 transition-transform">
                                 <Wheat className="w-5 h-5 text-orange-600" />
                             </div>
-                            <p className="text-2xl font-bold text-foreground">{completionRate}%</p>
+                            <p className="text-2xl font-bold text-foreground">0%</p>
                             <p className="text-xs text-muted-foreground">Completion Rate</p>
                         </div>
                     </div>
@@ -194,8 +147,7 @@ export function RevampedQuestsListScreen({ onStartQuest, quests, userData, onBac
                 {/* Quests Grid */}
                 <div className="max-w-6xl mx-auto">
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {filteredQuests.map((quest, index) => {
-                            const questId = quest._id || quest.id || quest.slug;
+                        {filteredQuests.map((quest) => {
                             const icons = {
                                 soil: Sprout,
                                 crops: Leaf,
@@ -207,22 +159,13 @@ export function RevampedQuestsListScreen({ onStartQuest, quests, userData, onBac
                                 pest: Bug,
                                 flowers: Flower2,
                             }
-                            const IconComponent = icons[questId] || icons[quest.slug] || Leaf
-
-                            // Check if quest is completed
-                            const isCompleted = userData?.questsProgress?.some(
-                                q => (q.questId === questId || q.questId === quest.slug) && q.status === "completed"
-                            ) || false
+                            const IconComponent = icons[quest.id] || Leaf
 
                             return (
                                 <div
-                                    key={questId}
-                                    onClick={() => onStartQuest(questId)}
-                                    className={`group bg-card rounded-3xl p-6 border shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 cursor-pointer relative overflow-hidden ${
-                                        isCompleted 
-                                            ? 'border-emerald-500/50 bg-emerald-50/5' 
-                                            : 'border-border'
-                                    }`}
+                                    key={quest.id}
+                                    onClick={() => onStartQuest(quest.id)}
+                                    className="group bg-card rounded-3xl p-6 border border-border shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 cursor-pointer relative overflow-hidden"
                                 >
                                     {/* Decorative background gradient */}
                                     <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-primary/5 to-accent/5 rounded-bl-full -mr-8 -mt-8 transition-transform group-hover:scale-150 duration-500"></div>
@@ -232,20 +175,12 @@ export function RevampedQuestsListScreen({ onStartQuest, quests, userData, onBac
                                             <div className="p-3 bg-gradient-to-br from-primary/10 to-primary/5 rounded-2xl group-hover:from-primary/20 group-hover:to-primary/10 transition-colors">
                                                 <IconComponent className="w-8 h-8 text-primary" />
                                             </div>
-                                            <div className="flex flex-col items-end gap-2">
-                                                <span key="difficulty" className={`px-3 py-1 rounded-full text-xs font-bold border ${quest.difficulty === 'Easy' || quest.difficulty === 'Beginner' ? 'bg-green-50 text-green-700 border-green-200' :
-                                                    quest.difficulty === 'Medium' ? 'bg-yellow-50 text-yellow-700 border-yellow-200' :
-                                                        'bg-red-50 text-red-700 border-red-200'
-                                                    }`}>
-                                                    {quest.difficulty}
-                                                </span>
-                                                {isCompleted && (
-                                                    <span key="completed" className="bg-emerald-500 text-white px-3 py-1 rounded-full flex items-center gap-1 text-xs font-bold shadow-md">
-                                                        <CheckCircle className="w-3 h-3" />
-                                                        Completed
-                                                    </span>
-                                                )}
-                                            </div>
+                                            <span className={`px-3 py-1 rounded-full text-xs font-bold border ${quest.difficulty === 'Easy' || quest.difficulty === 'Beginner' ? 'bg-green-50 text-green-700 border-green-200' :
+                                                quest.difficulty === 'Medium' ? 'bg-yellow-50 text-yellow-700 border-yellow-200' :
+                                                    'bg-red-50 text-red-700 border-red-200'
+                                                }`}>
+                                                {quest.difficulty}
+                                            </span>
                                         </div>
 
                                         <h3 className="font-bold text-xl text-foreground mb-2 group-hover:text-primary transition-colors">
@@ -267,7 +202,7 @@ export function RevampedQuestsListScreen({ onStartQuest, quests, userData, onBac
                                         <div className="flex items-center justify-between pt-4 border-t border-border/50">
                                             <div className="flex items-center gap-2 text-xs text-muted-foreground">
                                                 <span className="w-2 h-2 rounded-full bg-primary/50"></span>
-                                                {quest.activities?.length || 0} activities
+                                                {quest.activities.length} activities
                                             </div>
                                             <div className="flex items-center gap-1 text-sm font-bold text-accent">
                                                 <span>+{quest.xpReward} XP</span>
