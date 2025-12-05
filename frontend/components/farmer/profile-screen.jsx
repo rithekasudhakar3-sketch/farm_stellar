@@ -2,7 +2,7 @@
 "use client"
 
 import { useState, useEffect, useCallback } from "react"
-import { ArrowLeft, Edit2, MapPin, TrendingUp, Award, Leaf, Lock, Globe, Sun, Moon, Monitor, Check, ChevronDown, ChevronUp, Save, Loader2, AlertCircle, X } from "lucide-react"
+import { ArrowLeft, Edit2, MapPin, TrendingUp, Award, Leaf, Lock, Globe, Sun, Moon, Monitor, Check, ChevronDown, ChevronUp, Save, Loader2, AlertCircle, X, Trash2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -16,6 +16,7 @@ export function FarmerProfileScreen({ onBack }) {
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false)
   const [isSaving, setIsSaving] = useState(false)
   const [showDiscardDialog, setShowDiscardDialog] = useState(false)
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
   const [autoSaveTimer, setAutoSaveTimer] = useState(null)
 
   // Accordion states
@@ -207,6 +208,12 @@ export function FarmerProfileScreen({ onBack }) {
     setFontSize(newSize)
     const sizeLabel = newSize.charAt(0).toUpperCase() + newSize.slice(1)
     showSuccessToast(`Font size changed to ${sizeLabel}`)
+  }
+
+  const handleDeleteAccount = () => {
+    setShowDeleteConfirm(false)
+    showSuccessToast("Account deletion request sent", "info")
+    // TODO: Implement actual account deletion API call
   }
 
   // Keyboard shortcut: Ctrl+S to save
@@ -541,8 +548,8 @@ export function FarmerProfileScreen({ onBack }) {
                       key={option.value}
                       onClick={() => handleThemeChange(option.value)}
                       className={`relative group flex flex-col items-center gap-2 p-2 rounded-xl border-2 transition-all ${theme === option.value
-                          ? "border-primary ring-2 ring-primary/20 scale-[1.02]"
-                          : "border-transparent hover:border-primary/50 hover:scale-[1.02]"
+                        ? "border-primary ring-2 ring-primary/20 scale-[1.02]"
+                        : "border-transparent hover:border-primary/50 hover:scale-[1.02]"
                         }`}
                     >
                       <div className={`w-full aspect-video rounded-lg ${option.bg} ${option.border} border shadow-sm relative overflow-hidden`}>
@@ -621,6 +628,29 @@ export function FarmerProfileScreen({ onBack }) {
             </div>
           )}
         </div>
+
+        {/* DANGER ZONE - Account Deletion */}
+        <div className="bg-destructive/5 border-[1.5px] border-destructive/20 rounded-2xl shadow-[0_2px_8px_rgba(239,68,68,0.08)] transition-all">
+          <div className="p-6 space-y-4">
+            <div className="flex items-center gap-2">
+              <Trash2 className="w-5 h-5 text-destructive" />
+              <h3 className="text-lg font-semibold text-destructive" style={{ fontFamily: "'Segoe UI', sans-serif" }}>
+                Danger Zone
+              </h3>
+            </div>
+            <p className="text-sm text-muted-foreground">
+              Once you delete your account, there is no going back. Please be certain.
+            </p>
+            <Button
+              onClick={() => setShowDeleteConfirm(true)}
+              variant="destructive"
+              className="w-full rounded-2xl bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              <Trash2 className="w-4 h-4 mr-2" />
+              Delete Account
+            </Button>
+          </div>
+        </div>
       </div>
 
       {/* STICKY SAVE BUTTON - Only shows when there are unsaved changes */}
@@ -660,6 +690,47 @@ export function FarmerProfileScreen({ onBack }) {
                     Save All Changes
                   </>
                 )}
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Delete Account Confirmation Dialog */}
+      {showDeleteConfirm && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-[100] p-4 animate-in fade-in duration-200">
+          <div className="bg-card rounded-2xl p-6 max-w-md w-full shadow-2xl border-2 border-destructive/30 animate-in zoom-in-95 duration-200">
+            <div className="flex items-start gap-4 mb-4">
+              <div className="w-12 h-12 rounded-full bg-destructive/10 flex items-center justify-center flex-shrink-0">
+                <Trash2 className="w-6 h-6 text-destructive" />
+              </div>
+              <div>
+                <h3 className="text-lg font-bold text-foreground mb-1">Delete Account?</h3>
+                <p className="text-sm text-muted-foreground">
+                  This action cannot be undone. All your data will be permanently deleted.
+                </p>
+              </div>
+            </div>
+
+            <div className="bg-destructive/5 border border-destructive/20 rounded-xl p-4 mb-4">
+              <p className="text-sm text-foreground">
+                Your profile, quests, achievements, and all associated data will be permanently removed from our servers.
+              </p>
+            </div>
+
+            <div className="flex gap-3 justify-end">
+              <Button
+                variant="outline"
+                onClick={() => setShowDeleteConfirm(false)}
+                className="rounded-2xl"
+              >
+                Cancel
+              </Button>
+              <Button
+                onClick={handleDeleteAccount}
+                className="rounded-2xl bg-destructive text-destructive-foreground hover:bg-destructive/90"
+              >
+                Yes, Delete My Account
               </Button>
             </div>
           </div>
