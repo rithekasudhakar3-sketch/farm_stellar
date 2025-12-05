@@ -144,15 +144,15 @@ function ChecklistMode({ steps, quest, onContinue, onBack }) {
 
   useEffect(() => {
     sessionStorage.setItem(storageKey, JSON.stringify(completedSteps))
-    
+
     // Update quest progress in backend
     const updateProgress = async () => {
       const token = localStorage.getItem("token")
       if (!token) return
-      
+
       const completedCount = completedSteps.filter(Boolean).length
       const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:4000"
-      
+
       try {
         await fetch(`${backendUrl}/api/quests/${quest.id}/progress`, {
           method: "PUT",
@@ -169,7 +169,7 @@ function ChecklistMode({ steps, quest, onContinue, onBack }) {
         console.error("Failed to update progress:", error)
       }
     }
-    
+
     updateProgress()
   }, [completedSteps, storageKey, quest.id, steps.length])
 
@@ -266,6 +266,9 @@ function QuestWizard({ steps, onComplete, onBack, questId }) {
     return {}
   })
 
+  // Warning message state
+  const [showWarning, setShowWarning] = useState(false)
+
   useEffect(() => {
     sessionStorage.setItem(storageKey, JSON.stringify(checkedItems))
   }, [checkedItems, storageKey])
@@ -278,7 +281,16 @@ function QuestWizard({ steps, onComplete, onBack, questId }) {
         [subStepIdx]: !prev[safeIndex]?.[subStepIdx]
       }
     }))
+    // Hide warning when user checks an item
+    if (showWarning) setShowWarning(false)
   }
+
+  // Check if all substeps for current step are completed
+  const currentStepSubSteps = step.subSteps || []
+  const currentStepChecks = checkedItems[safeIndex] || {}
+  const allSubStepsChecked = currentStepSubSteps.length === 0 ||
+    currentStepSubSteps.every((_, idx) => currentStepChecks[idx] === true)
+  const canProceed = isSummaryStep || allSubStepsChecked
 
   const createQueryString = useCallback(
     (name, value) => {
@@ -290,6 +302,15 @@ function QuestWizard({ steps, onComplete, onBack, questId }) {
   )
 
   const handleNext = () => {
+    // Check if all substeps are completed before proceeding
+    if (!canProceed) {
+      setShowWarning(true)
+      return
+    }
+
+    // Hide warning and proceed
+    setShowWarning(false)
+
     if (isLastStep) {
       onComplete()
     } else {
@@ -380,9 +401,20 @@ function QuestWizard({ steps, onComplete, onBack, questId }) {
 
             {/* Footer Button */}
             <div className="p-6 border-t border-border bg-background/80 backdrop-blur-xl absolute bottom-0 left-0 right-0 z-10">
+              {/* Warning Message */}
+              {showWarning && !canProceed && (
+                <div className="mb-3 p-3 bg-destructive/10 border border-destructive/30 rounded-xl text-center animate-in fade-in slide-in-from-bottom-2 duration-300">
+                  <p className="text-sm font-semibold text-destructive">⚠️ Complete all steps to continue</p>
+                </div>
+              )}
+
               <button
                 onClick={handleNext}
-                className="w-full bg-primary text-primary-foreground font-bold py-4 rounded-2xl hover:bg-primary/90 transition-all shadow-lg shadow-primary/20 flex items-center justify-center gap-2 transform active:scale-[0.98] text-lg"
+                disabled={!canProceed}
+                className={`w-full font-bold py-4 rounded-2xl transition-all shadow-lg flex items-center justify-center gap-2 transform active:scale-[0.98] text-lg ${canProceed
+                    ? "bg-primary text-primary-foreground hover:bg-primary/90 shadow-primary/20"
+                    : "bg-muted text-muted-foreground cursor-not-allowed opacity-60"
+                  }`}
               >
                 {isLastStep ? "Complete Mission" : "Next Step"}
                 {!isLastStep && <ChevronRight className="w-5 h-5 stroke-[3]" />}
@@ -456,9 +488,20 @@ function QuestWizard({ steps, onComplete, onBack, questId }) {
 
             {/* Footer Button */}
             <div className="p-6 border-t border-border bg-background/80 backdrop-blur-xl absolute bottom-0 left-0 right-0 z-10">
+              {/* Warning Message */}
+              {showWarning && !canProceed && (
+                <div className="mb-3 p-3 bg-destructive/10 border border-destructive/30 rounded-xl text-center animate-in fade-in slide-in-from-bottom-2 duration-300">
+                  <p className="text-sm font-semibold text-destructive">⚠️ Complete all steps to continue</p>
+                </div>
+              )}
+
               <button
                 onClick={handleNext}
-                className="w-full bg-primary text-primary-foreground font-bold py-4 rounded-2xl hover:bg-primary/90 transition-all shadow-lg shadow-primary/20 flex items-center justify-center gap-2 transform active:scale-[0.98] text-lg"
+                disabled={!canProceed}
+                className={`w-full font-bold py-4 rounded-2xl transition-all shadow-lg flex items-center justify-center gap-2 transform active:scale-[0.98] text-lg ${canProceed
+                    ? "bg-primary text-primary-foreground hover:bg-primary/90 shadow-primary/20"
+                    : "bg-muted text-muted-foreground cursor-not-allowed opacity-60"
+                  }`}
               >
                 {isLastStep ? "Complete Mission" : "Next Step"}
                 {!isLastStep && <ChevronRight className="w-5 h-5 stroke-[3]" />}

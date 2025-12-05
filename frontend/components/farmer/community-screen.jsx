@@ -176,8 +176,8 @@ export function CommunityScreen({ onBack }) {
       if (response.ok) {
         const data = await response.json()
         // Update post in state
-        setPosts(posts.map(post => 
-          post._id === postId 
+        setPosts(posts.map(post =>
+          post._id === postId
             ? { ...post, likesCount: data.likesCount, isLiked: data.isLiked }
             : post
         ))
@@ -214,8 +214,8 @@ export function CommunityScreen({ onBack }) {
       if (response.ok) {
         const data = await response.json()
         // Update post in state
-        setPosts(posts.map(post => 
-          post._id === selectedPost._id 
+        setPosts(posts.map(post =>
+          post._id === selectedPost._id
             ? { ...post, commentsCount: data.commentsCount }
             : post
         ))
@@ -245,7 +245,7 @@ export function CommunityScreen({ onBack }) {
           </button>
           <h1
             className="text-2xl font-bold text-foreground flex items-center gap-2"
-            style={{ fontFamily: "Mali, cursive" }}
+            style={{ fontFamily: "'Segoe UI', sans-serif" }}
           >
             <Flower2 className="w-6 h-6 text-accent" />
             Community Garden
@@ -280,68 +280,68 @@ export function CommunityScreen({ onBack }) {
             </div>
           ) : (
             posts.map((post, idx) => (
-            <div
-              key={post._id}
-              className="bg-card border-[1.5px] border-border rounded-2xl p-6 shadow-[0_2px_8px_rgba(107,166,115,0.08),0_1px_3px_rgba(107,166,115,0.04)] hover:shadow-[0_4px_12px_rgba(107,166,115,0.12),0_2px_6px_rgba(107,166,115,0.08)] hover:-translate-y-0.5 transition-all relative before:content-[''] before:absolute before:inset-[-2px] before:border-2 before:border-primary before:rounded-2xl before:opacity-0 hover:before:opacity-20 before:transition-opacity animate-grow"
-              style={{ animationDelay: `${idx * 100}ms` }}
-            >
-              <div className="flex items-start gap-3 mb-4">
-                <div className="w-12 h-12 rounded-full bg-gradient-to-br from-primary/30 to-accent/30 flex items-center justify-center text-foreground font-bold border-2 border-primary/20">
-                  {post.userId?.name?.substring(0, 2).toUpperCase() || "U"}
-                </div>
-                <div className="flex-1">
-                  <h3 className="font-semibold text-foreground" style={{ fontFamily: "'Segoe UI', sans-serif" }}>
-                    {post.userId?.name || "Unknown User"}
-                  </h3>
-                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                    <MapPin className="w-3 h-3" />
-                    <span>{post.district || post.userId?.district || "Unknown"}</span>
-                    <span>•</span>
-                    <span>{new Date(post.createdAt).toLocaleDateString()}</span>
+              <div
+                key={post._id}
+                className="bg-card border-[1.5px] border-border rounded-2xl p-6 shadow-[0_2px_8px_rgba(107,166,115,0.08),0_1px_3px_rgba(107,166,115,0.04)] hover:shadow-[0_4px_12px_rgba(107,166,115,0.12),0_2px_6px_rgba(107,166,115,0.08)] hover:-translate-y-0.5 transition-all relative before:content-[''] before:absolute before:inset-[-2px] before:border-2 before:border-primary before:rounded-2xl before:opacity-0 hover:before:opacity-20 before:transition-opacity animate-grow"
+                style={{ animationDelay: `${idx * 100}ms` }}
+              >
+                <div className="flex items-start gap-3 mb-4">
+                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-primary/30 to-accent/30 flex items-center justify-center text-foreground font-bold border-2 border-primary/20">
+                    {post.userId?.name?.substring(0, 2).toUpperCase() || "U"}
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="font-semibold text-foreground" style={{ fontFamily: "'Segoe UI', sans-serif" }}>
+                      {post.userId?.name || "Unknown User"}
+                    </h3>
+                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                      <MapPin className="w-3 h-3" />
+                      <span>{post.district || post.userId?.district || "Unknown"}</span>
+                      <span>•</span>
+                      <span>{new Date(post.createdAt).toLocaleDateString()}</span>
+                    </div>
                   </div>
                 </div>
-              </div>
-              
-              {post.title && (
-                <h4 className="font-bold text-foreground mb-2 text-lg">{post.title}</h4>
-              )}
-              <p className="text-foreground mb-4 leading-relaxed">{post.content}</p>
 
-              {post.images && post.images.length > 0 && (
-                <div className={`grid gap-3 mb-4 ${post.images.length === 1 ? "grid-cols-1" : "grid-cols-2"}`}>
-                  {post.images.map((img, idx) => (
-                    <img
-                      key={idx}
-                      src={img.url || img.key || "/placeholder.svg"}
-                      alt={`Post image ${idx + 1}`}
-                      className="w-full h-52 object-cover rounded-2xl border-2 border-primary/10 hover:border-primary/30 transition-colors"
-                      onError={(e) => {
-                        e.target.onerror = null
-                        e.target.src = "/placeholder.svg"
-                      }}
-                    />
-                  ))}
+                {post.title && (
+                  <h4 className="font-bold text-foreground mb-2 text-lg">{post.title}</h4>
+                )}
+                <p className="text-foreground mb-4 leading-relaxed">{post.content}</p>
+
+                {post.images && post.images.length > 0 && (
+                  <div className={`grid gap-3 mb-4 ${post.images.length === 1 ? "grid-cols-1" : "grid-cols-2"}`}>
+                    {post.images.map((img, idx) => (
+                      <img
+                        key={idx}
+                        src={img.url || img.key || "/placeholder.svg"}
+                        alt={`Post image ${idx + 1}`}
+                        className="w-full h-52 object-cover rounded-2xl border-2 border-primary/10 hover:border-primary/30 transition-colors"
+                        onError={(e) => {
+                          e.target.onerror = null
+                          e.target.src = "/placeholder.svg"
+                        }}
+                      />
+                    ))}
+                  </div>
+                )}
+
+                <div className="flex items-center gap-6 text-muted-foreground pt-3 border-t-2 border-dashed border-border">
+                  <button
+                    onClick={() => toggleLike(post._id, post.isLiked)}
+                    className={`flex items-center gap-2 hover:text-primary transition-colors group ${post.isLiked ? 'text-primary' : ''}`}
+                  >
+                    <Heart className={`w-5 h-5 group-hover:scale-110 transition-all ${post.isLiked ? 'fill-primary' : ''}`} />
+                    <span className="text-sm font-medium">{post.likesCount || 0} 💚</span>
+                  </button>
+                  <button
+                    onClick={() => openCommentModal(post)}
+                    className="flex items-center gap-2 hover:text-primary transition-colors group"
+                  >
+                    <MessageCircle className="w-5 h-5 group-hover:scale-110 transition-transform" />
+                    <span className="text-sm font-medium">{post.commentsCount || 0} 💬</span>
+                  </button>
                 </div>
-              )}
-
-              <div className="flex items-center gap-6 text-muted-foreground pt-3 border-t-2 border-dashed border-border">
-                <button 
-                  onClick={() => toggleLike(post._id, post.isLiked)}
-                  className={`flex items-center gap-2 hover:text-primary transition-colors group ${post.isLiked ? 'text-primary' : ''}`}
-                >
-                  <Heart className={`w-5 h-5 group-hover:scale-110 transition-all ${post.isLiked ? 'fill-primary' : ''}`} />
-                  <span className="text-sm font-medium">{post.likesCount || 0} 💚</span>
-                </button>
-                <button 
-                  onClick={() => openCommentModal(post)}
-                  className="flex items-center gap-2 hover:text-primary transition-colors group"
-                >
-                  <MessageCircle className="w-5 h-5 group-hover:scale-110 transition-transform" />
-                  <span className="text-sm font-medium">{post.commentsCount || 0} 💬</span>
-                </button>
               </div>
-            </div>
-          )))}
+            )))}
         </div>
       </div>
 
@@ -355,7 +355,7 @@ export function CommunityScreen({ onBack }) {
                 Share Your Story
               </h2>
             </div>
-            
+
             <input
               type="text"
               value={newTitle}
@@ -364,7 +364,7 @@ export function CommunityScreen({ onBack }) {
               className="w-full p-3 mb-3 rounded-2xl border-2 border-border focus:border-primary focus:outline-none bg-background text-foreground"
               autoComplete="off"
             />
-            
+
             <textarea
               value={newPost}
               onChange={(e) => setNewPost(e.target.value)}
@@ -411,8 +411,8 @@ export function CommunityScreen({ onBack }) {
             </div>
 
             <div className="flex gap-3">
-              <Button 
-                onClick={handleCreatePost} 
+              <Button
+                onClick={handleCreatePost}
                 className="flex-1 bg-primary hover:bg-primary/90 rounded-2xl h-11"
                 disabled={isSubmitting}
               >
@@ -446,12 +446,12 @@ export function CommunityScreen({ onBack }) {
                 Add Comment
               </h2>
             </div>
-            
+
             <div className="mb-4 p-4 bg-muted/30 rounded-2xl">
               <p className="font-semibold text-sm mb-1">{selectedPost.userId?.name}</p>
               <p className="text-sm text-muted-foreground line-clamp-2">{selectedPost.content}</p>
             </div>
-            
+
             <textarea
               value={newComment}
               onChange={(e) => setNewComment(e.target.value)}
@@ -461,8 +461,8 @@ export function CommunityScreen({ onBack }) {
             />
 
             <div className="flex gap-3">
-              <Button 
-                onClick={submitComment} 
+              <Button
+                onClick={submitComment}
                 className="flex-1 bg-primary hover:bg-primary/90 rounded-2xl h-11"
               >
                 <Send className="w-4 h-4 mr-2" />

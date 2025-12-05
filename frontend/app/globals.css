@@ -1,4 +1,4 @@
-@import "tailwindcss";
+﻿@import "tailwindcss";
 @import "tw-animate-css";
 
 @custom-variant dark (&:is(.dark *));
@@ -151,6 +151,11 @@
     --sidebar-accent-foreground: oklch(0.25 0.06 150);
     --sidebar-border: oklch(0.30 0.05 140);
     --sidebar-ring: oklch(0.50 0.15 145);
+
+    /* Deep Forest specific variables for header styling */
+    --df-header-bg: oklch(0.18 0.06 140);
+    --df-header-text: oklch(0.90 0.05 100);
+    --df-icon-color: oklch(0.75 0.08 145);
 }
 
 @theme inline {
@@ -223,6 +228,46 @@
         @apply bg-background text-foreground;
         transition: background-color 300ms ease-in-out, color 300ms ease-in-out;
     }
+
+    /* Deep Forest Header Styling - Targets sticky headers and navigation */
+    .deep-forest .sticky.top-0,
+    .deep-forest .watercolor-bg,
+    .deep-forest [class*="watercolor-bg"],
+    .deep-forest header {
+        background: var(--df-header-bg) !important;
+    }
+
+    /* All text elements in headers */
+    .deep-forest .sticky.top-0 *,
+    .deep-forest .watercolor-bg * {
+        color: var(--df-header-text) !important;
+    }
+
+    /* Icons in headers - lighter green */
+    .deep-forest .sticky.top-0 svg,
+    .deep-forest .watercolor-bg svg {
+        color: var(--df-icon-color) !important;
+    }
+    /* Dark Mode Header Styling - Ensures headers are visible in dark theme */
+    .dark .sticky.top-0,
+    .dark .watercolor-bg,
+    .dark [class*="watercolor-bg"],
+    .dark header {
+        background: var(--card) !important;
+    }
+
+    /* All text elements in dark mode headers */
+    .dark .sticky.top-0 *,
+    .dark .watercolor-bg * {
+        color: var(--foreground) !important;
+    }
+
+    /* Icons in dark mode headers */
+    .dark .sticky.top-0 svg,
+    .dark .watercolor-bg svg {
+        color: var(--primary) !important;
+    }
+
 
     /* Japanese minimalist animations - smooth and energizing */
     @keyframes float-gentle {
