@@ -63,25 +63,26 @@ export function RevampedDashboard({ userData, onStartQuest, onNavigate }) {
 
             {/* Main Dashboard Content */}
             <div className="container mx-auto px-4 sm:px-6 py-6 sm:py-8">
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                    {/* Left Column - Main Content (2/3 width on desktop) */}
-                    <div className="lg:col-span-2 space-y-6">
-                        {/* User Progress Bar */}
+                {/* 2x2 Grid Layout for Cards */}
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+                    {/* Top Left - User Progress Bar */}
+                    <div className="h-full">
                         <UserProgressCard userData={userData} />
+                    </div>
 
-                        {/* Weather Alert Widget */}
+                    {/* Top Right - Ongoing Quests */}
+                    <div className="h-full">
+                        <OngoingQuestsCard onResumeQuest={handleResumeQuest} />
+                    </div>
+
+                    {/* Bottom Left - Weather Alert Widget */}
+                    <div className="h-full">
                         <WeatherAlertCard location={userData?.city || "Bangalore"} />
                     </div>
 
-                    {/* Right Column - Ongoing Quests & Leaderboard (1/3 width on desktop) */}
-                    <div className="lg:col-span-1">
-                        <div className="sticky top-24 space-y-6">
-                            {/* Ongoing Quests Section */}
-                            <OngoingQuestsCard onResumeQuest={handleResumeQuest} />
-                            
-                            {/* Leaderboard - positioned below ongoing quests */}
-                            <LeaderboardCard />
-                        </div>
+                    {/* Bottom Right - Leaderboard */}
+                    <div className="h-full">
+                        <LeaderboardCard />
                     </div>
                 </div>
 

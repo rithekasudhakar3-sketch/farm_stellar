@@ -8,12 +8,26 @@ import { Card } from "@/components/ui/card"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Checkbox } from "@/components/ui/checkbox"
 
+const LOCATION_DATA = {
+  "Kerala": {
+    "Alappuzha": ["Kainakary", "Nedumudi", "Ramankary", "Champakulam", "Thakazhy"],
+    "Malappuram": ["Vengara", "Parappanangadi", "Edappal", "Kuttippuram", "Perinthalmanna"],
+    "Wayanad": ["Meenangadi", "Sulthan Bathery", "Ambalavayal", "Pulpally", "Noolpuzha"],
+    "Kasaragod": ["Muliyar", "Kumbla", "Bedadka", "Cheruvathur", "Karadka"]
+  },
+  "Maharashtra": {
+    "Nagpur": ["Kanhalgaon GP", "Khasarmari GP", "Kinhalmakadi GP", "Kirnapur GP", "Titur GP"]
+  }
+}
+
 export function FarmDetailsScreen({ onSuccess, onBack }) {
   const [hasLand, setHasLand] = useState(true)
 
   const [farmDetails, setFarmDetails] = useState({
     farmName: "",
-    location: "",
+    state: "",
+    district: "",
+    panchayat: "",
     landSize: "",
     soilType: "",
     waterSource: "",
@@ -26,15 +40,21 @@ export function FarmDetailsScreen({ onSuccess, onBack }) {
       onSuccess({
         hasLand: false,
         farmName: "",
-        location: "",
+        state: "",
+        district: "",
+        panchayat: "",
         landSize: "",
         soilType: "",
         waterSource: "",
+        city: "", // For backward compatibility
+        location: "" // For backward compatibility
       })
     } else {
       onSuccess({
         hasLand: true,
         ...farmDetails,
+        city: farmDetails.district, // Map district to city for backward compatibility
+        location: `${farmDetails.panchayat}, ${farmDetails.district}, ${farmDetails.state}` // Map to location string
       })
     }
   }
@@ -44,12 +64,31 @@ export function FarmDetailsScreen({ onSuccess, onBack }) {
     if (checked) {
       setFarmDetails({
         farmName: "",
-        location: "",
+        state: "",
+        district: "",
+        panchayat: "",
         landSize: "",
         soilType: "",
         waterSource: "",
       })
     }
+  }
+
+  const handleStateChange = (value) => {
+    setFarmDetails({
+      ...farmDetails,
+      state: value,
+      district: "",
+      panchayat: ""
+    })
+  }
+
+  const handleDistrictChange = (value) => {
+    setFarmDetails({
+      ...farmDetails,
+      district: value,
+      panchayat: ""
+    })
   }
 
   return (
@@ -95,15 +134,62 @@ export function FarmDetailsScreen({ onSuccess, onBack }) {
                 />
               </div>
 
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="state">State</Label>
+                  <Select
+                    value={farmDetails.state}
+                    onValueChange={handleStateChange}
+                    required
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select State" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {Object.keys(LOCATION_DATA).map((state) => (
+                        <SelectItem key={state} value={state}>{state}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="district">District</Label>
+                  <Select
+                    value={farmDetails.district}
+                    onValueChange={handleDistrictChange}
+                    disabled={!farmDetails.state}
+                    required
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select District" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {farmDetails.state && Object.keys(LOCATION_DATA[farmDetails.state]).map((district) => (
+                        <SelectItem key={district} value={district}>{district}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+
               <div className="space-y-2">
-                <Label htmlFor="location">Location</Label>
-                <Input
-                  id="location"
-                  placeholder="Village, District, State"
-                  value={farmDetails.location}
-                  onChange={(e) => setFarmDetails({ ...farmDetails, location: e.target.value })}
+                <Label htmlFor="panchayat">Panchayat</Label>
+                <Select
+                  value={farmDetails.panchayat}
+                  onValueChange={(value) => setFarmDetails({ ...farmDetails, panchayat: value })}
+                  disabled={!farmDetails.district}
                   required
-                />
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select Panchayat" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {farmDetails.state && farmDetails.district && LOCATION_DATA[farmDetails.state][farmDetails.district].map((panchayat) => (
+                      <SelectItem key={panchayat} value={panchayat}>{panchayat}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
 
               <div className="space-y-2">

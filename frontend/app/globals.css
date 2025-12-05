@@ -4,6 +4,37 @@
 @custom-variant dark (&:is(.dark *));
 @custom-variant deep-forest (&:is(.deep-forest *));
 
+@theme {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+}
+
 :root {
     /* Matcha Green + Lime Pop Aesthetic */
     /* Background & Base */
@@ -195,12 +226,13 @@
 }
 
 @layer base {
-    * {
-        @apply border-border outline-ring/50;
-        transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow;
-        transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-        transition-duration: 200ms;
-    }
+  * {
+    border-color: var(--border);
+    outline-color: var(--ring);
+    transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 200ms;
+  }
 
     /* Smooth font size transitions */
     html {
@@ -224,8 +256,11 @@
         transition: background-color 300ms ease-in-out, color 300ms ease-in-out;
     }
 
-    /* Japanese minimalist animations - smooth and energizing */
-    @keyframes float-gentle {
+  body {
+    background-color: var(--background);
+    color: var(--foreground);
+    transition: background-color 300ms ease-in-out, color 300ms ease-in-out;
+  }
 
         0%,
         100% {
@@ -478,7 +513,311 @@
         @apply p-12;
     }
 
-    /* 48px */
+  /* Matcha gradient backgrounds - soft foam to deep matcha */
+  .watercolor-bg {
+    background: linear-gradient(135deg, oklch(0.95 0.02 140) 0%, oklch(0.93 0.03 145) 50%, oklch(0.94 0.02 135) 100%);
+  }
+
+  /* Lime glow effect - ONLY for gamification elements */
+  .soft-glow {
+    box-shadow: 0 0 15px rgba(198, 255, 71, 0.2), 0 0 30px rgba(198, 255, 71, 0.1);
+  }
+
+  .lime-glow {
+    box-shadow: 0 0 20px rgba(198, 255, 71, 0.4), 0 0 40px rgba(198, 255, 71, 0.2);
+  }
+
+  /* Leaf/sprout shaped elements */
+  .leaf-shape {
+    border-radius: 50% 0 50% 50%;
+  }
+
+  /* Standardized 8px grid spacing system */
+  .space-1 {
+    @apply p-1;
+  }
+
+  /* 4px */
+  .space-2 {
+    @apply p-2;
+  }
+
+  /* 8px */
+  .space-3 {
+    @apply p-3;
+  }
+
+  /* 12px */
+  .space-4 {
+    @apply p-4;
+  }
+
+  /* 16px */
+  .space-5 {
+    @apply p-5;
+  }
+
+  /* 20px */
+  .space-6 {
+    @apply p-6;
+  }
+
+  /* 24px */
+  .space-8 {
+    @apply p-8;
+  }
+
+  /* 32px */
+  .space-10 {
+    @apply p-10;
+  }
+
+  /* 40px */
+  .space-12 {
+    @apply p-12;
+  }
+
+  /* 48px */
+
+  /* Perfect icon sizes - snap to grid */
+  .icon-xs {
+    @apply w-4 h-4;
+  }
+
+  /* 16px */
+  .icon-sm {
+    @apply w-5 h-5;
+  }
+
+  /* 20px */
+  .icon-md {
+    @apply w-6 h-6;
+  }
+
+  /* 24px */
+  .icon-lg {
+    @apply w-7 h-7;
+  }
+
+  @keyframes spin-slow {
+    from {
+      transform: rotate(0deg);
+    }
+
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  /* Lime glow animation for rewards and achievements */
+  @keyframes lime-glow-pulse {
+
+    0%,
+    100% {
+      box-shadow: 0 0 10px var(--lime-glow), 0 0 20px var(--lime-glow);
+    }
+
+    50% {
+      box-shadow: 0 0 20px var(--lime-glow), 0 0 40px var(--lime-glow);
+    }
+  }
+
+  @keyframes lime-spark {
+    0% {
+      transform: scale(0) rotate(0deg);
+      opacity: 1;
+    }
+
+    100% {
+      transform: scale(2) rotate(180deg);
+      opacity: 0;
+    }
+  }
+
+  .animate-float-gentle {
+    animation: float-gentle 3s ease-in-out infinite;
+  }
+
+  .animate-sway {
+    animation: sway 4s ease-in-out infinite;
+  }
+
+  .animate-grow {
+    animation: grow 0.3s ease-out;
+  }
+
+  .animate-petal-fall {
+    animation: petal-fall 3s ease-in-out infinite;
+  }
+
+  .animate-shimmer {
+    animation: shimmer 2s infinite;
+  }
+
+  .animate-wiggle {
+    animation: wiggle 1s ease-in-out infinite;
+  }
+
+  .animate-float {
+    animation: float 2s ease-out forwards;
+  }
+
+  .animate-spin-slow {
+    animation: spin-slow 10s linear infinite;
+  }
+
+  .animate-lime-glow {
+    animation: lime-glow-pulse 2s ease-in-out infinite;
+  }
+
+  .animate-lime-spark {
+    animation: lime-spark 0.8s ease-out forwards;
+  }
+
+  /* User Win: Toast slide-down animation for delightful feedback */
+  @keyframes slide-down {
+    from {
+      opacity: 0;
+      transform: translate(-50%, -20px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translate(-50%, 0);
+    }
+  }
+
+  .animate-slide-down {
+    animation: slide-down 0.3s ease-out;
+  }
+
+  /* Mobile safety: Ensure buttons visible above keyboard/notch */
+  .pb-safe {
+    padding-bottom: max(1.5rem, env(safe-area-inset-bottom));
+  }
+
+  .animation-delay-200 {
+    animation-delay: 0.2s;
+  }
+
+  .animation-delay-400 {
+    animation-delay: 0.4s;
+  }
+
+  .animation-delay-600 {
+    animation-delay: 0.6s;
+  }
+
+  /* Matcha gradient backgrounds - soft foam to deep matcha */
+  .watercolor-bg {
+    background: linear-gradient(135deg, oklch(0.95 0.02 140) 0%, oklch(0.93 0.03 145) 50%, oklch(0.94 0.02 135) 100%);
+  }
+
+  /* Lime glow effect - ONLY for gamification elements */
+  .soft-glow {
+    box-shadow: 0 0 15px rgba(198, 255, 71, 0.2), 0 0 30px rgba(198, 255, 71, 0.1);
+  }
+
+  .lime-glow {
+    box-shadow: 0 0 20px rgba(198, 255, 71, 0.4), 0 0 40px rgba(198, 255, 71, 0.2);
+  }
+
+  /* Leaf/sprout shaped elements */
+  .leaf-shape {
+    border-radius: 50% 0 50% 50%;
+  }
+
+  /* Standardized 8px grid spacing system */
+  .space-1 {
+    @apply p-1;
+  }
+
+  /* 4px */
+  .space-2 {
+    @apply p-2;
+  }
+
+  /* 8px */
+  .space-3 {
+    @apply p-3;
+  }
+
+  /* 12px */
+  .space-4 {
+    @apply p-4;
+  }
+
+  /* 16px */
+  .space-5 {
+    @apply p-5;
+  }
+
+  /* 20px */
+  .space-6 {
+    @apply p-6;
+  }
+
+  /* 24px */
+  .space-8 {
+    @apply p-8;
+  }
+
+  /* 32px */
+  .space-10 {
+    @apply p-10;
+  }
+
+  /* 40px */
+  .space-12 {
+    @apply p-12;
+  }
+
+  /* 48px */
+
+  /* Perfect icon sizes - snap to grid */
+  .icon-xs {
+    @apply w-4 h-4;
+  }
+
+  /* 16px */
+  .icon-sm {
+    @apply w-5 h-5;
+  }
+
+  /* 20px */
+  .icon-md {
+    @apply w-6 h-6;
+  }
+
+}
+
+.goog-te-gadget-simple {
+  font-family: inherit !important;
+  font-size: 0.875rem !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.5rem !important;
+}
+
+.goog-te-gadget-simple .goog-te-menu-value {
+  color: var(--foreground) !important;
+  display: flex !important;
+  align-items: center !important;
+}
+
+.goog-te-gadget-simple .goog-te-menu-value span {
+  border-left: none !important;
+  text-decoration: none !important;
+}
+
+.goog-te-gadget-simple .goog-te-menu-value span:first-child {
+  font-weight: 500 !important;
+}
+
+/* Hide the Google logo in the dropdown trigger if desired, or keep it */
+.goog-te-gadget-icon {
+  display: none !important;
+}
 
     /* Perfect icon sizes - snap to grid */
     .icon-xs {

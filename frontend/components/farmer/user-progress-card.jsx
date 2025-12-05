@@ -12,10 +12,10 @@ export function UserProgressCard({ userData }) {
     const farmerType = level === "pro" || level === "Pro" ? "Pro" : "Beginner"
     const progressPercentage = (currentXP / requiredXP) * 100
     const xpToNextLevel = Math.max(0, requiredXP - currentXP)
-    
+
     // Count completed quests
     const completedQuestsCount = userData?.questsProgress?.filter(q => q.status === "completed")?.length || 0
-    
+
     // Generate avatar based on first letter of name
     const getAvatarContent = () => {
         if (farmerName && farmerName !== "Farmer") {
@@ -25,7 +25,7 @@ export function UserProgressCard({ userData }) {
     }
 
     return (
-        <div className="bg-card border-2 border-border rounded-3xl p-6 shadow-lg hover:shadow-xl transition-all">
+        <div className="bg-card border-2 border-border rounded-3xl p-6 shadow-lg hover:shadow-xl transition-all h-full flex flex-col">
             <div className="flex items-center justify-between mb-6">
                 <div className="flex items-center gap-4">
                     {/* Profile Avatar */}
@@ -72,7 +72,7 @@ export function UserProgressCard({ userData }) {
                     <p className="text-3xl font-bold text-primary">{currentXP}</p>
                     <p className="text-xs text-muted-foreground mt-1">Total XP</p>
                 </div>
-                
+
                 <div className="text-center">
                     <p className="text-3xl font-bold text-secondary">{completedQuestsCount}</p>
                     <p className="text-xs text-muted-foreground mt-1">Completed Quests</p>

@@ -13,40 +13,40 @@ export function WeatherAlertCard({ location }) {
             try {
                 setLoading(true)
                 setError(null)
-                
+
                 const apiKey = "f36aabc0f660437ba1a91516250410"
-                
+
                 // Validate location
                 if (!location || typeof location !== 'string' || !location.trim()) {
                     throw new Error("Location is required")
                 }
-                
+
                 // Parse location - handle different formats
                 const parts = location.trim().split(',').map(part => part.trim()).filter(Boolean)
-                
+
                 if (parts.length === 0) {
                     throw new Error("Invalid location format")
                 }
-                
+
                 // Use the first non-empty part (city/district)
                 let queryLocation = parts[0]
-                
+
                 // If it's coordinates format (lat,lng), throw error
                 if (/^-?\d+\.?\d*$/.test(queryLocation)) {
                     throw new Error("Please provide a city name, not coordinates")
                 }
-                
+
                 // Final validation - ensure we have a valid query
                 if (!queryLocation || queryLocation.length < 2) {
                     throw new Error("Location name is too short")
                 }
-                
+
                 console.log("Fetching weather for:", queryLocation)
-                
+
                 const url = `https://api.weatherapi.com/v1/forecast.json?key=${apiKey}&q=${encodeURIComponent(queryLocation)}&days=2&aqi=no&alerts=yes`
-                
+
                 const response = await fetch(url)
-                
+
                 if (!response.ok) {
                     const errorData = await response.json().catch(() => ({}))
                     console.error("Weather API error:", response.status, errorData)
@@ -55,15 +55,15 @@ export function WeatherAlertCard({ location }) {
 
                 const data = await response.json()
                 console.log("Weather data received for:", data.location.name)
-                
+
                 setWeatherData({
                     temperature: Math.round(data.current.temp_c),
                     condition: data.current.condition.text,
                     humidity: data.current.humidity,
                     rainfall: data.forecast.forecastday[0].day.daily_chance_of_rain,
                     windSpeed: Math.round(data.current.wind_kph),
-                    alert: data.alerts?.alert?.[0]?.headline || 
-                           `${data.forecast.forecastday[1].day.condition.text} expected tomorrow - Plan accordingly!`,
+                    alert: data.alerts?.alert?.[0]?.headline ||
+                        `${data.forecast.forecastday[1].day.condition.text} expected tomorrow - Plan accordingly!`,
                     icon: data.current.condition.icon,
                     code: data.current.condition.code
                 })
@@ -80,7 +80,7 @@ export function WeatherAlertCard({ location }) {
 
     const getWeatherIcon = () => {
         if (!weatherData) return <Cloud className="w-8 h-8 text-accent" />
-        
+
         const condition = weatherData.condition.toLowerCase()
         if (condition.includes("rain") || condition.includes("drizzle")) {
             return <CloudRain className="w-8 h-8 text-accent" />
@@ -125,7 +125,7 @@ export function WeatherAlertCard({ location }) {
     }
 
     return (
-        <div className="bg-card border-2 border-border rounded-3xl p-6 shadow-lg hover:shadow-xl transition-all">
+        <div className="bg-card border-2 border-border rounded-3xl p-6 shadow-lg hover:shadow-xl transition-all h-full flex flex-col">
             <div className="flex items-start justify-between mb-4">
                 <div>
                     <h3 className="text-xl font-bold text-foreground mb-1">Weather Alert</h3>
