@@ -1,0 +1,5 @@
+1. Moderation: Irreleveant questions -> other than farming and agriculture should not use
+2.100-150 words
+3.easier for farmers to understand
+4.a small buffer to store chat cnversation (limit=10)
+5.(optional) app related queries
