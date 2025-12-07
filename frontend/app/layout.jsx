@@ -3,6 +3,7 @@ import { Quicksand, Mali } from "next/font/google"
 import "./globals.css"
 import { PreferencesProvider } from "@/components/preferences-provider"
 import { ChatbotWidget } from "@/components/chatbot-widget"
+import { GoogleTranslate } from "@/components/google-translate"
 
 const _quicksand = Quicksand({ weight: ["400", "600", "700"], subsets: ["latin"] })
 const _mali = Mali({ weight: ["400", "600", "700"], subsets: ["latin"] })
@@ -10,6 +11,9 @@ const _mali = Mali({ weight: ["400", "600", "700"], subsets: ["latin"] })
 export const metadata = {
   title: "FarmStellar - Learn Sustainable Farming",
   description: "Gamified farming education app for beginners",
+  other: {
+    google: "notranslate",
+  },
   // icons: {
   //   icon: [
   //     {
@@ -36,6 +40,7 @@ export default function RootLayout({ children }) {
         <PreferencesProvider>
           {children}
           <ChatbotWidget />
+          <GoogleTranslate />
           <Analytics />
         </PreferencesProvider>
       </body>

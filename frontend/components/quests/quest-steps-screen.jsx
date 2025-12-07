@@ -1,5 +1,3 @@
-"use client"
-
 import { ChevronLeft, CheckCircle2, Circle, ChevronRight, Check, Zap, Trophy } from "lucide-react"
 import { useState, useEffect, useCallback } from "react"
 import { useRouter, useSearchParams, usePathname } from "next/navigation"
@@ -47,9 +45,9 @@ export const stepsData = {
   ],
 
   boll_keeper: [
-    { icon: "🔍", title: "Check for early boll shedding", instruction: "Inspect cotton plants thoroughly for any signs of early boll shedding or weak attachment." },
-    { icon: "🧪", title: "Apply balanced nutrient spray", instruction: "Prepare and apply a balanced micronutrient foliar spray to strengthen boll retention." },
-    { icon: "✂️", title: "Remove pest-damaged bolls", instruction: "Carefully identify and remove any bolls damaged by pests to prevent further issues." }
+    { icon: "🔍", title: "Inspect Bolls", instruction: "Check for early shedding & pest marks." },
+    { icon: "🧪", title: "Nutrient Spray", instruction: "Apply balanced micronutrient foliar spray." },
+    { icon: "✂️", title: "Remove Damage", instruction: "Cut off pest-affected bolls to prevent spread." }
   ],
 
   coconut_basin: [
@@ -105,7 +103,7 @@ export const stepsData = {
 
 export function QuestStepsScreen({ quest, onContinue, onBack }) {
   // Check if we have detailed steps in the quest object (New Format)
-  const detailedSteps = quest.steps || quest.stages
+  const detailedSteps = quest.steps
 
   // If we have detailed steps, use the Wizard mode
   if (detailedSteps && detailedSteps.length > 0) {
@@ -113,27 +111,9 @@ export function QuestStepsScreen({ quest, onContinue, onBack }) {
   }
 
   // Fallback to existing Checklist mode (Old Format)
-  // Use quest.slug or quest.id to look up steps
-  const questKey = quest.slug || quest.id
-  let steps = stepsData[questKey] || []
+  const steps = stepsData[quest.id] || []
 
-  console.log('Quest lookup:', { questKey, quest, hasSteps: steps.length > 0 })
-
-  // If no steps found, generate from activities
-  if (steps.length === 0 && quest.activities && quest.activities.length > 0) {
-    console.log('Generating steps from activities:', quest.activities)
-    steps = quest.activities.map((activity, idx) => ({
-      icon: ["🔍", "🧪", "✂️", "💧", "🌱", "📋", "✅", "🎯"][idx] || "✅",
-      title: activity,
-      instruction: activity
-    }))
-  }
-
-  return <ChecklistMode steps={steps} quest={quest} onContinue={onContinue} onBack={onBack} />
-}
-
-function ChecklistMode({ steps, quest, onContinue, onBack }) {
-  const storageKey = `quest_steps_${quest.id || quest.slug}`
+  const storageKey = `quest_steps_${quest.id}`
   const [completedSteps, setCompletedSteps] = useState(() => {
     if (typeof window !== "undefined") {
       const saved = sessionStorage.getItem(storageKey)
@@ -184,7 +164,7 @@ function ChecklistMode({ steps, quest, onContinue, onBack }) {
   return (
     <div className="flex flex-col h-screen">
       {/* Header */}
-      <div className="flex items-center justify-between p-4 border-b border-border pl-20">
+      <div className="flex items-center justify-between p-4 border-b border-border">
         <button onClick={onBack} className="p-2 hover:bg-muted rounded-lg transition-colors">
           <ChevronLeft className="w-5 h-5" />
         </button>
@@ -412,8 +392,8 @@ function QuestWizard({ steps, onComplete, onBack, questId }) {
                 onClick={handleNext}
                 disabled={!canProceed}
                 className={`w-full font-bold py-4 rounded-2xl transition-all shadow-lg flex items-center justify-center gap-2 transform active:scale-[0.98] text-lg ${canProceed
-                    ? "bg-primary text-primary-foreground hover:bg-primary/90 shadow-primary/20"
-                    : "bg-muted text-muted-foreground cursor-not-allowed opacity-60"
+                  ? "bg-primary text-primary-foreground hover:bg-primary/90 shadow-primary/20"
+                  : "bg-muted text-muted-foreground cursor-not-allowed opacity-60"
                   }`}
               >
                 {isLastStep ? "Complete Mission" : "Next Step"}
@@ -499,8 +479,8 @@ function QuestWizard({ steps, onComplete, onBack, questId }) {
                 onClick={handleNext}
                 disabled={!canProceed}
                 className={`w-full font-bold py-4 rounded-2xl transition-all shadow-lg flex items-center justify-center gap-2 transform active:scale-[0.98] text-lg ${canProceed
-                    ? "bg-primary text-primary-foreground hover:bg-primary/90 shadow-primary/20"
-                    : "bg-muted text-muted-foreground cursor-not-allowed opacity-60"
+                  ? "bg-primary text-primary-foreground hover:bg-primary/90 shadow-primary/20"
+                  : "bg-muted text-muted-foreground cursor-not-allowed opacity-60"
                   }`}
               >
                 {isLastStep ? "Complete Mission" : "Next Step"}

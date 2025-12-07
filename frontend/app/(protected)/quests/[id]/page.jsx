@@ -17,6 +17,9 @@ function QuestContent() {
     const questId = params.id
     const step = searchParams.get("step") || "intro"
 
+    console.log("Current step:", step)
+    console.log("Quest ID:", questId)
+
     const [userData, setUserData] = useState(null)
     const [quest, setQuest] = useState(null)
     const [allQuests, setAllQuests] = useState([])
@@ -29,12 +32,14 @@ function QuestContent() {
         const fetchData = async () => {
             const token = localStorage.getItem("token")
             if (!token) {
+                console.log("No token found, redirecting to welcome")
                 router.push("/welcome")
                 return
             }
 
             try {
                 const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:4000"
+                console.log("Fetching quest data for ID:", questId)
                 
                 // Fetch user data
                 const userRes = await fetch(`${backendUrl}/api/users/me`, {
@@ -44,6 +49,7 @@ function QuestContent() {
                 })
 
                 if (!userRes.ok) {
+                    console.error("Failed to fetch user data:", userRes.status, userRes.statusText)
                     throw new Error("Failed to fetch user data")
                 }
 
@@ -59,6 +65,7 @@ function QuestContent() {
                 }
 
                 setUserData(mergedData)
+                console.log("User data loaded:", mergedData)
 
                 // Fetch all quests
                 const questsRes = await fetch(`${backendUrl}/api/quests`, {
@@ -68,14 +75,19 @@ function QuestContent() {
                 })
 
                 if (!questsRes.ok) {
+                    console.error("Failed to fetch quests:", questsRes.status, questsRes.statusText)
                     throw new Error("Failed to fetch quests")
                 }
 
                 const questsData = await questsRes.json()
+                console.log("All quests loaded:", questsData.length, "quests")
                 setAllQuests(questsData)
 
                 // Find the current quest
                 const currentQuest = questsData.find(q => q._id === questId || q.id === questId || q.slug === questId)
+                console.log("Looking for quest with ID:", questId)
+                console.log("Found quest:", currentQuest ? currentQuest.title : "NOT FOUND")
+                
                 if (currentQuest) {
                     // Transform quest data to match frontend format
                     const transformedQuest = {
@@ -93,7 +105,10 @@ function QuestContent() {
                         stages: currentQuest.steps || currentQuest.stages || [],
                         steps: currentQuest.steps || currentQuest.stages || []
                     }
+                    console.log("Transformed quest:", transformedQuest)
                     setQuest(transformedQuest)
+                } else {
+                    console.error("Quest not found! Available quest IDs:", questsData.map(q => ({ _id: q._id, id: q.id, slug: q.slug })))
                 }
 
                 setLoading(false)
@@ -106,8 +121,32 @@ function QuestContent() {
         fetchData()
     }, [router, questId])
 
-    if (loading || !userData || !quest) {
-        return <div className="min-h-screen flex items-center justify-center">Loading...</div>
+    if (loading || !userData) {
+        return (
+            <div className="min-h-screen flex items-center justify-center">
+                <div className="text-center">
+                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto mb-4"></div>
+                    <p className="text-gray-600">Loading quest data...</p>
+                </div>
+            </div>
+        )
+    }
+
+    if (!quest) {
+        return (
+            <div className="min-h-screen flex items-center justify-center">
+                <div className="text-center">
+                    <p className="text-red-600 mb-4">Quest not found</p>
+                    <p className="text-gray-600 mb-4">Quest ID: {questId}</p>
+                    <button 
+                        onClick={() => router.push("/quests")} 
+                        className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
+                    >
+                        Back to Quests
+                    </button>
+                </div>
+            </div>
+        )
     }
 
     // Check if quest is completed
@@ -266,15 +305,18 @@ function QuestContent() {
                         onBack={() => navigateToStep("steps")}
                     />
                 ) : (
-                    <SubmitProofScreen
-                        quest={quest}
-                        onSubmit={(verificationResult) => {
-                            setVerificationData(verificationResult)
-                            showSuccessToast("✅ Submitted! Admin will review within 24 hours 🌱")
-                            navigateToStep("verification")
-                        }}
-                        onBack={() => navigateToStep("steps")}
-                    />
+                    <>
+                        {console.log("Rendering SubmitProofScreen for quest:", quest.id)}
+                        <SubmitProofScreen
+                            quest={quest}
+                            onSubmit={(verificationResult) => {
+                                setVerificationData(verificationResult)
+                                showSuccessToast("✅ Submitted! Admin will review within 24 hours 🌱")
+                                navigateToStep("verification")
+                            }}
+                            onBack={() => navigateToStep("steps")}
+                        />
+                    </>
                 )
             )}
 
@@ -283,13 +325,8 @@ function QuestContent() {
                     quest={quest}
                     verificationData={verificationData}
                     onContinue={() => {
-                        // For auto-verified quests (like crops), go to reward screen
-                        if (quest.id === "crops" || quest.id === "soil_scout") {
-                            navigateToStep("reward")
-                        } else {
-                            // For quests requiring admin approval, go back to quest list
-                            router.push("/quests")
-                        }
+                        // Navigate to learning summary screen
+                        navigateToStep("summary")
                     }}
                 />
             )}
