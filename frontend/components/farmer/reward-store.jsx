@@ -7,7 +7,6 @@ import { useState } from "react"
 const SEED_STORE_CATEGORIES = {
     vegetable_seeds: {
         name: "🌱 Vegetable Seeds",
-        icon: "🥬",
         color: "from-green-500/80 to-emerald-600/80",
         description: "Perfect starter seeds for your kitchen garden",
         items: [
@@ -20,7 +19,6 @@ const SEED_STORE_CATEGORIES = {
     },
     paddy_seeds: {
         name: "🌾 Rice Seeds",
-        icon: "🌾",
         color: "from-amber-500/80 to-yellow-600/80",
         description: "Traditional and modern rice varieties for better harvest",
         items: [
@@ -34,7 +32,6 @@ const SEED_STORE_CATEGORIES = {
     },
     premium_seeds: {
         name: "✨ Special Seeds",
-        icon: "⭐",
         color: "from-purple-500/80 to-pink-600/80",
         description: "Premium quality seeds for professional farmers",
         items: [
@@ -52,7 +49,6 @@ const SEED_STORE_CATEGORIES = {
 const ORGANIC_MANURE_CATEGORIES = {
     organic_manure: {
         name: "🌿 Natural Fertilizers",
-        icon: "🍂",
         color: "from-amber-600/80 to-orange-600/80",
         description: "Natural nutrients to make your soil healthy and rich",
         items: [
@@ -64,7 +60,6 @@ const ORGANIC_MANURE_CATEGORIES = {
     },
     compost_kits: {
         name: "♻️ Composting Kits",
-        icon: "♻️",
         color: "from-green-600/80 to-teal-600/80",
         description: "Turn your farm waste into valuable fertilizer",
         items: [
@@ -76,7 +71,6 @@ const ORGANIC_MANURE_CATEGORIES = {
     },
     vermicompost: {
         name: "🪱 Earthworm Compost",
-        icon: "🪱",
         color: "from-emerald-600/80 to-green-700/80",
         description: "Super nutritious fertilizer made with earthworms",
         items: [
@@ -88,7 +82,6 @@ const ORGANIC_MANURE_CATEGORIES = {
     },
     biofertilizers: {
         name: "✨ Bio-Fertilizers",
-        icon: "✨",
         color: "from-blue-600/80 to-indigo-600/80",
         description: "Helpful microbes that make soil naturally fertile",
         items: [
@@ -105,7 +98,6 @@ const ORGANIC_MANURE_CATEGORIES = {
 const FARMING_TOOLS_CATEGORIES = {
     small_tools: {
         name: "🛠️ Farm Tools",
-        icon: "🔧",
         color: "from-slate-600/80 to-gray-700/80",
         description: "Essential tools every farmer needs for daily work",
         items: [
@@ -177,20 +169,20 @@ export function RewardStore({ userData, onBack, onPurchase }) {
     const isPurchased = (itemId) => purchasedItems.includes(itemId)
 
     return (
-        <div className="min-h-screen bg-gradient-to-b from-background to-primary/5 pb-20">
+        <div className="min-h-screen bg-background pb-20">
             {/* Header */}
-            <div className="sticky top-0 z-10 bg-background/95 backdrop-blur-lg border-b border-border shadow-sm">
+            <div className="sticky top-0 z-10 bg-card border-b border-border shadow-sm">
                 <div className="max-w-6xl mx-auto px-6 py-4">
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-3">
                             <button
                                 onClick={onBack}
-                                className="p-2 hover:bg-muted rounded-xl transition-all"
+                                className="p-2 hover:bg-accent/10 rounded-xl transition-all"
                             >
-                                <ChevronLeft className="w-5 h-5" />
+                                <ChevronLeft className="w-5 h-5 text-foreground" />
                             </button>
                             <div>
-                                <h1 className="text-2xl font-black text-foreground flex items-center gap-2">
+                                <h1 className="text-2xl font-bold text-foreground flex items-center gap-2">
                                     <ShoppingBag className="w-7 h-7 text-primary" />
                                     Reward Store
                                 </h1>
@@ -198,12 +190,12 @@ export function RewardStore({ userData, onBack, onPurchase }) {
                             </div>
                         </div>
 
-                        <div className="bg-gradient-to-r from-primary to-accent text-white px-6 py-3 rounded-2xl shadow-lg hover:shadow-xl transition-all">
+                        <div className="bg-card border-2 border-primary/20 px-6 py-3 rounded-2xl shadow-md">
                             <div className="flex items-center gap-2">
-                                <Zap className="w-5 h-5" />
+                                <Zap className="w-5 h-5 text-accent" />
                                 <div>
-                                    <p className="text-xs opacity-90">Your Balance</p>
-                                    <p className="text-2xl font-black">{currentXP} XP</p>
+                                    <p className="text-xs text-muted-foreground">Your Balance</p>
+                                    <p className="text-2xl font-bold text-accent">{currentXP} XP</p>
                                 </div>
                             </div>
                         </div>
@@ -214,8 +206,8 @@ export function RewardStore({ userData, onBack, onPurchase }) {
                         <button
                             onClick={() => setMainTab("seeds")}
                             className={`flex items-center gap-2 px-6 py-3 rounded-xl font-bold transition-all ${mainTab === "seeds"
-                                ? "bg-gradient-to-r from-green-500 to-emerald-500 text-white shadow-lg scale-105"
-                                : "bg-card text-muted-foreground hover:bg-muted"
+                                ? "bg-primary text-primary-foreground shadow-md"
+                                : "bg-card border border-border text-muted-foreground hover:bg-accent/10 hover:border-primary/30"
                                 }`}
                         >
                             <Sprout className="w-5 h-5" />
@@ -224,8 +216,8 @@ export function RewardStore({ userData, onBack, onPurchase }) {
                         <button
                             onClick={() => setMainTab("manure")}
                             className={`flex items-center gap-2 px-6 py-3 rounded-xl font-bold transition-all ${mainTab === "manure"
-                                ? "bg-gradient-to-r from-amber-600 to-orange-600 text-white shadow-lg scale-105"
-                                : "bg-card text-muted-foreground hover:bg-muted"
+                                ? "bg-primary text-primary-foreground shadow-md"
+                                : "bg-card border border-border text-muted-foreground hover:bg-accent/10 hover:border-primary/30"
                                 }`}
                         >
                             <Leaf className="w-5 h-5" />
@@ -234,8 +226,8 @@ export function RewardStore({ userData, onBack, onPurchase }) {
                         <button
                             onClick={() => setMainTab("tools")}
                             className={`flex items-center gap-2 px-6 py-3 rounded-xl font-bold transition-all ${mainTab === "tools"
-                                ? "bg-gradient-to-r from-slate-600 to-gray-700 text-white shadow-lg scale-105"
-                                : "bg-card text-muted-foreground hover:bg-muted"
+                                ? "bg-primary text-primary-foreground shadow-md"
+                                : "bg-card border border-border text-muted-foreground hover:bg-accent/10 hover:border-primary/30"
                                 }`}
                         >
                             <Wrench className="w-5 h-5" />
@@ -254,16 +246,16 @@ export function RewardStore({ userData, onBack, onPurchase }) {
                         <div key={categoryKey} className="space-y-6">
                             {/* Category Header */}
                             <div className="space-y-3">
-                                <div className={`flex items-center gap-3 bg-gradient-to-r ${category.color} text-white px-6 py-4 rounded-2xl shadow-lg hover:shadow-xl transition-all`}>
+                                <div className="flex items-center gap-3 bg-accent/10 border border-primary/20 px-6 py-4 rounded-2xl shadow-sm">
                                     <span className="text-5xl">{iconDisplay}</span>
                                     <div>
-                                        <h2 className="text-2xl font-black">{category.name}</h2>
-                                        <p className="text-sm opacity-90">{category.description}</p>
+                                        <h2 className="text-2xl font-bold text-foreground">{category.name}</h2>
+                                        <p className="text-sm text-muted-foreground">{category.description}</p>
                                     </div>
                                 </div>
 
-                                <div className="bg-card/50 backdrop-blur-md border border-border rounded-xl p-4 shadow-sm">
-                                    <p className="text-xs text-accent font-semibold">✓ {category.benefits}</p>
+                                <div className="bg-card border border-border rounded-xl p-4 shadow-sm">
+                                    <p className="text-xs text-primary font-semibold">✓ {category.benefits}</p>
                                 </div>
                             </div>
 
@@ -276,15 +268,15 @@ export function RewardStore({ userData, onBack, onPurchase }) {
                                     const rarityLabel = RARITY_LABELS[item.rarity]
 
                                     return (
-                                        <div key={item.id} className={`relative rounded-2xl border-2 p-6 transition-all ${rarity} ${purchased ? "opacity-60" : affordable ? "hover:scale-105 hover:shadow-xl" : ""}`}>
+                                        <div key={item.id} className={`relative rounded-2xl border-2 p-6 transition-all ${rarity} ${purchased ? "opacity-60" : affordable ? "hover:scale-105 hover:shadow-xl hover:border-primary/30" : ""}`}>
                                             <div className="absolute top-3 right-3">
-                                                <span className={`text-xs font-bold px-2 py-1 rounded-full ${rarityLabel.color} bg-background/80`}>
+                                                <span className={`text-xs font-bold px-2 py-1 rounded-full ${rarityLabel.color} bg-card border border-border`}>
                                                     {rarityLabel.text}
                                                 </span>
                                             </div>
 
                                             {purchased && (
-                                                <div className="absolute top-3 left-3 bg-emerald-500 text-white px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1 shadow-md">
+                                                <div className="absolute top-3 left-3 bg-primary text-primary-foreground px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1 shadow-md">
                                                     <Check className="w-3 h-3" />
                                                     Owned
                                                 </div>
@@ -302,16 +294,16 @@ export function RewardStore({ userData, onBack, onPurchase }) {
 
                                                 <div className="flex items-center justify-center gap-2 py-2">
                                                     <Zap className="w-5 h-5 text-accent" />
-                                                    <span className="text-2xl font-black text-accent">{item.cost}</span>
+                                                    <span className="text-2xl font-bold text-accent">{item.cost}</span>
                                                     <span className="text-sm text-muted-foreground">XP</span>
                                                 </div>
 
                                                 <button
                                                     onClick={() => handlePurchase(item)}
                                                     disabled={!affordable || purchased || isPurchasing}
-                                                    className={`w-full py-3 rounded-xl font-bold transition-all ${purchased ? "bg-muted text-muted-foreground cursor-not-allowed" :
-                                                        affordable && !isPurchasing ? `bg-gradient-to-r ${category.color} text-white hover:shadow-lg active:scale-95` :
-                                                            "bg-muted text-muted-foreground cursor-not-allowed"
+                                                    className={`w-full py-3 rounded-xl font-bold transition-all ${purchased ? "bg-muted text-muted-foreground cursor-not-allowed border border-border" :
+                                                        affordable && !isPurchasing ? "bg-primary text-primary-foreground hover:bg-primary/90 shadow-md hover:shadow-lg active:scale-95" :
+                                                            "bg-muted text-muted-foreground cursor-not-allowed border border-border"
                                                         }`}
                                                 >
                                                     {isPurchasing ? "Processing..." : purchased ? "Already Redeemed" : affordable ? "Redeem Now" : "Not Enough XP"}

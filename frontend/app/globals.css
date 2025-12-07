@@ -248,6 +248,7 @@
     .deep-forest .watercolor-bg svg {
         color: var(--df-icon-color) !important;
     }
+
     /* Dark Mode Header Styling - Ensures headers are visible in dark theme */
     .dark .sticky.top-0,
     .dark .watercolor-bg,
