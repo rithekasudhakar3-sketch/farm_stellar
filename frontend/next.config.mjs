@@ -1,5 +1,7 @@
+import withPWA from "next-pwa";
+
 /** @type {import('next').NextConfig} */
-const nextConfig = {
+const baseConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
@@ -7,11 +9,19 @@ const nextConfig = {
     unoptimized: true,
   },
   productionBrowserSourceMaps: false,
+
+  // ✔ FIX: Set turbopack as an object to avoid errors
+  turbopack: {},
+
+  // ✔ You are using custom webpack config → keep it
   webpack: (config) => {
-    // Disable source maps to prevent "Invalid source map" warnings/errors
     config.devtool = false;
     return config;
   },
-}
+};
 
-export default nextConfig
+export default withPWA({
+  dest: "public",
+  register: true,
+  skipWaiting: true,
+})(baseConfig);

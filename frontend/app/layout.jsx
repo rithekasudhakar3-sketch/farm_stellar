@@ -25,7 +25,7 @@ export default function RootLayout({ children }) {
           <ChatbotWidget />
           <GoogleTranslate />
           <Analytics />
-        </PreferencesProvider>
+        </PreferencesProvider>  
       </body>
     </html>
   )
