@@ -6,11 +6,17 @@ const UserSchema = new mongoose.Schema({
   email: { type: String, unique: true, sparse: true },
   passwordHash: { type: String, required: true },
   location: { type: String },
+  state: { type: String },
+  district: { type: String },
   city: { type: String },
+  village: { type: String },
+  panchayat: { type: String },
+  block: { type: String },
   level: { type: String, enum: ['beginner', 'pro'], default: 'beginner' },
   xp: { type: Number, default: 0 },
   xpLevel: { type: Number, default: 0 },
   farm: { type: mongoose.Schema.Types.ObjectId, ref: 'Farm' },
+  purchasedRewards: [{ type: String }], // Array of purchased reward IDs
   questsProgress: [
     {
       questId: { type: String },

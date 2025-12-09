@@ -1,17 +1,18 @@
 "use client"
 
 import { RevampedDashboard } from "@/components/farmer/revamped-dashboard"
-import { QUESTS_DATA } from "@/constants/quests"
+import { FarmstellarChatbot } from "@/components/farmer/farmstellar-chatbot"
+
 import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
 
 export default function DashboardPage() {
     const router = useRouter()
     const [userData, setUserData] = useState(null)
-    const [dashboardData, setDashboardData] = useState(null)
+    const [quests, setQuests] = useState({})
+    const [loading, setLoading] = useState(true)
     const [showToast, setShowToast] = useState(false)
     const [toastMessage, setToastMessage] = useState("")
-    const [loading, setLoading] = useState(true)
 
     useEffect(() => {
         const fetchData = async () => {
@@ -37,18 +38,6 @@ export default function DashboardPage() {
                 }
 
                 const user = await userRes.json()
-
-                // Fetch dashboard data
-                const dashRes = await fetch(`${backendUrl}/api/dashboard`, {
-                    headers: {
-                        "Authorization": `Bearer ${token}`
-                    }
-                })
-
-                if (dashRes.ok) {
-                    const dash = await dashRes.json()
-                    setDashboardData(dash)
-                }
 
                 // Load local storage data for compatibility
                 const localData = JSON.parse(localStorage.getItem("farmquest_userdata") || "{}")
@@ -76,6 +65,37 @@ export default function DashboardPage() {
                 }
 
                 setUserData(mergedData)
+
+                // Fetch quests
+                const questsRes = await fetch(`${backendUrl}/api/quests`, {
+                    headers: {
+                        "Authorization": `Bearer ${token}`
+                    }
+                })
+
+                if (questsRes.ok) {
+                    const questsData = await questsRes.json()
+                    
+                    // Transform quests to match frontend format
+                    const transformedQuests = {}
+                    questsData.forEach(q => {
+                        transformedQuests[q._id] = {
+                            id: q._id,
+                            slug: q.slug,
+                            title: q.title,
+                            description: q.description,
+                            activities: q.activities || [],
+                            outcomes: q.outcomes || [],
+                            difficulty: q.difficulty,
+                            cropType: q.cropType,
+                            xpReward: q.xpReward,
+                            badgeName: q.badgeName,
+                            stages: q.stages || []
+                        }
+                    })
+                    
+                    setQuests(transformedQuests)
+                }
             } catch (error) {
                 console.error("Error fetching data:", error)
                 // Fallback to local data
@@ -105,8 +125,8 @@ export default function DashboardPage() {
             "community": "/community",
             "rewards": "/rewards",
             "farmer-profile": "/profile",
-            "settings": "/settings",
-            "impact-tracker": "/impact",
+            "settings": "/profile", // Redirects to profile since settings are integrated there
+            "impact-tracker": "/rewards",
         }
 
         if (routes[screen]) {
@@ -122,11 +142,14 @@ export default function DashboardPage() {
         <>
             <RevampedDashboard
                 userData={userData}
-                quests={QUESTS_DATA}
+                quests={quests}
                 onStartQuest={handleStartQuest}
                 onNavigate={handleNavigate}
                 onShowToast={showSuccessToast}
             />
+
+            {/* FarmStellar Chatbot */}
+            <FarmstellarChatbot />
 
             {showToast && (
                 <div className="fixed top-4 left-1/2 -translate-x-1/2 z-[100] animate-slide-down">

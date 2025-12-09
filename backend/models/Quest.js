@@ -1,19 +1,31 @@
 const mongoose = require('mongoose');
 
 const QuestSchema = new mongoose.Schema({
-  slug: { type: String, required: true, unique: true },
+  id: { type: String, unique: true, sparse: true },
   title: { type: String, required: true },
   description: { type: String },
-  difficulty: { type: String, enum: ['easy', 'medium', 'hard'] },
-  stages: [
+  activities: [{ type: String }],
+  outcomes: [{ type: String }],
+  difficulty: { type: String, enum: ['Beginner', 'Pro'] },
+  cropType: { type: String },
+  xpReward: { type: Number, default: 0 },
+  badgeName: { type: String },
+  steps: [
     {
       title: { type: String },
-      description: { type: String },
-      requiredMediaTypes: [{ type: String }],
-    },
+      objective: { type: String },
+      subSteps: [{ type: String }],
+      tip: { type: String },
+      reason: { type: String },
+      image: { type: String }
+    }
   ],
-  active: { type: Boolean, default: true },
-  totalXp: { type: Number, default: 0 },
-}, { timestamps: true });
+  verification_data: {
+    task_name: { type: String },
+    success_criteria: { type: String },
+    use_before_image: { type: Boolean, default: false }
+  },
+  active: { type: Boolean, default: true }
+}, { timestamps: true, strict: false });
 
 module.exports = mongoose.model('Quest', QuestSchema);

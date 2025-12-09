@@ -2,39 +2,30 @@ import { Analytics } from "@vercel/analytics/next"
 import { Quicksand, Mali } from "next/font/google"
 import { ChatbotWidget } from "@/components/shared/chatbot-widget"
 import "./globals.css"
+import { PreferencesProvider } from "@/components/preferences-provider"
+import { GoogleTranslate } from "@/components/google-translate"
 
 const _quicksand = Quicksand({ weight: ["400", "600", "700"], subsets: ["latin"] })
 const _mali = Mali({ weight: ["400", "600", "700"], subsets: ["latin"] })
 
 export const metadata = {
-  title: "FarmQuest - Learn Sustainable Farming",
+  title: "FarmStellar - Learn Sustainable Farming",
   description: "Gamified farming education app for beginners",
-  // icons: {
-  //   icon: [
-  //     {
-  //       url: "/icon-light-32x32.png",
-  //       media: "(prefers-color-scheme: light)",
-  //     },
-  //     {
-  //       url: "/icon-dark-32x32.png",
-  //       media: "(prefers-color-scheme: dark)",
-  //     },
-  //     {
-  //       url: "/icon.svg",
-  //       type: "image/svg+xml",
-  //     },
-  //   ],
-  //   apple: "/apple-icon.png",
-  // },
+  other: {
+    google: "notranslate",
+  },
 }
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body className={`font-sans antialiased`}>
-        {children}
-        <ChatbotWidget />
-        <Analytics />
+        <PreferencesProvider>
+          {children}
+          <ChatbotWidget />
+          <GoogleTranslate />
+          <Analytics />
+        </PreferencesProvider>
       </body>
     </html>
   )

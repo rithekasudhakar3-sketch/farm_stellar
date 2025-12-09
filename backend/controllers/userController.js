@@ -14,8 +14,8 @@ exports.getMe = async (req, res) => {
 
 exports.updateMe = async (req, res) => {
   try {
-    const { name, location, level, xp, xpLevel, questsProgress } = req.body;
-    
+    const { name, location, level, xp, xpLevel, questsProgress, purchasedRewards } = req.body;
+
     const updateData = {};
     if (name !== undefined) updateData.name = name;
     if (location !== undefined) updateData.location = location;
@@ -23,17 +23,18 @@ exports.updateMe = async (req, res) => {
     if (xp !== undefined) updateData.xp = xp;
     if (xpLevel !== undefined) updateData.xpLevel = xpLevel;
     if (questsProgress !== undefined) updateData.questsProgress = questsProgress;
-    
+    if (purchasedRewards !== undefined) updateData.purchasedRewards = purchasedRewards;
+
     const user = await User.findByIdAndUpdate(
       req.user.userId,
       updateData,
       { new: true, runValidators: true }
     );
-    
+
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
-    
+
     res.status(200).json(user);
   } catch (error) {
     console.error('Update user error:', error);

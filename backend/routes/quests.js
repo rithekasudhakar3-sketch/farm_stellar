@@ -7,6 +7,7 @@ const authMiddleware = require('../middleware/authMiddleware');
 router.get('/', authMiddleware, questController.getQuests);
 router.get('/:id', authMiddleware, questController.getQuestById);
 router.post('/:id/progress', authMiddleware, questController.updateQuestProgress);
+router.put('/:id/progress', authMiddleware, questController.updateQuestProgress);
 
 router.post('/:id/submissions', authMiddleware, submissionController.createSubmission);
 router.get('/:id/submissions', authMiddleware, submissionController.getSubmissionsForQuest);

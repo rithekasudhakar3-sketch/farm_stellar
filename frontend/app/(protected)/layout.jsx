@@ -42,15 +42,18 @@ export default function ProtectedLayout({ children }) {
                 const localData = JSON.parse(localStorage.getItem("farmquest_userdata") || "{}")
 
                 const mergedData = {
-                    name: user.name || "Farmer",
+                    ...localData,  // Start with local data as base
+                    // Override with fresh backend data
+                    name: user.name || localData.name || "Farmer",
                     level: user.level === "pro" ? 5 : 3,
                     xp: user.xp || 0,
                     xpLevel: user.xpLevel || 0,
                     location: user.city || user.location || localData.city || localData.location || "Unknown Location",
-                    ...localData
                 }
 
                 setUserData(mergedData)
+                // Update localStorage with fresh backend data
+                localStorage.setItem("farmquest_userdata", JSON.stringify(mergedData))
                 setLoading(false)
             } catch (error) {
                 console.error("Error fetching user data:", error)
@@ -79,8 +82,8 @@ export default function ProtectedLayout({ children }) {
             "community": "/community",
             "rewards": "/rewards",
             "farmer-profile": "/profile",
-            "settings": "/settings",
-            "impact-tracker": "/impact",
+            "settings": "/profile", // Redirects to profile since settings are integrated there
+            "impact-tracker": "/rewards",
         }
 
         if (routes[screen]) {

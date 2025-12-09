@@ -2,16 +2,7 @@
 
 import { Zap, Trophy, Share2, ArrowRight, Users } from "lucide-react"
 
-export function RewardScreen({ quest, onContinue, onNextQuest, onComplete }) {
-  const handleComplete = async () => {
-    if (onComplete) {
-      await onComplete(quest)
-    }
-    if (onContinue) {
-      onContinue()
-    }
-  }
-
+export function RewardScreen({ quest, userData, onComplete, onContinue, onNextQuest }) {
   const handleShare = () => {
     if (navigator.share) {
       navigator.share({
@@ -72,7 +63,7 @@ export function RewardScreen({ quest, onContinue, onNextQuest, onComplete }) {
         <div className="flex flex-col gap-3 max-w-md mx-auto">
           {/* Primary Action - Complete Quest */}
           <button
-            onClick={handleComplete}
+            onClick={onContinue}
             className="w-full bg-primary text-primary-foreground font-bold py-4 rounded-xl hover:bg-primary/90 transition-all shadow-lg shadow-primary/20 flex items-center justify-center gap-2 transform active:scale-[0.98]"
           >
             <Trophy className="w-5 h-5" />

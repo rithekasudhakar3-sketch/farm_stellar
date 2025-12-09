@@ -10,8 +10,9 @@ const s3Client = new S3Client({
   },
 });
 
-exports.uploadFile = async (buffer, mimeType) => {
-  const key = `uploads/${uuidv4()}`;
+exports.uploadFile = async (buffer, mimeType, fileType = 'general') => {
+  const folder = fileType === 'community' ? 'community' : fileType === 'submissions' ? 'submissions' : 'uploads';
+  const key = `${folder}/${uuidv4()}`;
   const command = new PutObjectCommand({
     Bucket: process.env.AWS_S3_BUCKET,
     Key: key,

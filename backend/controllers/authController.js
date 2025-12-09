@@ -6,10 +6,10 @@ const twilioService = require('../services/twilioService');
 
 exports.signup = async (req, res) => {
   try {
-    const { name, email, password, location, phone, city } = req.body;
+    const { name, email, password, location, phone, city, state, district, panchayat } = req.body;
 
     // Check if user exists by email or phone
-    const existingUser = await User.findOne({ 
+    const existingUser = await User.findOne({
       $or: [
         { email: email },
         { phone: phone }
@@ -21,7 +21,7 @@ exports.signup = async (req, res) => {
 
     const passwordHash = await bcrypt.hash(password, 10);
 
-    const user = new User({ name, email, phone, passwordHash, location, city });
+    const user = new User({ name, email, phone, passwordHash, location, city, state, district, panchayat });
     await user.save();
     console.log('User created:', user._id);
 
@@ -121,28 +121,28 @@ exports.verifyOTP = async (req, res) => {
 
     const result = twilioService.verifyOTP(phone, otp);
     console.log('Verification result:', result);
-    
+
     if (result.success) {
       // Check if user exists
       const user = await User.findOne({ phone });
-      
+
       if (user) {
         // Existing user - generate token
         const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '7d' });
         console.log('Existing user logged in:', user._id);
-        return res.status(200).json({ 
+        return res.status(200).json({
           success: true,
           token,
           isNewUser: false,
-          message: 'OTP verified successfully' 
+          message: 'OTP verified successfully'
         });
       } else {
         // New user - return success but no token (they need to complete signup)
         console.log('New user verified:', phone);
-        return res.status(200).json({ 
+        return res.status(200).json({
           success: true,
           isNewUser: true,
-          message: 'OTP verified. Please complete your profile.' 
+          message: 'OTP verified. Please complete your profile.'
         });
       }
     } else {

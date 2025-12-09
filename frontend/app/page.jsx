@@ -3,12 +3,12 @@
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
-import { 
-  Sprout, 
-  Trophy, 
-  Users, 
-  BookOpen, 
-  Sparkles, 
+import {
+  Sprout,
+  Trophy,
+  Users,
+  BookOpen,
+  Sparkles,
   ArrowRight,
   Leaf,
   Sun,
@@ -79,7 +79,7 @@ export default function LandingPage() {
               <p className="text-xs text-muted-foreground">Grow Your Knowledge</p>
             </div>
           </div>
-          
+
           {isAuthenticated ? (
             <Button onClick={handleGetStarted} className="btn-primary">
               Go to Dashboard
@@ -87,8 +87,8 @@ export default function LandingPage() {
             </Button>
           ) : (
             <div className="flex gap-3">
-              <Button 
-                variant="outline" 
+              <Button
+                variant="outline"
                 onClick={() => router.push("/welcome")}
                 className="border-2 hover:bg-secondary/20"
               >
@@ -112,32 +112,32 @@ export default function LandingPage() {
                 <Sparkles className="w-4 h-4" />
                 <span className="text-sm font-semibold">Gamified Learning Platform</span>
               </div>
-              
+
               <div className="space-y-4">
-                <h1 className="text-5xl lg:text-6xl font-bold leading-tight">
+                <h1 id="hero-title" className="text-5xl lg:text-6xl font-bold leading-tight">
                   Master{" "}
                   <span className="bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent animate-shimmer">
                     Sustainable Farming
                   </span>
                   {" "}Through Play
                 </h1>
-                <p className="text-xl text-muted-foreground leading-relaxed">
-                  Join thousands of farmers learning modern agricultural techniques through 
+                <p id="hero-desc" className="text-xl text-muted-foreground leading-relaxed">
+                  Join thousands of farmers learning modern agricultural techniques through
                   interactive quests, earn rewards, and build a sustainable future.
                 </p>
               </div>
 
               <div className="flex flex-wrap gap-4">
-                <Button 
-                  onClick={handleGetStarted} 
+                <Button
+                  onClick={handleGetStarted}
                   size="lg"
                   className="btn-primary text-lg px-8 py-6 shadow-xl hover:shadow-2xl"
                 >
                   Start Your Journey
                   <ArrowRight className="ml-2 w-5 h-5" />
                 </Button>
-                <Button 
-                  variant="outline" 
+                <Button
+                  variant="outline"
                   size="lg"
                   onClick={() => document.getElementById('features').scrollIntoView({ behavior: 'smooth' })}
                   className="border-2 text-lg px-8 py-6"
@@ -168,7 +168,7 @@ export default function LandingPage() {
               <div className="relative w-full aspect-square max-w-lg mx-auto">
                 {/* Central Circle */}
                 <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-accent/20 rounded-full blur-3xl animate-pulse"></div>
-                
+
                 {/* Floating Icons */}
                 <div className="absolute inset-0 flex items-center justify-center">
                   <div className="relative w-64 h-64">
@@ -203,8 +203,8 @@ export default function LandingPage() {
         <div className="container mx-auto px-6">
           <div className="max-w-6xl mx-auto">
             <div className="text-center mb-16">
-              <h2 className="text-4xl font-bold mb-4">Why Choose FarmStellar?</h2>
-              <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+              <h2 id="title" className="text-4xl font-bold mb-4">Why Choose FarmStellar?</h2>
+              <p id="description" className="text-xl text-muted-foreground max-w-2xl mx-auto">
                 Experience a revolutionary approach to agricultural education
               </p>
             </div>
@@ -300,7 +300,7 @@ export default function LandingPage() {
                   Join FarmStellar today and start your journey towards sustainable, profitable farming.
                 </p>
                 <div className="pt-4">
-                  <Button 
+                  <Button
                     onClick={handleGetStarted}
                     size="lg"
                     className="bg-white text-primary hover:bg-white/90 text-lg px-10 py-7 shadow-xl hover:shadow-2xl hover:scale-105 transition-all"
@@ -329,7 +329,7 @@ export default function LandingPage() {
                   <p className="text-sm text-muted-foreground">Grow Your Knowledge</p>
                 </div>
               </div>
-              
+
               <div className="text-center md:text-right">
                 <p className="text-sm text-muted-foreground">
                   © 2025 FarmStellar. All rights reserved.

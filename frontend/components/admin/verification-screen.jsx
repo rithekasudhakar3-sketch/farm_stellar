@@ -138,7 +138,7 @@ export function AdminVerificationScreen({ onBack }) {
           submissions.map((submission) => {
             const farmerName = submission.userId?.name || 'Unknown Farmer'
             const farmerPhone = submission.userId?.phone || 'N/A'
-            const questName = submission.questId || 'Unknown Quest'
+            const questName = submission.questTitle || submission.questId || 'Unknown Quest'
             const submittedTime = submission.createdAt ? new Date(submission.createdAt).toLocaleString() : 'Unknown'
             const proofType = submission.proofType || 'photo'
             const proofUrl = submission.proofUrl || '/placeholder.svg'

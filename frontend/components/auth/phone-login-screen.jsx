@@ -14,6 +14,9 @@ export function PhoneLoginScreen({ onSuccess, onBack, isSignup = false }) {
   const [password, setPassword] = useState("")
   const [location, setLocation] = useState("")
   const [city, setCity] = useState("")
+  const [district, setDistrict] = useState("")
+  const [panchayat, setPanchayat] = useState("")
+  const [state, setState] = useState("")
   const [isFetchingLocation, setIsFetchingLocation] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
 
@@ -38,17 +41,29 @@ export function PhoneLoginScreen({ onSuccess, onBack, isSignup = false }) {
           const locationString = `${latitude},${longitude}`
           setLocation(locationString)
 
-          // Reverse geocode to get city name
+          // Reverse geocode using OpenStreetMap Nominatim API
           try {
             const response = await fetch(
-              `https://api.weatherapi.com/v1/current.json?key=f36aabc0f660437ba1a91516250410&q=${latitude},${longitude}`
+              `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&zoom=18&addressdetails=1`
             )
             const data = await response.json()
-            if (data.location && data.location.name) {
-              setCity(data.location.name)
+
+            if (data.address) {
+              const addr = data.address
+
+              // Extract details
+              const fetchedCity = addr.city || addr.town || addr.village || addr.hamlet || ""
+              const fetchedDistrict = addr.state_district || addr.county || ""
+              const fetchedState = addr.state || ""
+              const fetchedPanchayat = addr.village || addr.town || addr.suburb || "" // Approximation
+
+              setCity(fetchedCity)
+              setDistrict(fetchedDistrict)
+              setState(fetchedState)
+              setPanchayat(fetchedPanchayat)
             }
           } catch (error) {
-            console.error("Error fetching city:", error)
+            console.error("Error fetching location details:", error)
           }
 
           setIsFetchingLocation(false)
@@ -67,16 +82,16 @@ export function PhoneLoginScreen({ onSuccess, onBack, isSignup = false }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    
+
     if (phone.length !== 10) return
-    
+
     setIsSubmitting(true)
-    
+
     try {
       const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:4000"
-      
+
       console.log('Sending OTP to phone:', phone);
-      
+
       // Send OTP to phone number
       const response = await fetch(`${backendUrl}/api/auth/send-otp`, {
         method: "POST",
@@ -93,12 +108,15 @@ export function PhoneLoginScreen({ onSuccess, onBack, isSignup = false }) {
       if (response.ok) {
         // Store signup data if it's signup flow
         if (isSignup) {
-          sessionStorage.setItem("signupData", JSON.stringify({
+          localStorage.setItem("signup_temp_data", JSON.stringify({
             name,
             email,
             password,
             location,
             city,
+            district,
+            panchayat,
+            state,
             phone
           }))
         }
@@ -204,12 +222,16 @@ export function PhoneLoginScreen({ onSuccess, onBack, isSignup = false }) {
                   </Button>
                 </div>
                 {city && (
-                  <p className="text-xs text-muted-foreground">City: {city}</p>
+                  <div className="text-xs text-muted-foreground mt-2 space-y-1">
+                    <p>City/Village: {city}</p>
+                    {district && <p>District: {district}</p>}
+                    {panchayat && <p>Panchayat: {panchayat}</p>}
+                  </div>
                 )}
               </div>
             </>
           )}
-<div className="space-y-2">
+          <div className="space-y-2">
             <Label htmlFor="phone">Mobile Number</Label>
             <div className="relative">
               <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">+91</span>
@@ -232,7 +254,7 @@ export function PhoneLoginScreen({ onSuccess, onBack, isSignup = false }) {
           </div>
 
           <Button type="submit" className="w-full" disabled={
-            isSignup 
+            isSignup
               ? (phone.length !== 10 || !name || !email || password.length < 6 || isSubmitting)
               : (phone.length !== 10 || isSubmitting)
           }>

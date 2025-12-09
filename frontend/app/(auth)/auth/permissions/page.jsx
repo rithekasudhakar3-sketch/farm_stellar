@@ -12,7 +12,7 @@ export default function PermissionsPage() {
     const handleComplete = async (permissions) => {
         setIsLoading(true)
         setError("")
-        
+
         try {
             // Combine all temp data
             const phone = localStorage.getItem("farmquest_temp_phone") || ""
@@ -21,24 +21,22 @@ export default function PermissionsPage() {
             const signupTempData = JSON.parse(localStorage.getItem("signup_temp_data") || "{}")
 
             // Validate that we have required data
-            if (!phone && !signupTempData.phone) {
-                setError("Phone number is missing. Please start the signup process again.")
-                setIsLoading(false)
-                setTimeout(() => router.push("/auth/signup"), 2000)
-                return
-            }
+            
 
             // Create user in backend
             const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:4000"
-            
+
             // Use data from phone login screen if available, otherwise fallback to auto-generated
             const signupData = {
                 name: signupTempData.name || farmDetails.name || `Farmer_${phone}`,
                 phone: signupTempData.phone || phone,
                 email: signupTempData.email || `${phone}@farmstellar.app`,
                 password: signupTempData.password || `farm_${phone}_pass`,
-                location: signupTempData.location || `${farmDetails.district || ""}, ${farmDetails.state || ""}`,
-                city: signupTempData.city || farmDetails.district || ""
+                location: signupTempData.location || `${farmDetails.panchayat || ""}, ${farmDetails.district || ""}, ${farmDetails.state || ""}`,
+                city: signupTempData.city || farmDetails.district || "",
+                state: farmDetails.state || signupTempData.state || "",
+                district: farmDetails.district || signupTempData.district || "",
+                panchayat: farmDetails.panchayat || signupTempData.panchayat || ""
             }
 
             const farmData = {
@@ -61,7 +59,7 @@ export default function PermissionsPage() {
             if (!signupRes.ok) {
                 const errorData = await signupRes.json()
                 const errorMessage = errorData.message || "Signup failed"
-                
+
                 // Handle specific error cases
                 if (errorMessage.includes("User already exists")) {
                     setError("This phone number or email is already registered. Please login instead.")

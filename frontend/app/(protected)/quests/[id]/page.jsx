@@ -7,7 +7,6 @@ import { VerificationScreen } from "@/components/quests/verification-screen"
 import { RewardScreen } from "@/components/quests/reward-screen"
 import { LearningSummaryScreen } from "@/components/quests/learning-summary-screen"
 import { SoilEvaluationScreen } from "@/components/quests/soil-evaluation-screen"
-import { QUESTS_DATA } from "@/constants/quests"
 import { useRouter, useParams, useSearchParams } from "next/navigation"
 import { useEffect, useState, Suspense } from "react"
 
@@ -18,20 +17,31 @@ function QuestContent() {
     const questId = params.id
     const step = searchParams.get("step") || "intro"
 
+    console.log("Current step:", step)
+    console.log("Quest ID:", questId)
+
     const [userData, setUserData] = useState(null)
+    const [quest, setQuest] = useState(null)
+    const [allQuests, setAllQuests] = useState([])
+    const [loading, setLoading] = useState(true)
     const [showToast, setShowToast] = useState(false)
     const [toastMessage, setToastMessage] = useState("")
+    const [verificationData, setVerificationData] = useState(null)
 
     useEffect(() => {
-        const fetchUserData = async () => {
+        const fetchData = async () => {
             const token = localStorage.getItem("token")
             if (!token) {
+                console.log("No token found, redirecting to welcome")
                 router.push("/welcome")
                 return
             }
 
             try {
                 const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:4000"
+                console.log("Fetching quest data for ID:", questId)
+                
+                // Fetch user data
                 const userRes = await fetch(`${backendUrl}/api/users/me`, {
                     headers: {
                         "Authorization": `Bearer ${token}`
@@ -39,6 +49,7 @@ function QuestContent() {
                 })
 
                 if (!userRes.ok) {
+                    console.error("Failed to fetch user data:", userRes.status, userRes.statusText)
                     throw new Error("Failed to fetch user data")
                 }
 
@@ -54,24 +65,83 @@ function QuestContent() {
                 }
 
                 setUserData(mergedData)
+                console.log("User data loaded:", mergedData)
+
+                // Fetch all quests
+                const questsRes = await fetch(`${backendUrl}/api/quests`, {
+                    headers: {
+                        "Authorization": `Bearer ${token}`
+                    }
+                })
+
+                if (!questsRes.ok) {
+                    console.error("Failed to fetch quests:", questsRes.status, questsRes.statusText)
+                    throw new Error("Failed to fetch quests")
+                }
+
+                const questsData = await questsRes.json()
+                console.log("All quests loaded:", questsData.length, "quests")
+                setAllQuests(questsData)
+
+                // Find the current quest
+                const currentQuest = questsData.find(q => q._id === questId || q.id === questId || q.slug === questId)
+                console.log("Looking for quest with ID:", questId)
+                console.log("Found quest:", currentQuest ? currentQuest.title : "NOT FOUND")
+                
+                if (currentQuest) {
+                    // Transform quest data to match frontend format
+                    const transformedQuest = {
+                        id: currentQuest.id || currentQuest._id,
+                        _id: currentQuest._id,
+                        slug: currentQuest.slug,
+                        title: currentQuest.title,
+                        description: currentQuest.description,
+                        activities: currentQuest.activities || [],
+                        outcomes: currentQuest.outcomes || [],
+                        difficulty: currentQuest.difficulty,
+                        cropType: currentQuest.cropType,
+                        xpReward: currentQuest.xpReward,
+                        badgeName: currentQuest.badgeName,
+                        stages: currentQuest.steps || currentQuest.stages || [],
+                        steps: currentQuest.steps || currentQuest.stages || []
+                    }
+                    console.log("Transformed quest:", transformedQuest)
+                    setQuest(transformedQuest)
+                } else {
+                    console.error("Quest not found! Available quest IDs:", questsData.map(q => ({ _id: q._id, id: q.id, slug: q.slug })))
+                }
+
+                setLoading(false)
             } catch (error) {
-                console.error("Error fetching user data:", error)
-                const data = JSON.parse(localStorage.getItem("farmquest_userdata") || "{}")
-                setUserData(data)
+                console.error("Error fetching data:", error)
+                setLoading(false)
             }
         }
 
-        fetchUserData()
-    }, [router])
+        fetchData()
+    }, [router, questId])
 
-    const quest = QUESTS_DATA[questId]
+    if (loading || !userData) {
+        return (
+            <div className="min-h-screen flex items-center justify-center">
+                <div className="text-center">
+                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto mb-4"></div>
+                    <p className="text-gray-600">Loading quest data...</p>
+                </div>
+            </div>
+        )
+    }
 
     if (!quest) {
         return (
             <div className="min-h-screen flex items-center justify-center">
                 <div className="text-center">
-                    <h2 className="text-2xl font-bold mb-2">Quest Not Found</h2>
-                    <button onClick={() => router.push("/quests")} className="text-primary">
+                    <p className="text-red-600 mb-4">Quest not found</p>
+                    <p className="text-gray-600 mb-4">Quest ID: {questId}</p>
+                    <button 
+                        onClick={() => router.push("/quests")} 
+                        className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
+                    >
                         Back to Quests
                     </button>
                 </div>
@@ -81,10 +151,6 @@ function QuestContent() {
 
     // Check if quest is completed
     const isCompleted = userData?.completedQuests?.some(q => q.questId === questId || q === questId) || false
-
-    if (!userData) {
-        return <div className="min-h-screen flex items-center justify-center">Loading...</div>
-    }
 
     const showSuccessToast = (message) => {
         setToastMessage(message)
@@ -97,55 +163,52 @@ function QuestContent() {
             const token = localStorage.getItem("token")
             const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:4000"
 
-            // Calculate new XP and level
-            const newXP = (userData.xp || 0) + quest.xpReward
-            const newXpLevel = Math.floor(newXP / 100)
-
-            // Update user in backend
-            const updateResponse = await fetch(`${backendUrl}/api/users/me`, {
-                method: "PATCH",
+            // Call backend auto-complete endpoint to award XP
+            const completeResponse = await fetch(`${backendUrl}/api/submissions/auto-complete`, {
+                method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                     "Authorization": `Bearer ${token}`
                 },
                 body: JSON.stringify({
-                    xp: newXP,
-                    xpLevel: newXpLevel,
-                    questsProgress: [
-                        ...(userData.questsProgress || []),
-                        {
-                            questId: quest.id,
-                            status: "completed",
-                            stageIndex: quest.stages?.length || 0
-                        }
-                    ]
+                    questId: quest.id
                 })
             })
 
-            if (!updateResponse.ok) {
-                const errorData = await updateResponse.json().catch(() => ({}))
+            if (!completeResponse.ok) {
+                const errorData = await completeResponse.json().catch(() => ({}))
                 console.error("Backend error:", errorData)
-                throw new Error(errorData.message || "Failed to update user progress")
+                throw new Error(errorData.message || "Failed to complete quest")
             }
 
-            const updatedUser = await updateResponse.json()
+            const result = await completeResponse.json()
 
-            // Update local state
+            // Update local state with backend response
             const updatedData = {
                 ...userData,
-                xp: newXP,
-                xpLevel: newXpLevel,
+                xp: result.updatedXP,
+                xpLevel: result.updatedLevel,
                 completedQuests: [...(userData.completedQuests || []), quest.id],
                 badges: [...(userData.badges || []), quest.badgeName],
-                questsProgress: updatedUser.questsProgress || []
+                questsProgress: [
+                    ...(userData.questsProgress || []).filter(q => q.questId !== quest.id),
+                    {
+                        questId: quest.id,
+                        status: 'completed',
+                        stageIndex: quest.stages?.length || 0
+                    }
+                ]
             }
 
             setUserData(updatedData)
             localStorage.setItem("farmquest_userdata", JSON.stringify(updatedData))
 
-            showSuccessToast(`🎉 +${quest.xpReward} XP earned! You're now level ${newXpLevel}!`)
+            showSuccessToast(`🎉 +${result.xpAwarded} XP earned! You're now level ${result.updatedLevel}!`)
 
-            return { leveledUp: newXpLevel > (userData.xpLevel || 0), newLevel: newXpLevel }
+            return {
+                leveledUp: result.leveledUp,
+                newLevel: result.updatedLevel
+            }
         } catch (error) {
             console.error("Error completing quest:", error)
             showSuccessToast("⚠️ Failed to save progress. Please try again.")
@@ -157,9 +220,55 @@ function QuestContent() {
         router.push(`/quests/${questId}?step=${newStep}`)
     }
 
-    const questIds = Object.keys(QUESTS_DATA)
-    const currentQuestIndex = questIds.indexOf(questId)
-    const nextQuestId = questIds[currentQuestIndex + 1] || questIds[0]
+    const handleStartQuest = async () => {
+        try {
+            const token = localStorage.getItem("token")
+            const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:4000"
+
+            // Check if quest is already in progress or completed
+            const existingProgress = userData.questsProgress?.find(
+                qp => (qp.questId === questId || qp.questId === quest.id || qp.questId === quest.slug)
+            )
+
+            if (!existingProgress) {
+                // Use the quest progress endpoint to start the quest
+                const progressResponse = await fetch(`${backendUrl}/api/quests/${quest.id}/progress`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${token}`
+                    },
+                    body: JSON.stringify({
+                        stageIndex: 0,
+                        status: "in-progress"
+                    })
+                })
+
+                if (!progressResponse.ok) {
+                    throw new Error("Failed to start quest")
+                }
+
+                const updatedQuestsProgress = await progressResponse.json()
+
+                // Update local state
+                const updatedData = {
+                    ...userData,
+                    questsProgress: updatedQuestsProgress
+                }
+                setUserData(updatedData)
+                localStorage.setItem("farmquest_userdata", JSON.stringify(updatedData))
+            }
+
+            // Navigate to steps
+            navigateToStep("steps&page=1")
+        } catch (error) {
+            console.error("Error starting quest:", error)
+            showSuccessToast("⚠️ Failed to start quest. Please try again.")
+        }
+    }
+
+    const currentQuestIndex = allQuests.findIndex(q => q._id === questId || q.slug === questId)
+    const nextQuestId = allQuests[currentQuestIndex + 1]?._id || allQuests[0]?._id
 
     const handleNextQuest = () => {
         router.push(`/quests/${nextQuestId}`)
@@ -170,7 +279,7 @@ function QuestContent() {
             {step === "intro" && (
                 <QuestIntroScreen
                     quest={quest}
-                    onStart={() => navigateToStep("steps&page=1")}
+                    onStart={handleStartQuest}
                     onBack={() => router.push("/quests")}
                     isCompleted={isCompleted}
                 />
@@ -196,28 +305,28 @@ function QuestContent() {
                         onBack={() => navigateToStep("steps")}
                     />
                 ) : (
-                    <SubmitProofScreen
-                        quest={quest}
-                        onSubmit={() => {
-                            showSuccessToast("✅ Submitted! Admin will review within 24 hours 🌱")
-                            navigateToStep("verification")
-                        }}
-                        onBack={() => navigateToStep("steps")}
-                    />
+                    <>
+                        {console.log("Rendering SubmitProofScreen for quest:", quest.id)}
+                        <SubmitProofScreen
+                            quest={quest}
+                            onSubmit={(verificationResult) => {
+                                setVerificationData(verificationResult)
+                                showSuccessToast("✅ Submitted! Admin will review within 24 hours 🌱")
+                                navigateToStep("verification")
+                            }}
+                            onBack={() => navigateToStep("steps")}
+                        />
+                    </>
                 )
             )}
 
             {step === "verification" && (
                 <VerificationScreen
                     quest={quest}
+                    verificationData={verificationData}
                     onContinue={() => {
-                        // For auto-verified quests (like crops), go to reward screen
-                        if (quest.id === "crops" || quest.id === "soil_scout") {
-                            navigateToStep("reward")
-                        } else {
-                            // For quests requiring admin approval, go back to quest list
-                            router.push("/quests")
-                        }
+                        // Navigate to learning summary screen
+                        navigateToStep("summary")
                     }}
                 />
             )}
