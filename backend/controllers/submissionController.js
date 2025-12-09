@@ -26,7 +26,7 @@ const QUEST_XP_REWARDS = {
 
 exports.createSubmission = async (req, res) => {
   try {
-    const { questId, stageIndex, media, notes, checklist, proofType, proofUrl, description } = req.body;
+    const { questId, stageIndex, media, notes, checklist, proofType, proofUrl, description, cottonVerification, questVerification } = req.body;
 
     // Validate S3 uploads if media keys are provided
     if (media && media.length > 0) {
@@ -48,7 +48,9 @@ exports.createSubmission = async (req, res) => {
       checklist: checklist || [],
       status: 'pending',
       proofType: proofType || 'text',
-      proofUrl: proofUrl || ''
+      proofUrl: proofUrl || '',
+      cottonVerification: cottonVerification || undefined,
+      questVerification: questVerification || undefined
     });
 
     await submission.save();
@@ -188,6 +190,23 @@ exports.getSubmissionsForQuest = async (req, res) => {
     const submissions = await Submission.find({ questId: req.params.id, userId: req.user.userId });
     res.status(200).json(submissions);
   } catch (error) {
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+exports.getUserSubmissions = async (req, res) => {
+  try {
+    const { questId } = req.query;
+    const query = { userId: req.user.userId };
+    
+    if (questId) {
+      query.questId = questId;
+    }
+    
+    const submissions = await Submission.find(query).sort({ createdAt: -1 });
+    res.status(200).json(submissions);
+  } catch (error) {
+    console.error('Get submissions error:', error);
     res.status(500).json({ message: 'Server error' });
   }
 };

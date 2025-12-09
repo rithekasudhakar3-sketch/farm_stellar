@@ -243,6 +243,15 @@ function QuestWizard({ steps, onComplete, onBack, questId }) {
   )
 
   const handleNext = () => {
+    // Check if all checkboxes are checked for non-summary steps
+    if (!isSummaryStep && step.subSteps && step.subSteps.length > 0) {
+      const allChecked = step.subSteps.every((_, idx) => checkedItems[safeIndex]?.[idx])
+      if (!allChecked) {
+        // Don't proceed if not all items are checked
+        return
+      }
+    }
+    
     if (isLastStep) {
       onComplete()
     } else {
@@ -262,6 +271,10 @@ function QuestWizard({ steps, onComplete, onBack, questId }) {
 
   // Calculate progress percentage
   const progress = ((safeIndex + 1) / steps.length) * 100
+  
+  // Check if all checkboxes for current step are checked
+  const currentStepAllChecked = !step.subSteps || step.subSteps.length === 0 || isSummaryStep || 
+    step.subSteps.every((_, idx) => checkedItems[safeIndex]?.[idx])
 
   return (
     <div className="h-screen flex flex-col bg-background overflow-hidden font-sans">
@@ -411,11 +424,21 @@ function QuestWizard({ steps, onComplete, onBack, questId }) {
             <div className="p-6 border-t border-border bg-background/80 backdrop-blur-xl absolute bottom-0 left-0 right-0 z-10">
               <button
                 onClick={handleNext}
-                className="w-full bg-primary text-primary-foreground font-bold py-4 rounded-2xl hover:bg-primary/90 transition-all shadow-lg shadow-primary/20 flex items-center justify-center gap-2 transform active:scale-[0.98] text-lg"
+                disabled={!currentStepAllChecked}
+                className={`w-full font-bold py-4 rounded-2xl transition-all flex items-center justify-center gap-2 transform active:scale-[0.98] text-lg ${
+                  currentStepAllChecked
+                    ? "bg-primary text-primary-foreground hover:bg-primary/90 shadow-lg shadow-primary/20"
+                    : "bg-muted text-muted-foreground cursor-not-allowed opacity-60"
+                }`}
               >
                 {isLastStep ? "Complete Mission" : "Next Step"}
                 {!isLastStep && <ChevronRight className="w-5 h-5 stroke-[3]" />}
               </button>
+              {!currentStepAllChecked && step.subSteps && step.subSteps.length > 0 && (
+                <p className="text-xs text-center text-muted-foreground mt-2">
+                  Complete all checkboxes to continue
+                </p>
+              )}
             </div>
           </div>
         </div>
