@@ -29,9 +29,9 @@ export function NavigationMenu({
     { icon: Leaf, label: "Quests", screenId: "quests-list" },
     { icon: Users, label: "Community", screenId: "community" },
     { icon: Gift, label: "Rewards", screenId: "impact-tracker" },
-    { icon: User, label: "Profile", screenId: "farmer-profile" },
-    { icon: Settings, label: "Settings", screenId: "settings" },
-    { icon: HelpCircle, label: "Help", screenId: "farmer-dashboard" },
+    { icon: Settings, label: "Settings", screenId: "farmer-profile" },
+    // { icon: Settings, label: "Settings", screenId: "settings" },
+    // { icon: HelpCircle, label: "Help", screenId: "farmer-dashboard" },
   ]
 
   const handleMenuNavigation = (screenId) => {
@@ -73,9 +73,8 @@ export function NavigationMenu({
       )}
 
       <nav
-        className={`fixed top-0 left-0 h-full w-80 bg-background border-r border-border shadow-2xl z-50 transform transition-transform duration-300 ease-out ${
-          isMenuOpen ? "translate-x-0" : "-translate-x-full"
-        }`}
+        className={`fixed top-0 left-0 h-full w-80 bg-background border-r border-border shadow-2xl z-50 transform transition-transform duration-300 ease-out ${isMenuOpen ? "translate-x-0" : "-translate-x-full"
+          }`}
         aria-label="Main navigation"
       >
         <div className="h-full overflow-y-auto">
@@ -120,21 +119,18 @@ export function NavigationMenu({
                   <button
                     key={index}
                     onClick={() => handleMenuNavigation(menuItem.screenId)}
-                    className={`w-full flex items-center gap-4 p-4 rounded-xl transition-all group ${
-                      isActiveScreen ? "bg-primary text-primary-foreground shadow-md" : "hover:bg-muted"
-                    }`}
+                    className={`w-full flex items-center gap-4 p-4 rounded-xl transition-all group ${isActiveScreen ? "bg-primary text-primary-foreground shadow-md" : "hover:bg-muted"
+                      }`}
                   >
                     <div
-                      className={`p-2.5 rounded-lg transition-colors ${
-                        isActiveScreen ? "bg-primary-foreground/20" : "bg-primary/10 group-hover:bg-primary/20"
-                      }`}
+                      className={`p-2.5 rounded-lg transition-colors ${isActiveScreen ? "bg-primary-foreground/20" : "bg-primary/10 group-hover:bg-primary/20"
+                        }`}
                     >
                       <MenuIcon className={`icon-sm ${isActiveScreen ? "text-primary-foreground" : "text-primary"}`} />
                     </div>
                     <span
-                      className={`font-medium group-hover:translate-x-0.5 transition-transform ${
-                        isActiveScreen ? "text-primary-foreground" : "text-foreground"
-                      }`}
+                      className={`font-medium group-hover:translate-x-0.5 transition-transform ${isActiveScreen ? "text-primary-foreground" : "text-foreground"
+                        }`}
                     >
                       {menuItem.label}
                     </span>

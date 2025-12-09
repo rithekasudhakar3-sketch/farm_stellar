@@ -131,9 +131,10 @@ export function CommunityScreen({ userData, onBack }) {
 
       if (response.ok) {
         const data = await response.json()
+        // Update post in state
         setPosts(posts.map(post =>
           post._id === postId
-            ? { ...post, likesCount: data.likesCount, isLikedByUser: data.isLiked }
+            ? { ...post, likesCount: data.likesCount, isLiked: data.isLiked }
             : post
         ))
       }
@@ -225,7 +226,7 @@ export function CommunityScreen({ userData, onBack }) {
           </button>
           <h1
             className="text-2xl font-bold text-foreground flex items-center gap-2"
-            style={{ fontFamily: "Mali, cursive" }}
+            style={{ fontFamily: "'Segoe UI', sans-serif" }}
           >
             <Flower2 className="w-6 h-6 text-accent" />
             Community Garden
@@ -289,37 +290,44 @@ export function CommunityScreen({ userData, onBack }) {
         </Button>
 
         {/* Posts Feed */}
-        {loading ? (
-          <div className="text-center py-8 text-muted-foreground">Loading posts...</div>
-        ) : posts.length === 0 ? (
-          <div className="text-center py-12 bg-card rounded-2xl border-2 border-dashed border-border">
-            <Leaf className="w-12 h-12 mx-auto text-muted-foreground mb-3" />
-            <p className="text-muted-foreground">No posts yet. Be the first to share!</p>
-          </div>
-        ) : (
-          <div className="space-y-5">
-            {posts.map((post, idx) => (
+        <div className="space-y-5">
+          {loading ? (
+            <div className="bg-card border-[1.5px] border-border rounded-2xl p-12 text-center shadow-[0_2px_8px_rgba(107,166,115,0.08),0_1px_3px_rgba(107,166,115,0.04)]">
+              <p className="text-muted-foreground">Loading posts...</p>
+            </div>
+          ) : posts.length === 0 ? (
+            <div className="bg-card border-[1.5px] border-border rounded-2xl p-12 text-center shadow-[0_2px_8px_rgba(107,166,115,0.08),0_1px_3px_rgba(107,166,115,0.04)]">
+              <Flower2 className="w-16 h-16 mx-auto text-muted-foreground/30 mb-4" />
+              <h3 className="text-lg font-semibold text-foreground mb-2">No posts yet</h3>
+              <p className="text-muted-foreground">Be the first to share your farming story! 🌱</p>
+            </div>
+          ) : (
+            posts.map((post, idx) => (
               <div
                 key={post._id}
-                className="bg-card border-[1.5px] border-border rounded-2xl p-6 shadow-md hover:shadow-lg hover:-translate-y-0.5 transition-all"
+                className="bg-card border-[1.5px] border-border rounded-2xl p-6 shadow-[0_2px_8px_rgba(107,166,115,0.08),0_1px_3px_rgba(107,166,115,0.04)] hover:shadow-[0_4px_12px_rgba(107,166,115,0.12),0_2px_6px_rgba(107,166,115,0.08)] hover:-translate-y-0.5 transition-all relative before:content-[''] before:absolute before:inset-[-2px] before:border-2 before:border-primary before:rounded-2xl before:opacity-0 hover:before:opacity-20 before:transition-opacity animate-grow"
                 style={{ animationDelay: `${idx * 100}ms` }}
               >
                 <div className="flex items-start gap-3 mb-4">
                   <div className="w-12 h-12 rounded-full bg-gradient-to-br from-primary/30 to-accent/30 flex items-center justify-center text-foreground font-bold border-2 border-primary/20">
-                    {post.userAvatar || post.userName?.charAt(0) || "F"}
+                    {post.userId?.name?.substring(0, 2).toUpperCase() || "U"}
                   </div>
                   <div className="flex-1">
-                    <h3 className="font-semibold text-foreground">
-                      {post.userName}
+                    <h3 className="font-semibold text-foreground" style={{ fontFamily: "'Segoe UI', sans-serif" }}>
+                      {post.userId?.name || "Unknown User"}
                     </h3>
                     <div className="flex items-center gap-2 text-sm text-muted-foreground">
                       <MapPin className="w-3 h-3" />
-                      <span>{post.district || post.city || "Unknown"}</span>
+                      <span>{post.district || post.userId?.district || "Unknown"}</span>
                       <span>•</span>
-                      <span>{formatTimestamp(post.createdAt)}</span>
+                      <span>{new Date(post.createdAt).toLocaleDateString()}</span>
                     </div>
                   </div>
                 </div>
+
+                {post.title && (
+                  <h4 className="font-bold text-foreground mb-2 text-lg">{post.title}</h4>
+                )}
                 <p className="text-foreground mb-4 leading-relaxed">{post.content}</p>
 
                 {post.images && post.images.length > 0 && (
@@ -327,9 +335,13 @@ export function CommunityScreen({ userData, onBack }) {
                     {post.images.map((img, idx) => (
                       <img
                         key={idx}
-                        src={img || "/placeholder.svg"}
+                        src={img.url || img.key || "/placeholder.svg"}
                         alt={`Post image ${idx + 1}`}
                         className="w-full h-52 object-cover rounded-2xl border-2 border-primary/10 hover:border-primary/30 transition-colors"
+                        onError={(e) => {
+                          e.target.onerror = null
+                          e.target.src = "/placeholder.svg"
+                        }}
                       />
                     ))}
                   </div>
@@ -337,26 +349,23 @@ export function CommunityScreen({ userData, onBack }) {
 
                 <div className="flex items-center gap-6 text-muted-foreground pt-3 border-t-2 border-dashed border-border">
                   <button
-                    onClick={() => handleToggleLike(post._id)}
-                    className={`flex items-center gap-2 transition-colors group ${post.isLikedByUser ? "text-primary" : "hover:text-primary"
-                      }`}
+                    onClick={() => toggleLike(post._id, post.isLiked)}
+                    className={`flex items-center gap-2 hover:text-primary transition-colors group ${post.isLiked ? 'text-primary' : ''}`}
                   >
-                    <Heart className={`w-5 h-5 group-hover:scale-110 transition-all ${post.isLikedByUser ? "fill-primary" : ""
-                      }`} />
-                    <span className="text-sm font-medium">{post.likesCount} 💚</span>
+                    <Heart className={`w-5 h-5 group-hover:scale-110 transition-all ${post.isLiked ? 'fill-primary' : ''}`} />
+                    <span className="text-sm font-medium">{post.likesCount || 0} 💚</span>
                   </button>
                   <button
                     onClick={() => openCommentModal(post)}
                     className="flex items-center gap-2 hover:text-primary transition-colors group"
                   >
                     <MessageCircle className="w-5 h-5 group-hover:scale-110 transition-transform" />
-                    <span className="text-sm font-medium">{post.commentsCount} 💬</span>
+                    <span className="text-sm font-medium">{post.commentsCount || 0} 💬</span>
                   </button>
                 </div>
               </div>
-            ))}
-          </div>
-        )}
+            )))}
+        </div>
       </div>
 
       {/* Create Post Modal */}
@@ -370,6 +379,15 @@ export function CommunityScreen({ userData, onBack }) {
                 Share Your Story
               </h2>
             </div>
+
+            <input
+              type="text"
+              value={newTitle}
+              onChange={(e) => setNewTitle(e.target.value)}
+              placeholder="Post Title"
+              className="w-full p-3 mb-3 rounded-2xl border-2 border-border focus:border-primary focus:outline-none bg-background text-foreground"
+              autoComplete="off"
+            />
 
             <textarea
               value={newPost}

@@ -5,102 +5,101 @@ import { QuestCompletionProgress } from "./quest-completion-progress"
 
 export const stepsData = {
   soil_scout: [
-    { icon: "🥄", title: "Collect Soil", instruction: "Dig 6 inches deep and collect a small soil sample." },
-    { icon: "✋", title: "Texture Test", instruction: "Rub soil between fingers to check sand/silt/clay ratio." },
-    { icon: "💧", title: "Moisture Check", instruction: "Observe if soil feels dry, moist, or sticky." },
-    { icon: "👃", title: "Smell Test", instruction: "Healthy soil has an earthy smell with no foul odor." }
+    { icon: "🥄", title: "Collect Soil", instruction: "Dig 6 inches and take a little soil." },
+    { icon: "✋", title: "Texture Test", instruction: "Rub soil in hand to feel rough or smooth." },
+    { icon: "💧", title: "Moisture Check", instruction: "See if soil is dry, moist, or sticky." },
+    { icon: "👃", title: "Smell Test", instruction: "Good soil smells earthy, not bad." }
   ],
 
   crop_quest: [
-    { icon: "👀", title: "Explore Crops", instruction: "Browse suggested crops based on your region." },
-    { icon: "🌾", title: "Pick Your 3 Crops", instruction: "Select crops that fit your climate & land." },
-    { icon: "📅", title: "Check Season", instruction: "Match each crop with the correct planting season." },
-    { icon: "💧", title: "Water Needs", instruction: "Confirm whether crops require low, medium, or high water." }
+    { icon: "👀", title: "Explore Crops", instruction: "See crops that suit your area." },
+    { icon: "🌾", title: "Pick Your 3 Crops", instruction: "Choose 3 crops for your weather and land." },
+    { icon: "📅", title: "Check Season", instruction: "Match each crop with correct season." },
+    { icon: "💧", title: "Water Needs", instruction: "Check if crops need low, medium, or high water." }
   ],
 
   compost_kickoff: [
-    { icon: "📍", title: "Choose Spot", instruction: "Select a shaded spot with good airflow." },
-    { icon: "🥬", title: "Add Greens", instruction: "Include kitchen waste like peels & scraps." },
-    { icon: "🍂", title: "Add Browns", instruction: "Mix dry leaves, cardboard, or straw." },
-    { icon: "🔄", title: "Mix Weekly", instruction: "Turn compost every 7 days to speed decomposition." }
+    { icon: "📍", title: "Choose Spot", instruction: "Pick a shaded place with airflow." },
+    { icon: "🥬", title: "Add Greens", instruction: "Add kitchen waste like peels." },
+    { icon: "🍂", title: "Add Browns", instruction: "Add dry leaves or cardboard." },
+    { icon: "🔄", title: "Mix Weekly", instruction: "Turn compost once a week." }
   ],
 
   zero_waste: [
-    { icon: "♻️", title: "Segregate Waste", instruction: "Separate organic & non-organic waste at home." },
-    { icon: "🍂", title: "Collect Dry Leaves", instruction: "Store leaves for mulching your plants." },
-    { icon: "🗑️", title: "Mini Waste Station", instruction: "Set up 2–3 labeled bins for easy segregation." }
+    { icon: "♻️", title: "Segregate Waste", instruction: "Keep wet and dry waste separate." },
+    { icon: "🍂", title: "Collect Dry Leaves", instruction: "Save dry leaves for mulch or compost." },
+    { icon: "🗑️", title: "Mini Waste Station", instruction: "Keep 2–3 bins for easy sorting." }
   ],
 
   mini_garden: [
-    { icon: "🌱", title: "Pick 5 Plants", instruction: "Choose beginner-friendly herbs/veggies." },
-    { icon: "🪴", title: "Prepare Patch", instruction: "Loosen top soil in a 1×1m area." },
-    { icon: "🌾", title: "Plant Seeds", instruction: "Sow seeds or plant small saplings." },
-    { icon: "💧", title: "Water & Mulch", instruction: "Keep soil moist and apply mulch on top." }
+    { icon: "🌱", title: "Pick 5 Plants", instruction: "Choose easy plants to start with." },
+    { icon: "🪴", title: "Prepare Patch", instruction: "Loosen soil in a 1×1m area." },
+    { icon: "🌾", title: "Plant Seeds", instruction: "Put seeds or plant small saplings." },
+    { icon: "💧", title: "Water & Mulch", instruction: "Water lightly and add mulch on top." }
   ],
 
   mulch_master: [
-    { icon: "🍂", title: "Collect Mulch", instruction: "Gather dry leaves, straw, or grass clippings." },
-    { icon: "🌿", title: "Spread Mulch", instruction: "Create a 2–3 inch thick layer around the plant." },
-    { icon: "💦", title: "Settle Mulch", instruction: "Water lightly to keep mulch in place." }
+    { icon: "🍂", title: "Collect Mulch", instruction: "Take dry leaves or straw." },
+    { icon: "🌿", title: "Spread Mulch", instruction: "Keep a 2–3 inch layer around plants." },
+    { icon: "💦", title: "Settle Mulch", instruction: "Water a little to hold mulch in place." }
   ],
 
   boll_keeper: [
-    { icon: "🔍", title: "Inspect Bolls", instruction: "Check for early shedding & pest marks." },
-    { icon: "🧪", title: "Nutrient Spray", instruction: "Apply balanced micronutrient foliar spray." },
-    { icon: "✂️", title: "Remove Damage", instruction: "Cut off pest-affected bolls to prevent spread." }
+    { icon: "🔍", title: "Check Early Boll Shedding", instruction: "Look for bolls falling early." },
+    { icon: "🧪", title: "Nutrient Spray", instruction: "Spray balanced nutrients on leaves." },
+    { icon: "✂️", title: "Remove Bad Bolls", instruction: "Cut and remove pest-damaged bolls." }
   ],
 
   coconut_basin: [
-    { icon: "📏", title: "Mark Radius", instruction: "Draw a 1–1.5m circle around the tree." },
-    { icon: "⛏️", title: "Dig Basin", instruction: "Create a shallow circular trench." },
-    { icon: "📐", title: "Level Soil", instruction: "Flatten inner area for even watering." },
-    { icon: "🍂", title: "Add Mulch", instruction: "Fill with dry leaves or coconut husk." },
-    { icon: "💧", title: "Water", instruction: "Water gently to help basin settle." }
+    { icon: "📏", title: "Mark Radius", instruction: "Draw a 1–1.5m circle around tree." },
+    { icon: "⛏️", title: "Dig Basin", instruction: "Dig a small round trench." },
+    { icon: "📐", title: "Level Soil", instruction: "Make inner soil flat." },
+    { icon: "🍂", title: "Add Mulch", instruction: "Put dry leaves or husk inside." },
+    { icon: "💧", title: "Water", instruction: "Water slowly to settle the basin." }
   ],
 
   coconut_bioenzyme: [
-    { icon: "🥥", title: "Collect Water", instruction: "Use leftover coconut water as base." },
-    { icon: "🍯", title: "Add Jaggery", instruction: "Mix jaggery to feed microbes." },
-    { icon: "🧪", title: "Ferment 7 Days", instruction: "Store sealed and allow natural fermentation." },
-    { icon: "💧", title: "Dilute & Apply", instruction: "Mix with water (1:20) and pour around root zone." }
+    { icon: "🥥", title: "Collect Water", instruction: "Use leftover coconut water." },
+    { icon: "🍯", title: "Add Jaggery", instruction: "Mix jaggery for microbes." },
+    { icon: "🧪", title: "Ferment 7 Days", instruction: "Keep covered for 7 days." },
+    { icon: "💧", title: "Dilute & Apply", instruction: "Mix 1:20 with water and pour near roots." }
   ],
 
   rust_shield: [
-    { icon: "🔍", title: "Spot Symptoms", instruction: "Look for yellow/orange rust patches on leaves." },
-    { icon: "✂️", title: "Remove Infected Leaves", instruction: "Cut and discard affected parts safely." },
-    { icon: "🌬️", title: "Improve Airflow", instruction: "Ensure proper spacing between plants." },
-    { icon: "🧴", title: "Organic Spray", instruction: "Apply safe fungicidal solution weekly." }
+    { icon: "🔍", title: "Spot Symptoms", instruction: "Check for yellow or orange leaf spots." },
+    { icon: "✂️", title: "Remove Leaves", instruction: "Cut and throw infected leaves." },
+    { icon: "🌬️", title: "Improve Airflow", instruction: "Give plants enough space." },
+    { icon: "🧴", title: "Organic Spray", instruction: "Spray safe fungicide weekly." }
   ],
 
   biodiversity_strip: [
-    { icon: "🌼", title: "Select Flowers", instruction: "Choose 5 pollinator-friendly plants." },
-    { icon: "📏", title: "Mark 1m Strip", instruction: "Prepare a 1-meter planting strip." },
-    { icon: "🌱", title: "Cluster Planting", instruction: "Plant flowers in small clusters." },
-    { icon: "🍂", title: "Mulch & Water", instruction: "Mulch lightly and water regularly." }
+    { icon: "🌼", title: "Select Flowers", instruction: "Choose 5 insect-friendly flowers." },
+    { icon: "📏", title: "Mark 1m Strip", instruction: "Prepare a 1m long strip." },
+    { icon: "🌱", title: "Plant Clusters", instruction: "Plant flowers in small groups." },
+    { icon: "🍂", title: "Mulch & Water", instruction: "Mulch lightly and water." }
   ],
 
   rainwater_hero: [
-    { icon: "🛢️", title: "Place Barrel", instruction: "Set container under roof edge to collect runoff." },
-    { icon: "🧵", title: "Add Mesh Filter", instruction: "Install mesh to block debris and insects." },
-    { icon: "🚰", title: "Fit Tap", instruction: "Attach outlet tap near bottom of barrel." },
-    { icon: "💧", title: "Use Saved Water", instruction: "Water plants using collected rainwater." }
+    { icon: "🛢️", title: "Place Barrel", instruction: "Keep drum under roof water flow." },
+    { icon: "🧵", title: "Add Mesh Filter", instruction: "Use mesh to stop dirt and insects." },
+    { icon: "🚰", title: "Fit Tap", instruction: "Fix a tap near bottom of drum." },
+    { icon: "💧", title: "Use Saved Water", instruction: "Water plants with stored rainwater." }
   ],
 
   biochar_maker: [
-    { icon: "🪵", title: "Gather Waste Wood", instruction: "Collect dry sticks, branches, and husk pieces." },
-    { icon: "🔥", title: "Burn Low-Oxygen", instruction: "Slow-burn in pit while limiting airflow." },
-    { icon: "🪨", title: "Crush Charcoal", instruction: "Break cooled biochar into smaller pieces." },
-    { icon: "🌱", title: "Mix with Compost", instruction: "Blend biochar into compost before application." }
+    { icon: "🪵", title: "Collect Wood", instruction: "Gather dry sticks and branches." },
+    { icon: "🔥", title: "Burn Low-Oxygen", instruction: "Burn slowly with less air." },
+    { icon: "🪨", title: "Crush Charcoal", instruction: "Break cooled charcoal into pieces." },
+    { icon: "🌱", title: "Mix with Compost", instruction: "Mix biochar into compost." }
   ],
 
   jeevamrutham: [
-    { icon: "🐄", title: "Mix Dung & Urine", instruction: "Combine fresh cow dung and urine in a drum." },
-    { icon: "🍯", title: "Add Jaggery + Flour", instruction: "Add jaggery & gram flour to feed microbes." },
-    { icon: "🧪", title: "Ferment 5–7 Days", instruction: "Stir daily and allow microbial growth." },
-    { icon: "🌾", title: "Apply to Soil", instruction: "Pour near root zone for microbial boost." }
+    { icon: "🐄", title: "Mix Dung & Urine", instruction: "Add fresh cow dung and urine in a drum." },
+    { icon: "🍯", title: "Add Jaggery + Flour", instruction: "Mix jaggery and gram flour." },
+    { icon: "🧪", title: "Ferment 5–7 Days", instruction: "Stir daily and let it ferment." },
+    { icon: "🌾", title: "Apply to Soil", instruction: "Pour near plant roots." }
   ]
 };
-
 export function QuestStepsScreen({ quest, onContinue, onBack }) {
   // Check if we have detailed steps in the quest object (New Format)
   const detailedSteps = quest.steps
@@ -124,7 +123,34 @@ export function QuestStepsScreen({ quest, onContinue, onBack }) {
 
   useEffect(() => {
     sessionStorage.setItem(storageKey, JSON.stringify(completedSteps))
-  }, [completedSteps, storageKey])
+
+    // Update quest progress in backend
+    const updateProgress = async () => {
+      const token = localStorage.getItem("token")
+      if (!token) return
+
+      const completedCount = completedSteps.filter(Boolean).length
+      const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:4000"
+
+      try {
+        await fetch(`${backendUrl}/api/quests/${quest.id}/progress`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`
+          },
+          body: JSON.stringify({
+            stageIndex: completedCount,
+            status: completedCount === steps.length ? "completed" : "in-progress"
+          })
+        })
+      } catch (error) {
+        console.error("Failed to update progress:", error)
+      }
+    }
+
+    updateProgress()
+  }, [completedSteps, storageKey, quest.id, steps.length])
 
   const toggleStep = (index) => {
     const newCompleted = [...completedSteps]
@@ -219,6 +245,9 @@ function QuestWizard({ steps, onComplete, onBack, questId }) {
     return {}
   })
 
+  // Warning message state
+  const [showWarning, setShowWarning] = useState(false)
+
   useEffect(() => {
     sessionStorage.setItem(storageKey, JSON.stringify(checkedItems))
   }, [checkedItems, storageKey])
@@ -231,7 +260,16 @@ function QuestWizard({ steps, onComplete, onBack, questId }) {
         [subStepIdx]: !prev[safeIndex]?.[subStepIdx]
       }
     }))
+    // Hide warning when user checks an item
+    if (showWarning) setShowWarning(false)
   }
+
+  // Check if all substeps for current step are completed
+  const currentStepSubSteps = step.subSteps || []
+  const currentStepChecks = checkedItems[safeIndex] || {}
+  const allSubStepsChecked = currentStepSubSteps.length === 0 ||
+    currentStepSubSteps.every((_, idx) => currentStepChecks[idx] === true)
+  const canProceed = isSummaryStep || allSubStepsChecked
 
   const createQueryString = useCallback(
     (name, value) => {
@@ -346,9 +384,20 @@ function QuestWizard({ steps, onComplete, onBack, questId }) {
 
             {/* Footer Button */}
             <div className="p-6 border-t border-border bg-background/80 backdrop-blur-xl absolute bottom-0 left-0 right-0 z-10">
+              {/* Warning Message */}
+              {showWarning && !canProceed && (
+                <div className="mb-3 p-3 bg-destructive/10 border border-destructive/30 rounded-xl text-center animate-in fade-in slide-in-from-bottom-2 duration-300">
+                  <p className="text-sm font-semibold text-destructive">⚠️ Complete all steps to continue</p>
+                </div>
+              )}
+
               <button
                 onClick={handleNext}
-                className="w-full bg-primary text-primary-foreground font-bold py-4 rounded-2xl hover:bg-primary/90 transition-all shadow-lg shadow-primary/20 flex items-center justify-center gap-2 transform active:scale-[0.98] text-lg"
+                disabled={!canProceed}
+                className={`w-full font-bold py-4 rounded-2xl transition-all shadow-lg flex items-center justify-center gap-2 transform active:scale-[0.98] text-lg ${canProceed
+                  ? "bg-primary text-primary-foreground hover:bg-primary/90 shadow-primary/20"
+                  : "bg-muted text-muted-foreground cursor-not-allowed opacity-60"
+                  }`}
               >
                 {isLastStep ? "Complete Mission" : "Next Step"}
                 {!isLastStep && <ChevronRight className="w-5 h-5 stroke-[3]" />}
@@ -422,6 +471,13 @@ function QuestWizard({ steps, onComplete, onBack, questId }) {
 
             {/* Footer Button */}
             <div className="p-6 border-t border-border bg-background/80 backdrop-blur-xl absolute bottom-0 left-0 right-0 z-10">
+              {/* Warning Message */}
+              {showWarning && !canProceed && (
+                <div className="mb-3 p-3 bg-destructive/10 border border-destructive/30 rounded-xl text-center animate-in fade-in slide-in-from-bottom-2 duration-300">
+                  <p className="text-sm font-semibold text-destructive">⚠️ Complete all steps to continue</p>
+                </div>
+              )}
+
               <button
                 onClick={handleNext}
                 disabled={!currentStepAllChecked}

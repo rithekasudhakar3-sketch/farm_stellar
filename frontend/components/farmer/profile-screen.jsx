@@ -252,54 +252,37 @@ export function FarmerProfileScreen({ onBack }) {
   return (
     <div className="min-h-screen pb-32">
       <div className="sticky top-0 z-10 bg-card border-[1.5px] border-border rounded-2xl shadow-[0_2px_8px_rgba(107,166,115,0.08),0_1px_3px_rgba(107,166,115,0.04)] border-b-2 border-primary/20 p-4 watercolor-bg">
-        <div className="flex items-center justify-between max-w-2xl mx-auto">
-          <div className="flex items-center gap-4">
-            <button
-              onClick={onBack}
-              className="p-2 hover:bg-primary/10 rounded-2xl transition-colors"
-              aria-label="Go back"
-            >
-              <ArrowLeft className="w-6 h-6" />
-            </button>
-            <div>
-              <h1
-                className="text-2xl font-bold text-foreground flex items-center gap-2"
-                style={{ fontFamily: "Mali, cursive" }}
-              >
-                <Leaf className="w-6 h-6 text-primary" />
-                Profile
-              </h1>
-              {hasUnsavedChanges && (
-                <p className="text-xs text-muted-foreground mt-1">
-                  Auto-saving in 2s... or press <kbd className="px-1 py-0.5 bg-muted rounded text-xs">Ctrl+S</kbd>
-                </p>
-              )}
-            </div>
-          </div>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => {
-              if (hasUnsavedChanges && isEditing) {
-                setShowDiscardDialog(true)
-              } else {
-                setIsEditing(!isEditing)
-              }
-            }}
-            className="rounded-2xl"
+        <div className="flex items-center gap-4 max-w-2xl mx-auto">
+          <button
+            onClick={onBack}
+            className="p-2 hover:bg-primary/10 rounded-2xl transition-colors"
+            aria-label="Go back"
           >
-            <Edit2 className="w-4 h-4 mr-2" />
-            {isEditing ? "Cancel" : "Edit Profile"}
-          </Button>
+            <ArrowLeft className="w-6 h-6" />
+          </button>
+          <div>
+            <h1
+              className="text-2xl font-bold text-foreground flex items-center gap-2"
+              style={{ fontFamily: "'Segoe UI', sans-serif" }}
+            >
+              <Leaf className="w-6 h-6 text-primary" />
+              Settings
+            </h1>
+            {hasUnsavedChanges && (
+              <p className="text-xs text-muted-foreground mt-1">
+                Auto-saving in 2s... or press <kbd className="px-1 py-0.5 bg-muted rounded text-xs">Ctrl+S</kbd>
+              </p>
+            )}
+          </div>
         </div>
       </div>
 
       <div className="max-w-2xl mx-auto p-4 space-y-6">
         {/* Profile Header Card */}
         <div className="bg-card border-[1.5px] border-border rounded-2xl p-8 shadow-[0_2px_8px_rgba(107,166,115,0.08),0_1px_3px_rgba(107,166,115,0.04)] hover:shadow-[0_4px_12px_rgba(107,166,115,0.12),0_2px_6px_rgba(107,166,115,0.08)] hover:-translate-y-0.5 transition-all watercolor-bg border-2 border-primary/20 relative overflow-hidden soft-glow">
-          <div className="absolute bottom-4 left-4 opacity-10">
+          {/* <div className="absolute bottom-4 left-4 opacity-10">
             <Leaf className="w-20 h-20 text-primary" />
-          </div>
+          </div> */}
 
           <div className="flex items-center gap-5 mb-5 relative z-10">
             <div className="w-24 h-24 rounded-full bg-gradient-to-br from-primary/30 to-accent/30 backdrop-blur flex items-center justify-center text-4xl font-bold border-4 border-primary/20 shadow-lg">
@@ -322,9 +305,18 @@ export function FarmerProfileScreen({ onBack }) {
                   )}
                 </div>
               ) : (
-                <h2 className="text-3xl font-bold text-foreground mb-1" style={{ fontFamily: "Mali, cursive" }}>
-                  {profile.name}
-                </h2>
+                <div className="flex items-center gap-3 mb-1">
+                  <h2 className="text-3xl font-bold text-foreground" style={{ fontFamily: "Mali, cursive" }}>
+                    {profile.name}
+                  </h2>
+                  <button
+                    onClick={() => setIsEditing(true)}
+                    className="flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-primary hover:text-primary-foreground hover:bg-primary rounded-lg transition-all"
+                  >
+                    <Edit2 className="w-3.5 h-3.5" />
+                    <span>Edit</span>
+                  </button>
+                </div>
               )}
               <div className="flex items-center gap-2 text-muted-foreground">
                 <MapPin className="w-4 h-4" />
@@ -334,7 +326,7 @@ export function FarmerProfileScreen({ onBack }) {
               </div>
             </div>
           </div>
-          <div className="grid grid-cols-3 gap-4 pt-5 border-t-2 border-dashed border-primary/20 relative z-10">
+          {/* <div className="grid grid-cols-3 gap-4 pt-5 border-t-2 border-dashed border-primary/20 relative z-10">
             <div className="text-center p-3 bg-white/50 rounded-2xl">
               <div className="text-3xl font-bold text-primary">150</div>
               <div className="text-sm text-muted-foreground mt-1">Total XP ✨</div>
@@ -347,7 +339,7 @@ export function FarmerProfileScreen({ onBack }) {
               <div className="text-3xl font-bold text-secondary">5</div>
               <div className="text-sm text-muted-foreground mt-1">Quests 📋</div>
             </div>
-          </div>
+          </div> */}
         </div>
 
         {/* Personal Details Card */}
@@ -383,9 +375,9 @@ export function FarmerProfileScreen({ onBack }) {
               className="w-full mt-1 p-3 rounded-2xl border-2 bg-background disabled:opacity-50"
             >
               <option value="Beginner">Beginner</option>
-              <option value="Intermediate">Intermediate</option>
-              <option value="Advanced">Advanced</option>
-              <option value="Expert">Expert</option>
+              {/* <option value="Intermediate">Intermediate</option> */}
+              <option value="Pro">Pro</option>
+              {/* <option value="Expert">Expert</option> */}
             </select>
           </div>
 
@@ -402,7 +394,7 @@ export function FarmerProfileScreen({ onBack }) {
             <div className="text-sm text-muted-foreground mt-2">{profile.fieldSize} acres 🌾</div>
           </div>
 
-          <div>
+          {/* <div>
             <Label className="text-muted-foreground mb-2">Primary Crops</Label>
             <div className="flex flex-wrap gap-2 mt-2">
               {profile.crops.map((crop) => (
@@ -414,7 +406,7 @@ export function FarmerProfileScreen({ onBack }) {
                 </span>
               ))}
             </div>
-          </div>
+          </div> */}
         </div>
 
         {/* Achievement Timeline */}
@@ -439,7 +431,7 @@ export function FarmerProfileScreen({ onBack }) {
         </div>
 
         {/* COLLAPSIBLE: Login & Security Section */}
-        <div className="bg-card border-[1.5px] border-border rounded-2xl shadow-[0_2px_8px_rgba(107,166,115,0.08),0_1px_3px_rgba(107,166,115,0.04)] hover:shadow-[0_4px_12px_rgba(107,166,115,0.12),0_2px_6px_rgba(107,166,115,0.08)] transition-all">
+        {/* <div className="bg-card border-[1.5px] border-border rounded-2xl shadow-[0_2px_8px_rgba(107,166,115,0.08),0_1px_3px_rgba(107,166,115,0.04)] hover:shadow-[0_4px_12px_rgba(107,166,115,0.12),0_2px_6px_rgba(107,166,115,0.08)] transition-all">
           <button
             onClick={() => setIsSecurityOpen(!isSecurityOpen)}
             className="w-full p-6 flex items-center justify-between hover:bg-muted/30 rounded-2xl transition-colors"
@@ -499,7 +491,7 @@ export function FarmerProfileScreen({ onBack }) {
               </div>
             </div>
           )}
-        </div>
+        </div> */}
 
         {/* COLLAPSIBLE: Display & Language Section */}
         <div className="bg-card border-[1.5px] border-border rounded-2xl shadow-[0_2px_8px_rgba(107,166,115,0.08),0_1px_3px_rgba(107,166,115,0.04)] hover:shadow-[0_4px_12px_rgba(107,166,115,0.12),0_2px_6px_rgba(107,166,115,0.08)] transition-all">
@@ -593,7 +585,7 @@ export function FarmerProfileScreen({ onBack }) {
                 </div>
 
                 {/* Font Size Sample Text Preview */}
-                <div className="mt-4 p-4 rounded-xl bg-muted/30 border-2 border-dashed border-border">
+                {/* <div className="mt-4 p-4 rounded-xl bg-muted/30 border-2 border-dashed border-border">
                   <p className="text-muted-foreground text-xs mb-2 font-medium uppercase tracking-wider">Preview</p>
                   <p
                     className="text-foreground leading-relaxed transition-all duration-300"
@@ -603,11 +595,11 @@ export function FarmerProfileScreen({ onBack }) {
                   >
                     The quick brown fox jumps over the lazy dog. 🌱
                   </p>
-                </div>
+                </div> */}
               </div>
 
               {/* High Contrast Mode Toggle */}
-              <div className="flex items-center justify-between p-4 bg-muted/30 rounded-2xl border border-border/50">
+              {/* <div className="flex items-center justify-between p-4 bg-muted/30 rounded-2xl border border-border/50">
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-full bg-background border-2 border-foreground flex items-center justify-center">
                     <div className="w-5 h-5 rounded-full bg-foreground"></div>
@@ -624,7 +616,7 @@ export function FarmerProfileScreen({ onBack }) {
                     showSuccessToast(checked ? "High contrast mode enabled" : "High contrast mode disabled")
                   }}
                 />
-              </div>
+              </div> */}
             </div>
           )}
         </div>
