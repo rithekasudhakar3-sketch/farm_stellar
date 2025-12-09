@@ -16,6 +16,7 @@ export function SubmitProofScreen({ quest, onSubmit, onBack }) {
   const [location, setLocation] = useState(null)
   const [isCameraActive, setIsCameraActive] = useState(false)
   const [verificationResult, setVerificationResult] = useState(null)
+  const [isVerifying, setIsVerifying] = useState(false)
 
   const videoRef = useRef(null)
   const streamRef = useRef(null)
@@ -37,7 +38,7 @@ export function SubmitProofScreen({ quest, onSubmit, onBack }) {
       console.log("Starting camera...")
       setIsCameraActive(true)
       
-      // attempt to get location (best-effort)
+      // attempt to get location (best-effort) with high accuracy
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
           (position) => {
@@ -45,14 +46,22 @@ export function SubmitProofScreen({ quest, onSubmit, onBack }) {
             setLocation({
               latitude: position.coords.latitude,
               longitude: position.coords.longitude,
-              accuracy: position.coords.accuracy
+              accuracy: position.coords.accuracy,
+              timestamp: new Date().toISOString()
             })
           },
           (error) => {
             console.warn("Location not available:", error)
+            if (error.code === error.PERMISSION_DENIED) {
+              alert("Location permission denied. Photos will be captured without GPS data. Please enable location access for better tracking.")
+            }
             // don't block camera if location fails
           },
-          { maximumAge: 60_000, timeout: 5000 }
+          { 
+            enableHighAccuracy: true,
+            timeout: 10000,
+            maximumAge: 0
+          }
         )
       }
 
@@ -111,8 +120,32 @@ export function SubmitProofScreen({ quest, onSubmit, onBack }) {
     if (!videoRef.current) return
     setIsUploading(true)
 
-
     try {
+      // Get fresh location right before capturing
+      let captureLocation = location
+      if (navigator.geolocation) {
+        try {
+          const position = await new Promise((resolve, reject) => {
+            navigator.geolocation.getCurrentPosition(resolve, reject, {
+              enableHighAccuracy: true,
+              timeout: 5000,
+              maximumAge: 0
+            })
+          })
+          captureLocation = {
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude,
+            accuracy: position.coords.accuracy,
+            timestamp: new Date().toISOString()
+          }
+          setLocation(captureLocation)
+          console.log("Fresh location captured:", captureLocation)
+        } catch (geoError) {
+          console.warn("Could not get fresh location:", geoError)
+          // Use existing location if available, or continue without
+        }
+      }
+
       const video = videoRef.current
 
       const canvas = document.createElement("canvas")
@@ -127,15 +160,7 @@ export function SubmitProofScreen({ quest, onSubmit, onBack }) {
       if (!blob) throw new Error("Failed to capture image")
 
       // preview data URL
-      ctx.drawImage(video, 0, 0, canvas.width, canvas.height)
-
-      // create blob
-
-
-      // preview data URL
       const preview = canvas.toDataURL("image/jpeg", 0.9)
-
-      // read blob to base64
 
       // read blob to base64
       const reader = new FileReader()
@@ -168,23 +193,24 @@ export function SubmitProofScreen({ quest, onSubmit, onBack }) {
 
           const { key, url } = await uploadRes.json().catch(() => ({}))
 
-
-
-
           setUploadedImage({
             url: url || preview,
             key: key || null,
             preview,
-            location
+            location: captureLocation
 
           })
+          
+          // Show location info to user if captured
+          if (captureLocation) {
+            console.log("Photo captured with location:", captureLocation)
+          }
         } catch (error) {
           console.error("Upload error:", error)
           alert("Failed to upload photo. Please try again.")
 
         } finally {
           setIsUploading(false)
-          stopCamera()
           stopCamera()
         }
       }
@@ -252,138 +278,215 @@ export function SubmitProofScreen({ quest, onSubmit, onBack }) {
     if (!onSubmit) return
     setIsSubmitting(true)
 
+    try {
+      const token = localStorage.getItem("token")
+      const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:4000"
 
-      try {
-        const token = localStorage.getItem("token")
-        const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:4000"
+      const questId = quest?._id || quest?.id || quest?.slug
+    
+      if (!questId) {
+        throw new Error("Quest ID is missing")
+      }
 
-        const questId = quest?._id || quest?.id || quest?.slug
+      console.log('Submitting proof for quest:', questId, quest)
+
+      // Step 1: Verify quest based on type
+      let verificationResult = null
+      const isBollKeeperQuest = questId === 'boll_keeper' || quest?.slug === 'boll_keeper'
       
-        if (!questId) {
-          throw new Error("Quest ID is missing")
-        }
-
-        console.log('Submitting proof for quest:', questId, quest)
-
-        // Step 1: Send photo to verification endpoint if we have verification_data
-        let verificationResult = null
-        if (uploadedImage && quest?.verification_data) {
-          try {
-            console.log('Sending to verification endpoint:', quest.verification_data)
+      if (uploadedImage) {
+        try {
+          console.log('Verifying quest...')
+          setIsVerifying(true)
           
-            // Prepare verification payload
-            const verificationPayload = {
-              task_name: quest.verification_data.task_name,
-              success_criteria: quest.verification_data.success_criteria,
-              use_before_image: quest.verification_data.use_before_image || false,
-              image_url: uploadedImage.url || uploadedImage.preview
-            }
-
-            console.log('Verification payload:', verificationPayload)
-
-            const verifyResponse = await fetch('http://127.0.0.1:8000/verify', {
+          if (isBollKeeperQuest) {
+            // Cotton boll verification
+            console.log('Using cotton verification...')
+            const verifyResponse = await fetch(`${backendUrl}/api/cotton/verify`, {
               method: 'POST',
               headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': token ? `Bearer ${token}` : ''
               },
-              body: JSON.stringify(verificationPayload)
+              body: JSON.stringify({
+                imageKey: uploadedImage.key,
+                imageUrl: uploadedImage.url
+              })
             })
 
             if (verifyResponse.ok) {
               verificationResult = await verifyResponse.json()
-              console.log('Verification result:', verificationResult)
+              console.log('Cotton verification result:', verificationResult)
+              setVerificationResult(verificationResult)
+              
+              // Check if cotton was detected
+              if (!verificationResult.has_cotton) {
+                setIsVerifying(false)
+                setIsSubmitting(false)
+                alert('No cotton bolls detected in the image. Please take a clear photo of cotton bolls and try again.')
+                return
+              }
             } else {
-              console.warn('Verification endpoint returned error:', verifyResponse.status)
+              const errorData = await verifyResponse.json().catch(() => ({}))
+              throw new Error(errorData.message || 'Cotton verification failed')
             }
-          } catch (verifyError) {
-            console.warn('Verification endpoint not available:', verifyError)
-            // Continue with submission even if verification fails
+          } else {
+            // Generic quest verification for all other quests
+            console.log('Using generic quest verification...')
+            
+            // Fetch quest details to get success_criteria
+            const questResponse = await fetch(`${backendUrl}/api/quests/${questId}`, {
+              headers: {
+                'Authorization': token ? `Bearer ${token}` : '',
+                'Content-Type': 'application/json'
+              }
+            })
+            
+            if (!questResponse.ok) {
+              throw new Error('Failed to fetch quest details')
+            }
+            
+            const questData = await questResponse.json()
+            const successCriteria = questData.verification_data?.success_criteria || questData.description
+            
+            console.log('Quest success criteria:', successCriteria)
+            
+            const verifyResponse = await fetch(`${backendUrl}/api/quest-verification/verify`, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': token ? `Bearer ${token}` : ''
+              },
+              body: JSON.stringify({
+                imageKey: uploadedImage.key,
+                imageUrl: uploadedImage.url,
+                successCriteria: successCriteria,
+                questId: questId
+              })
+            })
+
+            if (verifyResponse.ok) {
+              verificationResult = await verifyResponse.json()
+              console.log('Generic quest verification result:', verificationResult)
+              setVerificationResult(verificationResult)
+              
+              // Check if quest was verified
+              if (!verificationResult.verified && !verificationResult.success) {
+                setIsVerifying(false)
+                setIsSubmitting(false)
+                alert(`Quest verification failed: ${verificationResult.response || 'Image does not meet quest requirements'}. Please try again with a better image.`)
+                return
+              }
+            } else {
+              const errorData = await verifyResponse.json().catch(() => ({}))
+              throw new Error(errorData.message || 'Quest verification failed')
+            }
           }
+          
+          setIsVerifying(false)
+        } catch (verifyError) {
+          console.error('Verification error:', verifyError)
+          setIsVerifying(false)
+          alert(`Verification failed: ${verifyError.message}. Please ensure the image meets quest requirements.`)
+          setIsSubmitting(false)
+          return
         }
-
-        // Step 2: Submit to backend as normal
-        const submissionData = {
-          questId: questId,
-          proofType: uploadedImage ? "photo" : "text",
-          proofUrl: uploadedImage?.url || "",
-          description: notes || "Quest completed as per instructions",
-          status: "pending"
-        }
-
-        // Only add media if we have a valid S3 key
-        if (uploadedImage?.key) {
-          submissionData.media = [
-            {
-              key: uploadedImage.key,
-              mimeType: "image/jpeg",
-              sizeBytes: uploadedImage.sizeBytes || 0
-            }
-          ]
-        }
-
-        // Add verification result if available
-        if (verificationResult) {
-          submissionData.verificationResult = verificationResult
-        }
-
-        console.log('Submission payload:', submissionData)
-
-        const response = await fetch(`${backendUrl}/api/submissions`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": token ? `Bearer ${token}` : ""
-
-          },
-          body: JSON.stringify(submissionData)
-        })
-
-        if (!response.ok) {
-          const errorData = await response.json().catch(() => ({}))
-          console.error("Submission failed:", response.status, errorData)
-          throw new Error(errorData.message || `Server error: ${response.status}`)
-        }
-
-        const result = await response.json()
-        console.log("Submission successful:", result)
-
-        // small delay for UX
-        await new Promise((resolve) => setTimeout(resolve, 500))
-      
-        // Pass verification result to parent
-        onSubmit(verificationResult)
-      } catch (error) {
-        console.error("Error submitting proof:", error)
-        alert(`Failed to submit proof: ${error.message}. Please try again.`)
-        setIsSubmitting(false)
       }
+
+      // Step 2: Submit to backend as normal
+      const submissionData = {
+        questId: questId,
+        proofType: uploadedImage ? "photo" : "text",
+        proofUrl: uploadedImage?.url || "",
+        description: notes || "Quest completed as per instructions",
+        status: "pending"
+      }
+
+      // Only add media if we have a valid S3 key
+      if (uploadedImage?.key) {
+        submissionData.media = [
+          {
+            key: uploadedImage.key,
+            mimeType: "image/jpeg",
+            sizeBytes: uploadedImage.sizeBytes || 0
+          }
+        ]
+      }
+
+      // Add verification result if available
+      if (verificationResult) {
+        if (isBollKeeperQuest) {
+          submissionData.cottonVerification = verificationResult
+        } else {
+          submissionData.questVerification = verificationResult
+        }
+      }
+
+      console.log('Submission payload:', submissionData)
+
+      const response = await fetch(`${backendUrl}/api/submissions`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": token ? `Bearer ${token}` : ""
+
+        },
+        body: JSON.stringify(submissionData)
+      })
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}))
+        console.error("Submission failed:", response.status, errorData)
+        throw new Error(errorData.message || `Server error: ${response.status}`)
+      }
+
+      const result = await response.json()
+      console.log("Submission successful:", result)
+
+      // small delay for UX
+      await new Promise((resolve) => setTimeout(resolve, 500))
+    
+      // Pass verification result to parent
+      onSubmit(verificationResult)
+    } catch (error) {
+      console.error("Error submitting proof:", error)
+      alert(`Failed to submit proof: ${error.message}. Please try again.`)
+      setIsSubmitting(false)
     }
+  }
 
     return (
-      <div className="flex flex-col h-screen pb-safe">
+      <div className="flex flex-col h-screen overflow-hidden pb-safe bg-gradient-to-b from-background to-muted/20">
         {/* Header */}
-        <div className="flex items-center justify-between p-4 border-b border-border">
-          <button onClick={onBack} className="p-2 hover:bg-muted rounded-lg transition-colors">
-            <ChevronLeft className="w-5 h-5" />
+        <div className="flex items-center justify-between p-4 sm:p-6 border-b border-border bg-background/80 backdrop-blur-sm shadow-sm flex-shrink-0">
+          <button onClick={onBack} className="p-2 hover:bg-primary/10 rounded-xl transition-all hover:scale-105 active:scale-95">
+            <ChevronLeft className="w-6 h-6 text-foreground" />
           </button>
-          <div className="w-9" />
+          <h1 className="text-lg font-bold text-foreground">Submit Quest</h1>
+          <div className="w-10" />
         </div>
 
         {/* Content */}
-        <div className="flex-1 overflow-auto px-6 py-6 space-y-6">
-          <div className="text-center">
-            <h2 className="text-2xl font-bold text-foreground mb-2">Submit Proof</h2>
-            <p className="text-sm text-muted-foreground">Submit evidence of quest completion</p>
+        <div className="flex-1 overflow-y-auto px-4 sm:px-6 py-6 space-y-6 max-w-2xl mx-auto w-full">
+          <div className="text-center space-y-2">
+            <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-br from-primary/20 to-accent/20 mb-3">
+              <Camera className="w-8 h-8 text-primary" />
+            </div>
+            <h2 className="text-2xl sm:text-3xl font-bold text-foreground">Submit Your Proof</h2>
+            <p className="text-sm sm:text-base text-muted-foreground">Capture or upload evidence of quest completion</p>
           </div>
 
           {/* Upload Options */}
           {showPhotoOption && (
-            <div className="space-y-3">
-              <h3 className="font-bold text-foreground text-sm">Upload Media</h3>
+            <div className="space-y-4">
+              <h3 className="font-bold text-foreground text-base sm:text-lg flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-primary"></span>
+                Upload Media
+              </h3>
 
               {/* Camera View */}
               {isCameraActive ? (
-                <div className="relative bg-black rounded-2xl overflow-hidden border-2 border-primary">
+                <div className="relative bg-black rounded-3xl overflow-hidden border-2 border-primary shadow-2xl shadow-primary/20">
                   <video
                     ref={videoRef}
                     autoPlay
@@ -397,86 +500,151 @@ export function SubmitProofScreen({ quest, onSubmit, onBack }) {
                     onPlay={() => console.log('Video playing')}
                     onError={(e) => console.error('Video error:', e)}
                   />
-                  <div className="absolute top-2 left-2 bg-primary text-primary-foreground px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1 z-10">
-                    <MapPin className="w-3 h-3" />
-                    {location ? "Location Tracked" : "Getting Location..."}
+                  <div className="absolute top-3 left-3 bg-primary/90 backdrop-blur-sm text-primary-foreground px-3 py-1.5 rounded-full text-xs font-bold flex items-center gap-1.5 z-10 shadow-lg animate-pulse">
+                    <MapPin className="w-3.5 h-3.5" />
+                    {location ? "📍 Location Tracked" : "📡 Getting Location..."}
                   </div>
-                  <div className="absolute bottom-4 left-0 right-0 flex justify-center gap-4">
+                  <div className="absolute bottom-6 left-0 right-0 flex justify-center gap-4 px-4">
                     <button
                       onClick={stopCamera}
-                      className="bg-destructive text-destructive-foreground px-6 py-3 rounded-full font-bold shadow-lg hover:scale-105 transition-transform"
+                      className="bg-red-500/90 backdrop-blur-sm text-white px-6 py-3 rounded-2xl font-bold shadow-xl hover:scale-105 active:scale-95 transition-all"
                     >
-                      Cancel
+                      ✕ Cancel
                     </button>
                     <button
                       onClick={capturePhoto}
                       disabled={isUploading}
-                      className="bg-primary text-primary-foreground px-8 py-3 rounded-full font-bold shadow-lg hover:scale-105 transition-transform disabled:opacity-50"
+                      className="bg-white text-gray-900 px-8 py-3 rounded-2xl font-bold shadow-xl hover:scale-105 active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                      {isUploading ? "Uploading..." : "📸 Capture"}
+                      {isUploading ? "⏳ Uploading..." : "📸 Capture"}
                     </button>
                   </div>
                 </div>
               ) : uploadedImage ? (
-                <div className="relative">
+                <div className="relative group">
+                  <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-accent/20 rounded-3xl blur-xl opacity-50 group-hover:opacity-75 transition-opacity"></div>
                   <img
                     src={uploadedImage.preview || uploadedImage.url}
                     alt="Uploaded proof"
-                    className="w-full h-64 object-cover rounded-2xl border-2 border-primary"
+                    className="relative w-full h-72 sm:h-80 object-cover rounded-3xl border-2 border-primary/50 shadow-2xl"
                   />
                   <button
                     onClick={() => setUploadedImage(null)}
-                    className="absolute top-2 right-2 bg-destructive text-destructive-foreground p-2 rounded-full shadow-lg hover:scale-110 transition-transform"
+                    className="absolute top-3 right-3 bg-red-500/90 backdrop-blur-sm text-white p-2.5 rounded-full shadow-lg hover:scale-110 active:scale-95 transition-all z-10"
                     aria-label="Remove photo"
                   >
-                    <X className="w-4 h-4" />
+                    <X className="w-5 h-5" />
                   </button>
-                  <div className="absolute bottom-2 left-2 bg-accent text-accent-foreground px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1">
-                    <CheckCircle2 className="w-3 h-3" />
+                  <div className="absolute bottom-3 left-3 bg-green-500/90 backdrop-blur-sm text-white px-4 py-2 rounded-full text-xs sm:text-sm font-bold flex items-center gap-2 shadow-lg">
+                    <CheckCircle2 className="w-4 h-4" />
                     Photo Ready!
                   </div>
                   {uploadedImage.location && (
-                    <div className="absolute top-2 left-2 bg-primary text-primary-foreground px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1">
-                      <MapPin className="w-3 h-3" />
-                      Location: {uploadedImage.location.latitude.toFixed(4)}, {uploadedImage.location.longitude.toFixed(4)}
+                    <div className="absolute top-3 left-3 bg-primary/90 backdrop-blur-sm text-primary-foreground px-3 py-1.5 rounded-full text-xs font-bold flex items-center gap-1.5 shadow-lg">
+                      <MapPin className="w-3.5 h-3.5" />
+                      📍 {uploadedImage.location.latitude.toFixed(4)}, {uploadedImage.location.longitude.toFixed(4)}
                     </div>
                   )}
                 </div>
               ) : (
-                <div className="space-y-2">
+                <div className="space-y-3">
                   <button
                     onClick={startCamera}
-                    className="block w-full cursor-pointer"
+                    className="block w-full cursor-pointer group"
                   >
-                    <div className="border-2 border-dashed border-border rounded-xl p-6 hover:border-primary hover:bg-primary/5 transition-all text-center">
-                      <Camera className="w-10 h-10 text-primary mx-auto mb-2" />
-                      <p className="text-sm font-medium text-foreground">Take Live Photo 📸</p>
-                      <p className="text-xs text-muted-foreground mt-1">With GPS Location</p>
+                    <div className="relative bg-gradient-to-br from-primary/10 to-accent/10 border-2 border-dashed border-primary/30 rounded-2xl sm:rounded-3xl p-8 hover:border-primary hover:from-primary/20 hover:to-accent/20 transition-all text-center group-hover:scale-[1.02] active:scale-[0.98] shadow-lg hover:shadow-xl">
+                      <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary/20 mb-3 group-hover:scale-110 transition-transform">
+                        <Camera className="w-8 h-8 text-primary" />
+                      </div>
+                      <p className="text-base sm:text-lg font-bold text-foreground mb-1">📸 Take Live Photo</p>
+                      <p className="text-xs sm:text-sm text-muted-foreground">📍 With GPS Location Tracking</p>
                     </div>
                   </button>
+                  
+                  {/* File Upload Option for Development */}
+                  <label className="block w-full cursor-pointer group">
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={handleImageUpload}
+                      className="hidden"
+                    />
+                    <div className="relative bg-gradient-to-br from-muted/50 to-muted/30 border-2 border-dashed border-border rounded-2xl sm:rounded-3xl p-6 hover:border-primary hover:bg-primary/5 transition-all text-center group-hover:scale-[1.02] active:scale-[0.98]">
+                      <div className="text-4xl mb-2 group-hover:scale-110 transition-transform inline-block">📁</div>
+                      <p className="text-sm sm:text-base font-semibold text-foreground mb-1">Upload from Device</p>
+                      <p className="text-xs text-muted-foreground">For Development/Testing</p>
+                    </div>
+                  </label>
                 </div>
               )}
             </div>
           )}
 
+          {/* Verification Result Display */}
+          {verificationResult && (
+            <div className={`p-4 rounded-2xl border-2 ${
+              verificationResult.success && verificationResult.is_healthy
+                ? 'bg-green-50 border-green-500 dark:bg-green-950/30'
+                : 'bg-amber-50 border-amber-500 dark:bg-amber-950/30'
+            }`}>
+              <div className="flex items-start gap-3">
+                {verificationResult.success && verificationResult.is_healthy ? (
+                  <CheckCircle2 className="w-6 h-6 text-green-600 dark:text-green-400 flex-shrink-0 mt-0.5" />
+                ) : (
+                  <div className="w-6 h-6 flex-shrink-0 mt-0.5 text-amber-600 dark:text-amber-400">⚠️</div>
+                )}
+                <div className="flex-1">
+                  <h4 className="font-bold text-sm mb-1">
+                    {verificationResult.success && verificationResult.is_healthy
+                      ? 'Healthy Cotton Detected!'
+                      : 'Cotton Analysis Result'}
+                  </h4>
+                  {verificationResult.success ? (
+                    <div className="text-xs space-y-1">
+                      <p>Cotton Detected: {verificationResult.has_cotton ? 'Yes' : 'No'}</p>
+                      <p>Healthy Status: {verificationResult.is_healthy ? 'Healthy' : 'Not Fully Opened'}</p>
+                      {verificationResult.detected_classes && verificationResult.detected_classes.length > 0 && (
+                        <p>Detected: {verificationResult.detected_classes.join(', ')}</p>
+                      )}
+                      {verificationResult.message && <p className="text-muted-foreground">{verificationResult.message}</p>}
+                    </div>
+                  ) : (
+                    <p className="text-xs text-destructive">
+                      {verificationResult.error || 'Verification failed'}
+                    </p>
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
+
           {/* Submit Button */}
-          <div>
+          <div className="sticky bottom-0 bg-gradient-to-t from-background via-background to-transparent pt-4 pb-2">
             <button
               onClick={handleSubmit}
-              disabled={!canSubmit || isSubmitting}
-              className={`w-full font-bold py-4 rounded-2xl transition-all shadow-lg ${canSubmit && !isSubmitting
-                ? "bg-primary text-primary-foreground hover:bg-primary/90 hover:shadow-primary/30 active:scale-95"
-                : "bg-muted text-muted-foreground cursor-not-allowed"
+              disabled={!canSubmit || isSubmitting || isVerifying}
+              className={`w-full font-bold py-4 sm:py-5 rounded-2xl sm:rounded-3xl transition-all shadow-xl text-base sm:text-lg ${canSubmit && !isSubmitting && !isVerifying
+                ? "bg-gradient-to-r from-primary to-accent text-white hover:shadow-2xl hover:shadow-primary/40 active:scale-95 hover:scale-[1.02]"
+                : "bg-muted text-muted-foreground cursor-not-allowed opacity-60"
                 }`}
             >
-              {isSubmitting ? (
+              {isVerifying ? (
                 <span className="flex items-center justify-center gap-2">
-                  <span className="animate-spin">⏳</span> Submitting...
+                  <span className="animate-spin">⏳</span> Verifying Quest...
+                </span>
+              ) : isSubmitting ? (
+                <span className="flex items-center justify-center gap-2">
+                  <span className="animate-bounce">📤</span> Submitting Proof...
                 </span>
               ) : (
-                "Submit for Review ✓"
+                <span className="flex items-center justify-center gap-2">
+                  ✨ Submit for Review
+                </span>
               )}
             </button>
+            {!canSubmit && (
+              <p className="text-center text-xs sm:text-sm text-muted-foreground mt-3">📸 Please capture or upload a photo to continue</p>
+            )}
           </div>
         </div>
       </div>

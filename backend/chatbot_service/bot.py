@@ -9,9 +9,12 @@ from typing import Optional, Dict, List
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_core.messages import HumanMessage, SystemMessage
 
-# Load environment variables
-load_dotenv()
+# Load environment variables from parent directory's .env file
+load_dotenv(dotenv_path=os.path.join(os.path.dirname(__file__), '..', '.env'))
 api_key = os.getenv("GOOGLE_API_KEY")
+
+if not api_key:
+    raise ValueError("GOOGLE_API_KEY not found in environment variables. Please add it to your .env file.")
 
 # Create FastAPI app
 app = FastAPI(title="FarmStellar Chatbot")

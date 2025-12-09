@@ -1,8 +1,8 @@
 import { Analytics } from "@vercel/analytics/next"
 import { Quicksand, Mali } from "next/font/google"
+import { ChatbotWidget } from "@/components/shared/chatbot-widget"
 import "./globals.css"
 import { PreferencesProvider } from "@/components/preferences-provider"
-import { ChatbotWidget } from "@/components/chatbot-widget"
 import { GoogleTranslate } from "@/components/google-translate"
 
 const _quicksand = Quicksand({ weight: ["400", "600", "700"], subsets: ["latin"] })
@@ -14,23 +14,6 @@ export const metadata = {
   other: {
     google: "notranslate",
   },
-  // icons: {
-  //   icon: [
-  //     {
-  //       url: "/icon-light-32x32.png",
-  //       media: "(prefers-color-scheme: light)",
-  //     },
-  //     {
-  //       url: "/icon-dark-32x32.png",
-  //       media: "(prefers-color-scheme: dark)",
-  //     },
-  //     {/8
-  //       url: "/icon.svg",
-  //       type: "image/svg+xml",
-  //     },
-  //   ],
-  //   apple: "/apple-icon.png",
-  // },
 }
 
 export default function RootLayout({ children }) {

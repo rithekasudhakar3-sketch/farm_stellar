@@ -18,6 +18,8 @@ const purchaseOrderRoutes = require('./routes/purchaseOrders');
 const chatbotRoutes = require('./routes/chatbot');
 const translateRoutes = require('./routes/translate');
 const weatherRoutes = require('./routes/weather');
+const cottonRoutes = require('./routes/cotton');
+const questVerificationRoutes = require('./routes/questVerification');
 
 
 const app = express();
@@ -52,6 +54,8 @@ app.use('/api/chatbot', chatbotRoutes);
 app.use('/api/translate', translateRoutes);
 app.use('/api/community', communityRoutes);
 app.use('/api/weather', weatherRoutes);
+app.use('/api/cotton', cottonRoutes);
+app.use('/api/quest-verification', questVerificationRoutes);
 
 app.get('/api/health', (req, res) => {
   res.status(200).json({ status: 'ok' });

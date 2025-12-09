@@ -9,12 +9,13 @@ export function VerificationScreen({ quest, onContinue, isAutoVerified = false, 
   const [verificationResults, setVerificationResults] = useState([])
   const [learningOutcomes, setLearningOutcomes] = useState([])
   const [loading, setLoading] = useState(true)
+  const [genericVerificationResult, setGenericVerificationResult] = useState(null)
 
   const stages = [
-    { icon: Eye, text: "Analyzing submitted image...", duration: 2000 },
-    { icon: Brain, text: "AI identifying key elements...", duration: 2500 },
-    { icon: Sparkles, text: "Verifying completion criteria...", duration: 2000 },
-    { icon: Zap, text: "Generating feedback...", duration: 1500 }
+    { icon: Eye, text: "Analyzing submitted image...", duration: 0 },
+    { icon: Brain, text: "AI identifying key elements...", duration: 0 },
+    { icon: Sparkles, text: "Verifying completion criteria...", duration: 0 },
+    { icon: Zap, text: "Generating feedback...", duration: 0 }
   ]
 
   useEffect(() => {
@@ -53,6 +54,23 @@ export function VerificationScreen({ quest, onContinue, isAutoVerified = false, 
 
     fetchQuestData()
 
+    // Process quest verification data
+    if (verificationData) {
+      console.log('Generic quest verification data received from props:', verificationData)
+      setGenericVerificationResult(verificationData)
+      
+      // Set verification results immediately
+      const results = [
+        {
+          label: 'Verification Status',
+          status: verificationData.verified ? 'Verified ✓' : 'Not Verified',
+          color: verificationData.verified ? 'text-green-500' : 'text-red-500'
+        }
+      ]
+
+      setVerificationResults(results)
+    }
+
     // Process verification results from API or simulate
     const runVerification = async () => {
       for (let i = 0; i < stages.length; i++) {
@@ -64,56 +82,48 @@ export function VerificationScreen({ quest, onContinue, isAutoVerified = false, 
       if (verificationData) {
         console.log('Displaying verification data from API:', verificationData)
         
-        // Map API response to display format
+        // Map API response to display format for other quests
         const results = []
-        
+          
         // Add all fields from the verification response
         Object.entries(verificationData).forEach(([key, value]) => {
-          if (key === 'verified' || key === 'success') {
-            results.push({
-              label: 'Verification Status',
-              status: value ? 'Verified ✓' : 'Failed',
-              color: value ? 'text-green-500' : 'text-red-500'
-            })
-          } else if (key === 'score') {
-            results.push({
-              label: 'Overall Score',
-              status: `${value}/100`,
-              color: value >= 80 ? 'text-green-500' : value >= 60 ? 'text-yellow-500' : 'text-red-500'
-            })
-          } else if (key === 'confidence') {
-            results.push({
-              label: 'Confidence',
-              status: `${Math.round(value * 100)}%`,
-              color: value >= 0.8 ? 'text-green-500' : value >= 0.6 ? 'text-yellow-500' : 'text-red-500'
-            })
-          } else if (key === 'message' || key === 'feedback') {
-            // Skip message field, we'll display it separately
-          } else if (typeof value === 'boolean') {
-            results.push({
-              label: key.split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' '),
-              status: value ? 'Passed ✓' : 'Failed',
-              color: value ? 'text-green-500' : 'text-red-500'
-            })
-          } else if (typeof value === 'string' || typeof value === 'number') {
-            results.push({
-              label: key.split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' '),
-              status: String(value),
-              color: 'text-primary'
-            })
-          }
-        })
-        
-        setVerificationResults(results)
-      } else {
-        // Fallback to mock data if no API response
-        setVerificationResults([
-          { label: "Image Quality", status: "Excellent", color: "text-green-500" },
-          { label: "Completion Steps", status: "All Verified", color: "text-green-500" },
-          { label: "Authenticity", status: "Confirmed", color: "text-green-500" },
-          { label: "Overall Score", status: "95/100", color: "text-primary" }
-        ])
-      }
+            if (key === 'verified' || key === 'success') {
+              results.push({
+                label: 'Verification Status',
+                status: value ? 'Verified ✓' : 'Failed',
+                color: value ? 'text-green-500' : 'text-red-500'
+              })
+            } else if (key === 'score') {
+              results.push({
+                label: 'Overall Score',
+                status: `${value}/100`,
+                color: value >= 80 ? 'text-green-500' : value >= 60 ? 'text-yellow-500' : 'text-red-500'
+              })
+            } else if (key === 'confidence') {
+              results.push({
+                label: 'Confidence',
+                status: `${Math.round(value * 100)}%`,
+                color: value >= 0.8 ? 'text-green-500' : value >= 0.6 ? 'text-yellow-500' : 'text-red-500'
+              })
+            } else if (key === 'message' || key === 'feedback') {
+              // Skip message field, we'll display it separately
+            } else if (typeof value === 'boolean') {
+              results.push({
+                label: key.split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' '),
+                status: value ? 'Passed ✓' : 'Failed',
+                color: value ? 'text-green-500' : 'text-red-500'
+              })
+            } else if (typeof value === 'string' || typeof value === 'number') {
+              results.push({
+                label: key.split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' '),
+                status: String(value),
+                color: 'text-primary'
+              })
+            }
+          })
+          
+          setVerificationResults(results)
+        }
 
       setIsComplete(true)
     }
@@ -147,13 +157,9 @@ export function VerificationScreen({ quest, onContinue, isAutoVerified = false, 
           {/* Status Text */}
           <div>
             <h2 className="text-3xl font-bold text-foreground mb-3 text-balance">
-              {isAutoVerified ? "Verification Successful! ✓" : "Submission Received!"}
+              AI Verification
             </h2>
-            <p className="text-muted-foreground text-sm leading-relaxed">
-              {isAutoVerified
-                ? `Your crop selections have been automatically verified. You're ready to claim your rewards!`
-                : `Your submission has been sent for admin review. You'll receive XP and rewards once approved. Check back within 24 hours!`}
-            </p>
+            
           </div>
 
           {/* Progress Stages */}
@@ -193,24 +199,107 @@ export function VerificationScreen({ quest, onContinue, isAutoVerified = false, 
           )}
 
           {/* Verification Results */}
-          {isComplete && (
-            <div className="bg-card border border-border rounded-2xl p-6 space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-700">
-              <h3 className="text-lg font-bold text-foreground flex items-center gap-2">
-                <Sparkles className="w-5 h-5 text-primary" />
+          {isComplete && verificationResults.length > 0 && (
+            <div className="bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-800 border-2 border-gray-200 dark:border-gray-700 rounded-2xl sm:rounded-3xl p-4 sm:p-6 space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-700 shadow-lg">
+              <h3 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white flex items-center gap-2 pb-2 border-b border-gray-200 dark:border-gray-700">
+                <Sparkles className="w-5 h-5 sm:w-6 sm:h-6 text-emerald-500" />
                 Verification Results
               </h3>
-              <div className="space-y-3">
+              <div className="space-y-2">
                 {verificationResults.map((result, idx) => (
-                  <div key={idx} className="flex justify-between items-center p-3 bg-muted/50 rounded-lg">
-                    <span className="text-sm font-medium text-foreground">{result.label}</span>
-                    <span className={`text-sm font-bold ${result.color}`}>{result.status}</span>
+                  <div key={idx} className="flex justify-between items-center p-3 sm:p-4 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl hover:shadow-md transition-all">
+                    <span className="text-sm sm:text-base font-medium text-gray-700 dark:text-gray-300">{result.label}</span>
+                    <span className={`text-sm sm:text-base font-bold ${result.color}`}>{result.status}</span>
                   </div>
                 ))}
               </div>
-              <div className="bg-gradient-to-r from-green-500/10 to-emerald-500/10 border border-green-500/20 rounded-lg p-4 text-center">
-                <p className="text-sm font-bold text-green-600 dark:text-green-400">
-                  {verificationData?.message || verificationData?.feedback || '🎉 Excellent work! Your quest has been verified successfully.'}
-                </p>
+            </div>
+          )}
+
+          {/* Quest Verification Details */}
+          {isComplete && genericVerificationResult && (
+            <div className="bg-gradient-to-br from-white to-blue-50 dark:from-gray-900 dark:to-blue-900/20 border-2 border-blue-200 dark:border-blue-800 rounded-2xl sm:rounded-3xl p-4 sm:p-6 space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-700 shadow-lg">
+              {/* Header */}
+              <div className="flex items-center gap-3 pb-3 border-b border-blue-200 dark:border-blue-800">
+                <div className="p-2 bg-blue-100 dark:bg-blue-900/50 rounded-xl">
+                  <Brain className="w-6 h-6 text-blue-600 dark:text-blue-400" />
+                </div>
+                <h3 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white">
+                  Response
+                </h3>
+              </div>
+                
+              {/* AI Response Content */}
+              <div className={`p-4 sm:p-5 rounded-xl backdrop-blur-sm border-2 ${
+                genericVerificationResult.verified || genericVerificationResult.success
+                  ? 'bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 border-green-300 dark:border-green-700'
+                  : 'bg-gradient-to-br from-red-50 to-rose-50 dark:from-red-900/20 dark:to-rose-900/20 border-red-300 dark:border-red-700'
+              }`}>
+                {(() => {
+                  const responseText = genericVerificationResult.response || genericVerificationResult.message || ''
+                  
+                  // Function to format the response into bullet points
+                  const formatResponse = (text) => {
+                    if (!text) {
+                      return genericVerificationResult.verified || genericVerificationResult.success
+                        ? ['✓ Quest verified successfully', '✓ All criteria met', '✓ Submission accepted']
+                        : ['✗ Quest verification failed', '✗ Please review requirements', '✗ Submit again with correct proof']
+                    }
+
+                    // Split by common delimiters and clean up
+                    let points = text
+                      .split(/[.!?]\s+(?=[A-Z])|[\n•\-–—]+/)
+                      .map(point => point.trim())
+                      .filter(point => point.length > 10) // Filter out very short fragments
+                    
+                    // If we have numbered points (1., 2., etc), split by those
+                    if (text.match(/\d+\.\s/)) {
+                      points = text.split(/\d+\.\s+/).filter(p => p.trim().length > 10)
+                    }
+                    
+                    // Limit to 3-4 most important points
+                    points = points.slice(0, 4)
+                    
+                    // Add bullet points if not present
+                    return points.map(point => {
+                      // Clean up and shorten if needed
+                      let cleaned = point
+                        .replace(/^(VERIFIED:|YES|NO|Therefore,?|The clear|This image|In summary)/gi, '')
+                        .trim()
+                      
+                      // Limit length to ~100 characters
+                      if (cleaned.length > 100) {
+                        cleaned = cleaned.substring(0, 100).trim() + '...'
+                      }
+                      
+                      return cleaned
+                    }).filter(p => p.length > 0)
+                  }
+
+                  const bulletPoints = formatResponse(responseText)
+                  const isVerified = genericVerificationResult.verified || genericVerificationResult.success
+
+                  return (
+                    <ul className="space-y-2">
+                      {bulletPoints.map((point, idx) => (
+                        <li key={idx} className="flex items-start gap-3">
+                          <span className={`mt-1 flex-shrink-0 ${
+                            isVerified ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'
+                          }`}>
+                            {isVerified ? '✓' : '✗'}
+                          </span>
+                          <span className={`text-sm sm:text-base leading-relaxed ${
+                            isVerified
+                              ? 'text-green-800 dark:text-green-200'
+                              : 'text-red-800 dark:text-red-200'
+                          }`}>
+                            {point}
+                          </span>
+                        </li>
+                      ))}
+                    </ul>
+                  )
+                })()}
               </div>
             </div>
           )}
@@ -218,21 +307,19 @@ export function VerificationScreen({ quest, onContinue, isAutoVerified = false, 
           {/* AI Info */}
           {!isComplete && (
             <div className="bg-primary/5 border border-primary/20 rounded-lg p-4 text-left">
-              <p className="text-xs text-muted-foreground">
-                <strong>What's Next?</strong> Our admin team will review your submission and approve it if all requirements are met. You'll see the quest marked as "Completed" in your quest list once approved.
-              </p>
+              
             </div>
           )}
         </div>
       </div>
 
       {/* Continue Button */}
-      <div className="px-6 pb-6">
+      <div className="px-4 sm:px-6 pb-4 sm:pb-6">
         <button
           onClick={onContinue}
           disabled={!isComplete}
-          className={`w-full font-bold py-4 rounded-2xl transition-all shadow-lg ${isComplete
-              ? "bg-primary text-primary-foreground hover:bg-primary/90 hover:shadow-primary/30 active:scale-95"
+          className={`w-full font-bold py-3 sm:py-4 rounded-2xl transition-all text-sm sm:text-base ${isComplete
+              ? "bg-primary text-primary-foreground hover:bg-primary/90 active:scale-95"
               : "bg-muted text-muted-foreground cursor-not-allowed"
             }`}
         >

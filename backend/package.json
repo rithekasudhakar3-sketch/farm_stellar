@@ -181,9 +181,15 @@
     "yallist": "^4.0.0"
   },
   "scripts": {
-    "dev": "nodemon index.js"
+  "dev": "nodemon index.js",
+  "start": "node index.js",
+  "chatbot": "cd chatbot_service && python bot.py",
+  "dev:all": "concurrently --kill-others --names \"BACKEND,CHATBOT\" --prefix-colors \"cyan,magenta\" \"npm run dev\" \"npm run chatbot\""
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  }
 }
