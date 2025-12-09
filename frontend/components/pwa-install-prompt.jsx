@@ -10,6 +10,7 @@ export function PWAInstallPrompt() {
 
   useEffect(() => {
     const handler = (e) => {
+      console.log('beforeinstallprompt event received', e)
       // Prevent the mini-infobar from appearing on mobile
       e.preventDefault()
       // Save the event so it can be triggered later
@@ -17,25 +18,61 @@ export function PWAInstallPrompt() {
       setShowInstallPrompt(true)
     }
 
-    window.addEventListener('beforeinstallprompt', handler)
+    const customHandler = () => {
+      console.log('Custom PWA install event received')
+      setShowInstallPrompt(true)
+    }
 
-    return () => window.removeEventListener('beforeinstallprompt', handler)
+    window.addEventListener('beforeinstallprompt', handler)
+    window.addEventListener('pwa-install-available', customHandler)
+
+    // Check if already dismissed recently
+    const dismissed = localStorage.getItem('pwa-install-dismissed')
+    if (dismissed) {
+      const dismissedDate = new Date(parseInt(dismissed))
+      const weekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)
+      if (dismissedDate > weekAgo) {
+        setShowInstallPrompt(false)
+      }
+    }
+
+    // For testing - show prompt if no beforeinstallprompt is fired
+    const testTimeout = setTimeout(() => {
+      if (!deferredPrompt && !localStorage.getItem('pwa-install-dismissed')) {
+        console.log('No beforeinstallprompt event, showing fallback prompt')
+        setShowInstallPrompt(true)
+      }
+    }, 3000)
+
+    return () => {
+      window.removeEventListener('beforeinstallprompt', handler)
+      window.removeEventListener('pwa-install-available', customHandler)
+      clearTimeout(testTimeout)
+    }
   }, [])
 
   const handleInstallClick = async () => {
-    if (!deferredPrompt) return
+    if (deferredPrompt) {
+      // Show the install prompt
+      deferredPrompt.prompt()
 
-    // Show the install prompt
-    deferredPrompt.prompt()
+      // Wait for the user to respond to the prompt
+      const { outcome } = await deferredPrompt.userChoice
 
-    // Wait for the user to respond to the prompt
-    const { outcome } = await deferredPrompt.userChoice
+      console.log(`User response to the install prompt: ${outcome}`)
 
-    console.log(`User response to the install prompt: ${outcome}`)
-
-    // Clear the deferredPrompt so it can only be used once
-    setDeferredPrompt(null)
-    setShowInstallPrompt(false)
+      // Clear the deferredPrompt so it can only be used once
+      setDeferredPrompt(null)
+      setShowInstallPrompt(false)
+    } else {
+      // Fallback for browsers that don't support beforeinstallprompt
+      console.log('No deferredPrompt available - showing manual instructions')
+      alert('To install this app:\\n\\n' +
+            'Chrome/Edge: Look for the install icon in the address bar\\n' +
+            'Safari: Tap Share → Add to Home Screen\\n' +
+            'Firefox: Tap Menu → Install')
+      setShowInstallPrompt(false)
+    }
   }
 
   const handleDismiss = () => {
@@ -56,7 +93,7 @@ export function PWAInstallPrompt() {
     }
   }, [])
 
-  if (!showInstallPrompt || !deferredPrompt) return null
+  if (!showInstallPrompt) return null
 
   return (
     <div className="fixed bottom-4 left-4 right-4 z-50 md:left-auto md:right-4 md:max-w-sm">
