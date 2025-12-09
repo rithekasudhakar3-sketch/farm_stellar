@@ -3,105 +3,104 @@
 import { ChevronRight } from "lucide-react"
 
 const summaryData = {
-    soil_scout: [
-    "Soil texture determines water retention and crop suitability.",
-    "Moisture testing helps estimate irrigation needs.",
-    "Soil color and smell indicate microbial health.",
-    "Healthy soil supports stronger roots and better yields.",
+  soil_scout: [
+    "Soil feel tells water holding and crop fit.",
+    "Check soil wetness to know when to water.",
+    "Soil colour and smell show soil health.",
+    "Good soil gives strong roots and good yield.",
   ],
 
   crop_quest: [
-    "Selecting region-suited crops improves success and yield.",
-    "Climate-based crop planning reduces risks.",
-    "Matching water needs prevents over- or under-irrigation.",
-    "Seasonal crop selection ensures healthy growth.",
+    "Choose crops that suit your area.",
+    "Follow weather to plan crops.",
+    "Give crops the needed water.",
+    "Grow crops in the right season.",
   ],
 
   compost_kickoff: [
-    "Composting reduces organic waste significantly.",
-    "Balancing green and dry materials accelerates breakdown.",
-    "Proper moisture keeps compost active and odor-free.",
-    "Finished compost enriches soil naturally.",
+    "Compost reduces farm waste.",
+    "Mix green and dry waste for fast compost.",
+    "Right moisture avoids bad smell.",
+    "Compost makes soil rich.",
   ],
 
   zero_waste: [
-    "Segregating waste makes recycling and composting easier.",
-    "Collecting dry leaves supports mulching and composting.",
-    "Zero-waste habits reduce farm pollution.",
-    "Clean waste management improves farm sustainability.",
+    "Separate waste to make work easy.",
+    "Dry leaves help in mulch and compost.",
+    "Zero waste keeps farm clean.",
+    "Good waste handling helps the farm.",
   ],
 
   mini_garden: [
-    "Starting small builds confidence in growing plants.",
-    "A 5-plant patch teaches essential gardening basics.",
-    "Beginners learn watering, spacing, and soil preparation.",
-    "Mini gardens promote daily care habits.",
+    "Start small to learn easily.",
+    "Five plants teach basics.",
+    "Learn watering and spacing slowly.",
+    "Small garden builds daily care habit.",
   ],
 
   mulch_master: [
-    "Mulching reduces evaporation and saves water.",
-    "Soil temperature stays cooler under mulch.",
-    "Mulch suppresses weed growth naturally.",
-    "Organic mulch improves soil health over time.",
+    "Mulch saves water.",
+    "Mulch keeps soil cool.",
+    "Mulch controls weeds.",
+    "Mulch improves soil slowly.",
   ],
 
   boll_keeper: [
-    "Monitoring early boll shedding improves cotton yield.",
-    "Balanced nutrients strengthen boll development.",
-    "Removing pest-damaged bolls avoids crop loss.",
-    "Healthy bolls increase final harvest quality.",
+    "Check early boll drop.",
+    "Right nutrients help bolls grow.",
+    "Remove damaged bolls fast.",
+    "Good bolls give good harvest.",
   ],
 
   coconut_basin: [
-    "Circular basins help retain rainwater around roots.",
-    "Basins improve deep soil moisture levels.",
-    "Mulching inside basins boosts microbial activity.",
-    "Coconut trees become more drought-resilient.",
+    "Round basin keeps water near roots.",
+    "Basins help water go deep.",
+    "Mulch in basin boosts soil life.",
+    "Trees handle dry days better.",
   ],
 
   coconut_bioenzyme: [
-    "Bio-enzymes increase beneficial soil microbes.",
-    "Fermented solutions strengthen plant immunity.",
-    "Diluted enzyme improves nutrient absorption.",
-    "Natural fertilizers reduce chemical dependency.",
+    "Bio-enzyme adds good soil life.",
+    "It makes plants stronger.",
+    "Diluted enzyme helps plants eat nutrients.",
+    "Less need for chemicals.",
   ],
 
   rust_shield: [
-    "Early detection of rust reduces crop damage.",
-    "Healthy spacing improves airflow and prevents disease.",
-    "Removing infected leaves slows disease spread.",
-    "Timely organic sprays protect wheat health.",
+    "Find rust early.",
+    "Keep space between plants.",
+    "Remove sick leaves soon.",
+    "Use organic spray on time.",
   ],
 
   biodiversity_strip: [
-    "Flowering strips attract pollinators and predators.",
-    "More beneficial insects reduce pest pressure.",
-    "Biodiversity improves ecological balance.",
-    "Hedgerows support long-term soil and crop health.",
+    "Flowers bring helpful insects.",
+    "Helpful insects reduce pests.",
+    "More insects keep farm balance.",
+    "Hedgerows protect soil.",
   ],
 
   rainwater_hero: [
-    "Rainwater harvesting reduces dependence on wells.",
-    "Filtered storage keeps water clean for plants.",
-    "Stored rainwater works well for dry spells.",
-    "Simple systems increase farm sustainability.",
+    "Rainwater saves well water.",
+    "Filter rainwater for clean use.",
+    "Stored rainwater helps in dry time.",
+    "Simple rain systems help the farm.",
   ],
 
   biochar_maker: [
-    "Biochar improves soil aeration and structure.",
-    "Low-oxygen burning retains carbon effectively.",
-    "Mixing biochar with compost boosts microbial activity.",
-    "Biochar increases long-term soil fertility.",
+    "Biochar makes soil loose.",
+    "Low-oxygen burn keeps carbon.",
+    "Mix biochar with compost.",
+    "Biochar keeps soil good for years.",
   ],
 
   jeevamrutham: [
-    "Jeevamrutham boosts natural soil microbe counts.",
-    "Fermentation releases plant-available nutrients.",
-    "Plants grow healthier with improved root activity.",
-    "Regular application strengthens overall soil biology.",
+    "Jeevamrutham adds soil life.",
+    "Fermentation makes nutrients ready.",
+    "Roots grow strong with it.",
+    "Use often for good soil.",
   ],
-
-}
+};
 
 export function LearningSummaryScreen({ quest, onContinue }) {
   const summaryPoints = summaryData[quest.id] || []
