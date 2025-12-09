@@ -3,13 +3,24 @@
 import { useState } from "react"
 import { Leaf, Sprout, Droplets, Sun, Wheat, TreePine, Bug, Flower2, Search, Filter, ArrowRight, Star, Trophy, ChevronDown } from "lucide-react"
 
-export function RevampedQuestsListScreen({ onStartQuest, quests }) {
+export function RevampedQuestsListScreen({ onStartQuest, quests, userData, completedQuests, farmerType, onBack }) {
     const [searchQuery, setSearchQuery] = useState("")
     const [selectedCrop, setSelectedCrop] = useState("All")
     const [selectedDifficulty, setSelectedDifficulty] = useState("All")
 
     const questList = Object.values(quests)
     const totalXP = questList.reduce((sum, quest) => sum + quest.xpReward, 0)
+    
+    // Get current level from userData or default to 1
+    const currentLevel = userData?.xpLevel || 1
+    const currentXP = userData?.xp || 0
+    
+    // Calculate completion rate
+    const completedQuestsCount = completedQuests?.length || 0
+    const totalQuestsCount = questList.length
+    const completionRate = totalQuestsCount > 0 
+        ? Math.round((completedQuestsCount / totalQuestsCount) * 100) 
+        : 0
 
     const cropFilters = ["All", "Cotton", "Coconut", "Wheat", "General"]
     const difficultyFilters = ["All", "Beginner", "Pro"]
@@ -63,7 +74,7 @@ export function RevampedQuestsListScreen({ onStartQuest, quests }) {
                             <div className="w-10 h-10 mx-auto bg-primary/10 rounded-full flex items-center justify-center mb-2 group-hover:scale-110 transition-transform">
                                 <Trophy className="w-5 h-5 text-primary" />
                             </div>
-                            <p className="text-2xl font-bold text-foreground">1</p>
+                            <p className="text-2xl font-bold text-foreground">{currentLevel}</p>
                             <p className="text-xs text-muted-foreground">Current Level</p>
                         </div>
                         <div className="bg-card/80 backdrop-blur-sm border border-border rounded-2xl p-4 shadow-sm hover:shadow-md transition-all text-center group">
@@ -84,7 +95,7 @@ export function RevampedQuestsListScreen({ onStartQuest, quests }) {
                             <div className="w-10 h-10 mx-auto bg-orange-100 rounded-full flex items-center justify-center mb-2 group-hover:scale-110 transition-transform">
                                 <Wheat className="w-5 h-5 text-orange-600" />
                             </div>
-                            <p className="text-2xl font-bold text-foreground">0%</p>
+                            <p className="text-2xl font-bold text-foreground">{completionRate}%</p>
                             <p className="text-xs text-muted-foreground">Completion Rate</p>
                         </div>
                     </div>

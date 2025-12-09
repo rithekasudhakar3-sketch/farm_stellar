@@ -58,3 +58,20 @@ exports.getSignedDownloadUrl = async (key, expiresIn = 3600) => {
   
   return await getSignedUrl(s3Client, command, { expiresIn });
 };
+
+exports.getObject = async (key) => {
+  const command = new GetObjectCommand({
+    Bucket: process.env.AWS_S3_BUCKET,
+    Key: key,
+  });
+  
+  const response = await s3Client.send(command);
+  
+  // Convert stream to buffer
+  const chunks = [];
+  for await (const chunk of response.Body) {
+    chunks.push(chunk);
+  }
+  
+  return Buffer.concat(chunks);
+};

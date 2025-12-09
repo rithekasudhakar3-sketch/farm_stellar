@@ -16,6 +16,21 @@ const SubmissionSchema = new mongoose.Schema({
   status: { type: String, default: 'pending' },
   proofType: { type: String, default: 'text' },
   proofUrl: { type: String, default: '' },
+  cottonVerification: {
+    success: { type: Boolean },
+    has_cotton: { type: Boolean },
+    is_healthy: { type: Boolean },
+    detected_classes: [{ type: String }],
+    detection_count: { type: Number },
+    message: { type: String },
+    error: { type: String }
+  },
+  questVerification: {
+    success: { type: Boolean },
+    verified: { type: Boolean },
+    response: { type: String },
+    error: { type: String }
+  },
   reviewedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'Admin' },
   reviewedAt: { type: Date },
   feedback: { type: String }
