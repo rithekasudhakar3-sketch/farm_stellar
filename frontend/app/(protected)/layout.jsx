@@ -1,6 +1,7 @@
 "use client"
 
 import { NavigationMenu } from "@/components/shared/navigation-menu"
+
 import { useRouter, usePathname } from "next/navigation"
 import { useEffect, useState } from "react"
 
@@ -36,7 +37,7 @@ export default function ProtectedLayout({ children }) {
                 }
 
                 const user = await res.json()
-                
+
                 // Load local storage data for compatibility
                 const localData = JSON.parse(localStorage.getItem("farmquest_userdata") || "{}")
 

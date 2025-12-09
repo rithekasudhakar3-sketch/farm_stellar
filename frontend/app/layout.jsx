@@ -1,5 +1,6 @@
 import { Analytics } from "@vercel/analytics/next"
 import { Quicksand, Mali } from "next/font/google"
+import { ChatbotWidget } from "@/components/shared/chatbot-widget"
 import "./globals.css"
 
 const _quicksand = Quicksand({ weight: ["400", "600", "700"], subsets: ["latin"] })
@@ -32,6 +33,7 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body className={`font-sans antialiased`}>
         {children}
+        <ChatbotWidget />
         <Analytics />
       </body>
     </html>
