@@ -5,8 +5,17 @@ const Farm = require('../models/Farm');
 const twilioService = require('../services/twilioService');
 
 exports.signup = async (req, res) => {
+  console.log('--- SIGNUP REQUEST RECEIVED ---');
+  console.log('Body:', JSON.stringify(req.body, null, 2));
+
   try {
     const { name, email, password, location, phone, city, state, district, panchayat } = req.body;
+
+    // Basic Validation
+    if (!phone || !name || !password) {
+      console.log('Validation failed: Missing required fields');
+      return res.status(400).json({ message: 'Missing required fields (name, phone, or password)' });
+    }
 
     // Check if user exists by email or phone
     const existingUser = await User.findOne({
@@ -15,7 +24,9 @@ exports.signup = async (req, res) => {
         { phone: phone }
       ]
     });
+
     if (existingUser) {
+      console.log('User already exists:', existingUser._id);
       return res.status(400).json({ message: 'User already exists' });
     }
 
@@ -38,7 +49,14 @@ exports.signup = async (req, res) => {
     res.status(201).json({ token });
   } catch (error) {
     console.error('Signup error:', error);
-    res.status(500).json({ message: 'Server error', error: error.message });
+    // Ensure error object is useful
+    const errorMsg = error.message || String(error);
+    const errorStack = error.stack;
+    res.status(500).json({
+      message: 'Server error during signup',
+      error: errorMsg,
+      details: errorStack
+    });
   }
 };
 
@@ -119,7 +137,7 @@ exports.verifyOTP = async (req, res) => {
       return res.status(400).json({ success: false, message: 'Invalid OTP format' });
     }
 
-    const result = twilioService.verifyOTP(phone, otp);
+    const result = await twilioService.verifyOTP(phone, otp);
     console.log('Verification result:', result);
 
     if (result.success) {

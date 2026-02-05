@@ -13,7 +13,10 @@ function VerifyContent() {
     const handleSuccess = async (data) => {
         if (data.isNewUser || type === "signup") {
             // New user - proceed to farmer type selection
-            // Signup data is already in localStorage from PhoneLoginScreen
+            // Ensure phone is available for signup completion (especially if coming from Login flow)
+            if (phone) {
+                localStorage.setItem("farmquest_temp_phone", phone)
+            }
             router.push("/auth/farmer-type")
         } else {
             // Existing user - token already set in OTP verification

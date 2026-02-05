@@ -8,20 +8,13 @@ const baseConfig = {
   images: {
     unoptimized: true,
   },
-  productionBrowserSourceMaps: false,
-
-  // ✔ FIX: Set turbopack as an object to avoid errors
-  turbopack: {},
-
-  // ✔ You are using custom webpack config → keep it
-  webpack: (config) => {
-    config.devtool = false;
-    return config;
-  },
+  // Removed webpack config - Turbopack doesn't need it
 };
 
 export default withPWA({
   dest: "public",
   register: true,
   skipWaiting: true,
+  disable: process.env.NODE_ENV === 'development', // Disable PWA in dev for faster builds
 })(baseConfig);
+

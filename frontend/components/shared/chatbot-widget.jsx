@@ -44,23 +44,33 @@ export function ChatbotWidget() {
         setIsLoading(true)
 
         try {
-            const response = await fetch("http://localhost:4000/ask", {
+            const token = localStorage.getItem("token")
+            if (!token) {
+                setMessages(prev => [...prev, { role: "bot", content: "Please log in to chat with Stella AI! 🔒" }])
+                setIsLoading(false)
+                return
+            }
+
+            const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:4000"
+            const response = await fetch(`${backendUrl}/api/chatbot/message`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
                 },
                 body: JSON.stringify({
                     message: userMessage,
-                    session_id: sessionId
+                    // session_id is handled by backend via userId
                 }),
             })
 
             if (!response.ok) {
-                throw new Error("Failed to fetch response")
+                const errorData = await response.json().catch(() => ({}))
+                throw new Error(errorData.error || response.statusText || "Failed to fetch response")
             }
 
             const data = await response.json()
-            setMessages(prev => [...prev, { role: "bot", content: data.answer }])
+            setMessages(prev => [...prev, { role: "bot", content: data.response }])
         } catch (error) {
             console.error("Chat error:", error)
             setMessages(prev => [...prev, { role: "bot", content: "Sorry, I'm having trouble connecting to the farm. Please try again later. 🚜" }])

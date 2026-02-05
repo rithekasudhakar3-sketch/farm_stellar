@@ -21,7 +21,7 @@ export default function PermissionsPage() {
             const signupTempData = JSON.parse(localStorage.getItem("signup_temp_data") || "{}")
 
             // Validate that we have required data
-            
+
 
             // Create user in backend
             const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:4000"
@@ -37,6 +37,11 @@ export default function PermissionsPage() {
                 state: farmDetails.state || signupTempData.state || "",
                 district: farmDetails.district || signupTempData.district || "",
                 panchayat: farmDetails.panchayat || signupTempData.panchayat || ""
+            }
+
+            if (!signupData.phone || !signupData.name || !signupData.password) {
+                console.error("Missing required signup data:", signupData);
+                throw new Error("Missing required signup information. Please restart the login process.");
             }
 
             const farmData = {
@@ -58,6 +63,7 @@ export default function PermissionsPage() {
 
             if (!signupRes.ok) {
                 const errorData = await signupRes.json()
+                console.error("Signup failed with data:", errorData)
                 const errorMessage = errorData.message || "Signup failed"
 
                 // Handle specific error cases
@@ -143,7 +149,15 @@ export default function PermissionsPage() {
                             <svg className="w-6 h-6 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>
-                            <p className="font-medium text-sm leading-relaxed">{error}</p>
+                            <div className="flex flex-col gap-2 w-full">
+                                <p className="font-medium text-sm leading-relaxed">{error}</p>
+                                <button
+                                    onClick={() => router.push("/auth/login")}
+                                    className="text-xs bg-destructive-foreground/10 hover:bg-destructive-foreground/20 text-destructive-foreground rounded px-3 py-1.5 w-fit transition-colors font-semibold"
+                                >
+                                    Restart Login
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>

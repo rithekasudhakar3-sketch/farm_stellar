@@ -1,6 +1,9 @@
 const User = require('../models/User');
 
 // Handle chatbot messages
+const axios = require('axios');
+
+// Handle chatbot messages
 exports.sendMessage = async (req, res) => {
     try {
         const { message } = req.body;
@@ -13,9 +16,19 @@ exports.sendMessage = async (req, res) => {
         // Get user context
         const user = await User.findById(userId).populate('farm');
 
-        // TODO: Integrate with your AI/chatbot service here
-        // For now, we'll use a simple response system
-        const response = await generateChatbotResponse(message, user);
+        let response;
+        try {
+            // Call Python Chatbot Service (Gemini)
+            const pythonResponse = await axios.post('http://localhost:8000/ask', {
+                message: message,
+                session_id: userId.toString()
+            });
+            response = pythonResponse.data.answer;
+        } catch (serviceError) {
+            console.warn('Python chatbot service unavailable, using fallback:', serviceError.message);
+            // Fallback to simple response system
+            response = await generateChatbotResponse(message, user);
+        }
 
         res.status(200).json({
             response,
