@@ -10,7 +10,7 @@ import { Slider } from "@/components/ui/slider"
 import { Switch } from "@/components/ui/switch"
 import { usePreferences } from "@/components/preferences-provider"
 
-export function FarmerProfileScreen({ onBack }) {
+export function FarmerProfileScreen({ onBack, userData }) {
   const { theme, setTheme, fontSize, setFontSize, highContrast, setHighContrast } = usePreferences()
   const [isEditing, setIsEditing] = useState(false)
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false)
@@ -27,13 +27,14 @@ export function FarmerProfileScreen({ onBack }) {
   const [errors, setErrors] = useState({})
 
   const [profile, setProfile] = useState({
-    name: "Raj Kumar",
-    phone: "+91 98765 43210",
-    district: "Patiala",
-    state: "Punjab",
-    experience: "Intermediate",
-    fieldSize: 5,
-    crops: ["Wheat", "Rice", "Sugarcane"],
+    name: userData?.name || "Raj Kumar",
+    phone: userData?.phone || "+91 98765 43210",
+    username: userData?.username || "",
+    district: userData?.district || userData?.location?.split(',')[0] || "Patiala",
+    state: userData?.state || "Punjab",
+    experience: userData?.level === 5 ? "Pro" : "Intermediate",
+    fieldSize: userData?.farmSize || 5, // Assuming farmSize might come in future
+    crops: userData?.crops || ["Wheat", "Rice", "Sugarcane"],
   })
 
   // Settings state
@@ -87,6 +88,20 @@ export function FarmerProfileScreen({ onBack }) {
           newErrors.name = "Name must be at least 2 characters"
         } else {
           delete newErrors.name
+        }
+        break
+      case "username":
+        // Allow empty username (optional) unless user is currently typing content
+        if (value && value.trim().length > 0) {
+          if (value.trim().length < 3) {
+            newErrors.username = "Username must be at least 3 characters"
+          } else if (!/^[a-zA-Z0-9_]+$/.test(value)) {
+            newErrors.username = "Username can only contain letters, numbers, and underscores"
+          } else {
+            delete newErrors.username
+          }
+        } else {
+          delete newErrors.username
         }
         break
       default:
@@ -147,15 +162,41 @@ export function FarmerProfileScreen({ onBack }) {
     setIsSaving(true)
 
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000))
+      // API call to update profile
+      const userToken = localStorage.getItem("token");
 
-      // TODO: Replace with actual API call
-      // const response = await fetch('/api/profile', {
-      //   method: 'PUT',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify({ profile, settings })
-      // })
+      // Construct payload dynamically
+      const payload = {
+        name: profile.name,
+        phone: profile.phone,
+        location: `${profile.district}, ${profile.state}`,
+        // Add other fields as needed
+      };
+
+      // Only include username if it is present and valid (non-empty)
+      if (profile.username && profile.username.trim().length >= 3) {
+        payload.username = profile.username;
+      }
+
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:4000"}/api/users/me`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${userToken}`
+        },
+        body: JSON.stringify(payload)
+      })
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Failed to update profile");
+      }
+
+      const updatedUser = await response.json();
+      localStorage.setItem("farmquest_userdata", JSON.stringify(updatedUser));
+
+      // Notify other components (like NavigationMenu in layout)
+      window.dispatchEvent(new Event('farmquest_user_update'));
 
       setHasUnsavedChanges(false)
       setIsEditing(false)
@@ -431,14 +472,15 @@ export function FarmerProfileScreen({ onBack }) {
         </div>
 
         {/* COLLAPSIBLE: Login & Security Section */}
-        {/* <div className="bg-card border-[1.5px] border-border rounded-2xl shadow-[0_2px_8px_rgba(107,166,115,0.08),0_1px_3px_rgba(107,166,115,0.04)] hover:shadow-[0_4px_12px_rgba(107,166,115,0.12),0_2px_6px_rgba(107,166,115,0.08)] transition-all">
+        {/* Account Settings Section */}
+        <div className="bg-card border-[1.5px] border-border rounded-2xl shadow-[0_2px_8px_rgba(107,166,115,0.08),0_1px_3px_rgba(107,166,115,0.04)] hover:shadow-[0_4px_12px_rgba(107,166,115,0.12),0_2px_6px_rgba(107,166,115,0.08)] transition-all">
           <button
             onClick={() => setIsSecurityOpen(!isSecurityOpen)}
             className="w-full p-6 flex items-center justify-between hover:bg-muted/30 rounded-2xl transition-colors"
           >
             <h3 className="text-lg font-semibold flex items-center gap-2" style={{ fontFamily: "'Segoe UI', sans-serif" }}>
               <Lock className="w-5 h-5 text-primary" />
-              Login & Security
+              Account Settings
             </h3>
             {isSecurityOpen ? (
               <ChevronUp className="w-5 h-5 text-muted-foreground" />
@@ -449,6 +491,29 @@ export function FarmerProfileScreen({ onBack }) {
 
           {isSecurityOpen && (
             <div className="px-6 pb-6 space-y-4 animate-in slide-in-from-top-2 duration-200">
+              <div>
+                <Label className="text-small text-muted-foreground">Username</Label>
+                <div className="relative mt-2">
+                  <Input
+                    type="text"
+                    value={profile.username}
+                    onChange={(e) => updateProfile("username", e.target.value)}
+                    className={`rounded-2xl border-2 ${errors.username ? 'border-red-500' : ''}`}
+                    placeholder="Choose a unique username"
+                  />
+                  {errors.username && (
+                    <p className="text-xs text-red-500 flex items-center gap-1 mt-1">
+                      <AlertCircle className="w-3 h-3" />
+                      {errors.username}
+                    </p>
+                  )}
+                  <p className="text-xs text-muted-foreground mt-1">
+                    Unique handle for your profile. 3+ characters.
+                  </p>
+                </div>
+              </div>
+
+              {/* Email Section (Read Only or Editable if needed) */}
               <div>
                 <Label className="text-small text-muted-foreground">Email Address</Label>
                 <div className="relative mt-2">
@@ -466,32 +531,10 @@ export function FarmerProfileScreen({ onBack }) {
                     {settings.emailVerified ? "Verified" : "Unverified"}
                   </span>
                 </div>
-                {errors.email && (
-                  <p className="text-xs text-red-500 flex items-center gap-1 mt-1">
-                    <AlertCircle className="w-3 h-3" />
-                    {errors.email}
-                  </p>
-                )}
-              </div>
-
-              <button className="w-full flex items-center justify-between p-4 hover:bg-muted rounded-2xl transition-colors">
-                <div className="flex items-center gap-3">
-                  <span className="font-medium">Change Password</span>
-                </div>
-              </button>
-
-              <div className="flex items-center justify-between p-4 hover:bg-muted rounded-2xl transition-colors">
-                <div className="flex items-center gap-3">
-                  <div>
-                    <div className="font-medium">Two-Factor Authentication</div>
-                    <div className="text-xs text-muted-foreground">Add extra security</div>
-                  </div>
-                </div>
-                <Switch />
               </div>
             </div>
           )}
-        </div> */}
+        </div>
 
         {/* COLLAPSIBLE: Display & Language Section */}
         <div className="bg-card border-[1.5px] border-border rounded-2xl shadow-[0_2px_8px_rgba(107,166,115,0.08),0_1px_3px_rgba(107,166,115,0.04)] hover:shadow-[0_4px_12px_rgba(107,166,115,0.12),0_2px_6px_rgba(107,166,115,0.08)] transition-all">

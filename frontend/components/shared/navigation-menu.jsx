@@ -5,6 +5,7 @@ import { Home, Leaf, Users, Gift, User, Settings, HelpCircle, LogOut, Menu, X, M
 
 export function NavigationMenu({
   userName,
+  userHandle,
   userLevel,
   userLocation,
   onLogout,
@@ -97,6 +98,7 @@ export function NavigationMenu({
                 </div>
                 <div className="flex-1">
                   <h3 className="text-h4 text-foreground leading-tight">{userName || "Farmer"}</h3>
+                  {userHandle && <p className="text-xs text-muted-foreground">@{userHandle}</p>}
                   <div className="flex items-center gap-1 mt-1">
                     <Award className="w-3 h-3 text-accent" />
                     <span className="text-small font-medium text-accent">Level {userLevel}</span>

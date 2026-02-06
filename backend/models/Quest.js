@@ -10,6 +10,7 @@ const QuestSchema = new mongoose.Schema({
   cropType: { type: String },
   xpReward: { type: Number, default: 0 },
   badgeName: { type: String },
+  image: { type: String },
   steps: [
     {
       title: { type: String },

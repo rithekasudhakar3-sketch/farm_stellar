@@ -14,10 +14,23 @@ exports.getMe = async (req, res) => {
 
 exports.updateMe = async (req, res) => {
   try {
-    const { name, location, level, xp, xpLevel, questsProgress, purchasedRewards } = req.body;
+    const { name, username, location, level, xp, xpLevel, questsProgress, purchasedRewards } = req.body;
 
     const updateData = {};
     if (name !== undefined) updateData.name = name;
+
+    // Username update logic
+    if (username !== undefined) {
+      if (username.length < 3) {
+        return res.status(400).json({ message: 'Username must be at least 3 characters long' });
+      }
+      const existingUser = await User.findOne({ username });
+      if (existingUser && existingUser._id.toString() !== req.user.userId) {
+        return res.status(400).json({ message: 'Username is already taken' });
+      }
+      updateData.username = username;
+    }
+
     if (location !== undefined) updateData.location = location;
     if (level !== undefined) updateData.level = level;
     if (xp !== undefined) updateData.xp = xp;

@@ -10,16 +10,16 @@ export function RevampedQuestsListScreen({ onStartQuest, quests, userData, compl
 
     const questList = Object.values(quests)
     const totalXP = questList.reduce((sum, quest) => sum + quest.xpReward, 0)
-    
+
     // Get current level from userData or default to 1
     const currentLevel = userData?.xpLevel || 1
     const currentXP = userData?.xp || 0
-    
+
     // Calculate completion rate
     const completedQuestsCount = completedQuests?.length || 0
     const totalQuestsCount = questList.length
-    const completionRate = totalQuestsCount > 0 
-        ? Math.round((completedQuestsCount / totalQuestsCount) * 100) 
+    const completionRate = totalQuestsCount > 0
+        ? Math.round((completedQuestsCount / totalQuestsCount) * 100)
         : 0
 
     const cropFilters = ["All", "Cotton", "Coconut", "Wheat", "General"]
@@ -183,8 +183,12 @@ export function RevampedQuestsListScreen({ onStartQuest, quests, userData, compl
 
                                     <div className="relative z-10">
                                         <div className="flex items-start justify-between mb-4">
-                                            <div className="p-3 bg-gradient-to-br from-primary/10 to-primary/5 rounded-2xl group-hover:from-primary/20 group-hover:to-primary/10 transition-colors">
-                                                <IconComponent className="w-8 h-8 text-primary" />
+                                            <div className="p-3 bg-gradient-to-br from-primary/10 to-primary/5 rounded-2xl group-hover:from-primary/20 group-hover:to-primary/10 transition-colors overflow-hidden relative">
+                                                {quest.image ? (
+                                                    <img src={quest.image} alt={quest.title} className="w-8 h-8 object-cover rounded-md" />
+                                                ) : (
+                                                    <IconComponent className="w-8 h-8 text-primary" />
+                                                )}
                                             </div>
                                             <span className={`px-3 py-1 rounded-full text-xs font-bold border ${quest.difficulty === 'Easy' || quest.difficulty === 'Beginner' ? 'bg-green-50 text-green-700 border-green-200' :
                                                 quest.difficulty === 'Medium' ? 'bg-yellow-50 text-yellow-700 border-yellow-200' :

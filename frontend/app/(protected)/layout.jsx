@@ -65,7 +65,32 @@ export default function ProtectedLayout({ children }) {
             }
         }
 
+
         fetchUserData()
+
+        // Listen for local updates (e.g. from profile page)
+        const handleStorageChange = (e) => {
+            if (e.key === "farmquest_userdata") {
+                const newData = JSON.parse(e.newValue || "{}")
+                if (newData) {
+                    setUserData(prev => ({ ...prev, ...newData }))
+                }
+            }
+        }
+
+        // Custom event for same-tab updates
+        const handleCustomUpdate = () => {
+            const localData = JSON.parse(localStorage.getItem("farmquest_userdata") || "{}")
+            setUserData(prev => ({ ...prev, ...localData }))
+        }
+
+        window.addEventListener('storage', handleStorageChange)
+        window.addEventListener('farmquest_user_update', handleCustomUpdate)
+
+        return () => {
+            window.removeEventListener('storage', handleStorageChange)
+            window.removeEventListener('farmquest_user_update', handleCustomUpdate)
+        }
     }, [router])
 
     const handleLogout = () => {
@@ -99,6 +124,7 @@ export default function ProtectedLayout({ children }) {
         <div className="min-h-screen bg-background">
             <NavigationMenu
                 userName={userData.name}
+                userHandle={userData.username} // Pass username as userHandle
                 userLevel={userData.xpLevel}
                 userLocation={userData.location}
                 onLogout={handleLogout}

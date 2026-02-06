@@ -97,10 +97,12 @@ exports.sendOTP = async (req, res) => {
       return res.status(400).json({ success: false, message: 'Phone number is required' });
     }
 
-    // Validate phone format (10 digits)
-    if (!/^\d{10}$/.test(phone)) {
+    // Validate phone format (allowing + and length check flexibility for now, rely on Twilio service normalization)
+    // Accept 10-15 digits, optional + prefix
+    const phoneRegex = /^\+?\d{10,15}$/;
+    if (!phoneRegex.test(phone.replace(/\s+/g, ''))) {
       console.log('Error: Invalid phone format:', phone);
-      return res.status(400).json({ success: false, message: 'Invalid phone number format' });
+      return res.status(400).json({ success: false, message: 'Invalid phone number format. Please enter a valid number.' });
     }
 
     console.log('Sending OTP to:', phone);
@@ -126,7 +128,8 @@ exports.verifyOTP = async (req, res) => {
     }
 
     // Validate phone format
-    if (!/^\d{10}$/.test(phone)) {
+    const phoneRegex = /^\+?\d{10,15}$/;
+    if (!phoneRegex.test(phone.replace(/\s+/g, ''))) {
       console.log('Invalid phone format:', phone);
       return res.status(400).json({ success: false, message: 'Invalid phone number format' });
     }
