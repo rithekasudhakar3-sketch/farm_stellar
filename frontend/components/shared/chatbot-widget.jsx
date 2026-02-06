@@ -44,23 +44,18 @@ export function ChatbotWidget() {
         setIsLoading(true)
 
         try {
-            const token = localStorage.getItem("token")
-            if (!token) {
-                setMessages(prev => [...prev, { role: "bot", content: "Please log in to chat with Stella AI! 🔒" }])
-                setIsLoading(false)
-                return
-            }
+            // NOTE: Token check removed for direct backend connection test as per requirements
+            // const token = localStorage.getItem("token") 
+            // if (!token) ...
 
-            const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:4000"
-            const response = await fetch(`${backendUrl}/api/chatbot/message`, {
+            const backendUrl = "http://localhost:5000" // Hardcoded for this specific task connection
+            const response = await fetch(`${backendUrl}/api/chat`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    "Authorization": `Bearer ${token}`
                 },
                 body: JSON.stringify({
                     message: userMessage,
-                    // session_id is handled by backend via userId
                 }),
             })
 
@@ -70,7 +65,7 @@ export function ChatbotWidget() {
             }
 
             const data = await response.json()
-            setMessages(prev => [...prev, { role: "bot", content: data.response }])
+            setMessages(prev => [...prev, { role: "bot", content: data.reply }])
         } catch (error) {
             console.error("Chat error:", error)
             setMessages(prev => [...prev, { role: "bot", content: "Sorry, I'm having trouble connecting to the farm. Please try again later. 🚜" }])
