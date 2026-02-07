@@ -13,17 +13,73 @@ export function NavigationMenu({
   onNavigate,
 }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [detectedLocation, setDetectedLocation] = useState(null)
+  const [isLoadingLocation, setIsLoadingLocation] = useState(false)
+
+  const detectLocation = () => {
+    if (typeof window !== 'undefined' && !navigator.geolocation) {
+      return
+    }
+
+    setIsLoadingLocation(true)
+
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        try {
+          const { latitude, longitude } = position.coords
+
+          // Reverse geocoding using OpenStreetMap Nominatim API
+          const response = await fetch(
+            `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`
+          )
+
+          if (response.ok) {
+            const data = await response.json()
+            // Extract relevant location parts
+            const address = data.address
+            const city = address.city || address.town || address.village || address.suburb
+            const state = address.state || address.state_district
+
+            if (city && state) {
+              setDetectedLocation(`${city}, ${state}`)
+            } else if (city) {
+              setDetectedLocation(city)
+            } else {
+              setDetectedLocation(`${latitude.toFixed(2)}, ${longitude.toFixed(2)}`)
+            }
+          }
+        } catch (error) {
+          console.error("Error getting location name:", error)
+        } finally {
+          setIsLoadingLocation(false)
+        }
+      },
+      (error) => {
+        console.error("Error accessing location:", error)
+        setIsLoadingLocation(false)
+      },
+      {
+        enableHighAccuracy: true,
+        timeout: 10000,
+        maximumAge: 0
+      }
+    )
+  }
 
   useEffect(() => {
     if (isMenuOpen) {
       document.body.style.overflow = "hidden"
+      // Try to detect location when menu opens if not already detected
+      if (!userLocation || userLocation === "Unknown Location") {
+        detectLocation()
+      }
     } else {
       document.body.style.overflow = "unset"
     }
     return () => {
       document.body.style.overflow = "unset"
     }
-  }, [isMenuOpen])
+  }, [isMenuOpen, userLocation])
 
   const NAVIGATION_MENU_ITEMS = [
     { icon: Home, label: "Dashboard", screenId: "farmer-dashboard" },
@@ -105,10 +161,19 @@ export function NavigationMenu({
                   </div>
                 </div>
               </div>
-              <div className="flex items-center gap-2 text-medium text-muted-foreground">
-                <MapPin className="w-3 h-3" />
-                <span>{userLocation}</span>
-              </div>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  detectLocation();
+                }}
+                disabled={isLoadingLocation}
+                className="flex items-center gap-2 text-medium text-muted-foreground hover:text-primary transition-colors w-full text-left"
+              >
+                <MapPin className={`w-3 h-3 ${isLoadingLocation ? 'animate-bounce text-primary' : ''}`} />
+                <span>
+                  {isLoadingLocation ? "Locating..." : (detectedLocation || userLocation || "Unknown Location")}
+                </span>
+              </button>
             </div>
           </div>
 
