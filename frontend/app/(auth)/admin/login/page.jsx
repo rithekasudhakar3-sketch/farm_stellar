@@ -1,6 +1,6 @@
 "use client"
 
-import { AdminPasskeyLoginScreen } from "@/components/auth/admin-passkey-login-screen"
+import { AdminPasskeyLoginScreen } from "@/components/features/auth/admin-passkey-login-screen"
 import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
 
@@ -12,7 +12,7 @@ export default function AdminLoginPage() {
         // Check if already logged in as admin
         const adminToken = localStorage.getItem("farmquest_admin_token")
         const adminInfo = localStorage.getItem("farmquest_admin")
-        
+
         if (adminToken && adminInfo) {
             router.push("/admin/dashboard")
             return

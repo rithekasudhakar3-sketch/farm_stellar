@@ -1,25 +1,25 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
-const connectDB = require('./config/db');
+const connectDB = require('./src/config/db');
 
-const authRoutes = require('./routes/auth');
-const adminRoutes = require('./routes/admin');
-const userRoutes = require('./routes/user');
-const farmRoutes = require('./routes/farm');
-const dashboardRoutes = require('./routes/dashboard');
-const questRoutes = require('./routes/quests');
-const uploadRoutes = require('./routes/uploads');
-const submissionRoutes = require('./routes/submissions');
-const rewardRoutes = require('./routes/rewards');
-const leaderboardRoutes = require('./routes/leaderboard');
-const communityRoutes = require('./routes/community');
-const purchaseOrderRoutes = require('./routes/purchaseOrders');
-const chatbotRoutes = require('./routes/chatbot');
-const translateRoutes = require('./routes/translate');
-const weatherRoutes = require('./routes/weather');
-const cottonRoutes = require('./routes/cotton');
-const questVerificationRoutes = require('./routes/questVerification');
+const authRoutes = require('./src/routes/auth');
+const adminRoutes = require('./src/routes/admin');
+const userRoutes = require('./src/routes/user');
+const farmRoutes = require('./src/routes/farm');
+const dashboardRoutes = require('./src/routes/dashboard');
+const questRoutes = require('./src/routes/quests');
+const uploadRoutes = require('./src/routes/uploads');
+const submissionRoutes = require('./src/routes/submissions');
+const rewardRoutes = require('./src/routes/rewards');
+const leaderboardRoutes = require('./src/routes/leaderboard');
+const communityRoutes = require('./src/routes/community');
+const purchaseOrderRoutes = require('./src/routes/purchaseOrders');
+const chatbotRoutes = require('./src/routes/chatbot');
+const translateRoutes = require('./src/routes/translate');
+const weatherRoutes = require('./src/routes/weather');
+const cottonRoutes = require('./src/routes/cotton');
+const questVerificationRoutes = require('./src/routes/questVerification');
 
 
 const app = express();

@@ -1,6 +1,6 @@
 "use client"
 
-import { AdminFarmersScreen } from "@/components/admin/farmers-screen"
+import { AdminFarmersScreen } from "@/components/features/admin/farmers-screen"
 import { useRouter } from "next/navigation"
 
 export default function AdminFarmersPage() {

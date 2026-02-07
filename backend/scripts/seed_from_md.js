@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 require('dotenv').config();
-const Quest = require('./models/Quest');
+const Quest = require('../src/models/Quest');
 
 const quests = [
   {
@@ -1121,17 +1121,17 @@ const quests = [
 ];
 
 const seedQuests = async () => {
-    try {
-        await mongoose.connect(process.env.MONGO_URI);
-        console.log('Connected to DB');
-        await Quest.deleteMany({});
-        await Quest.insertMany(quests);
-        console.log('Seeded ' + quests.length + ' quests');
-        await mongoose.disconnect();
-    } catch (err) {
-        console.error(err);
-        process.exit(1);
-    }
+  try {
+    await mongoose.connect(process.env.MONGO_URI);
+    console.log('Connected to DB');
+    await Quest.deleteMany({});
+    await Quest.insertMany(quests);
+    console.log('Seeded ' + quests.length + ' quests');
+    await mongoose.disconnect();
+  } catch (err) {
+    console.error(err);
+    process.exit(1);
+  }
 };
 
 seedQuests();

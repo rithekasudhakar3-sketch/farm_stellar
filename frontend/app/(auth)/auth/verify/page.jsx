@@ -1,6 +1,6 @@
 "use client"
 
-import { OtpVerificationScreen } from "@/components/auth/otp-verification-screen"
+import { OtpVerificationScreen } from "@/components/features/auth/otp-verification-screen"
 import { useRouter, useSearchParams } from "next/navigation"
 import { Suspense } from "react"
 

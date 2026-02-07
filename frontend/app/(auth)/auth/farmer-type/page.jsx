@@ -1,6 +1,6 @@
 "use client"
 
-import { FarmerTypeSelectionScreen } from "@/components/auth/farmer-type-selection-screen"
+import { FarmerTypeSelectionScreen } from "@/components/features/auth/farmer-type-selection-screen"
 import { useRouter } from "next/navigation"
 
 export default function FarmerTypePage() {

@@ -1,6 +1,6 @@
 "use client"
 
-import { ImpactTrackerScreen } from "@/components/farmer/impact-tracker-screen"
+import { ImpactTrackerScreen } from "@/components/features/farmer/impact-tracker-screen"
 import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
 

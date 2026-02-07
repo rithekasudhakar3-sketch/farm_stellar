@@ -1,6 +1,6 @@
 "use client"
 
-import { WelcomeScreen } from "@/components/welcome-screen"
+import { WelcomeScreen } from "@/components/shared/welcome-screen"
 import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
 

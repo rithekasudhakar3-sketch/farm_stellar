@@ -1,7 +1,7 @@
 "use client"
 
-import { RevampedDashboard } from "@/components/farmer/revamped-dashboard"
-import { FarmstellarChatbot } from "@/components/farmer/farmstellar-chatbot"
+import { RevampedDashboard } from "@/components/features/farmer/revamped-dashboard"
+import { FarmstellarChatbot } from "@/components/features/farmer/farmstellar-chatbot"
 
 import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"

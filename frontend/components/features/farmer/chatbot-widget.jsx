@@ -42,9 +42,15 @@ export function ChatbotWidget() {
         setIsLoading(true)
 
         try {
-            const response = await fetch("http://localhost:8000/ask", {
+            const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:4000"
+            const token = typeof window !== 'undefined' ? localStorage.getItem("token") : null
+
+            const response = await fetch(`${backendUrl}/api/chatbot/message`, {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                },
                 body: JSON.stringify({
                     message: userMsg,
                     session_id: sessionId
@@ -56,7 +62,7 @@ export function ChatbotWidget() {
             }
 
             const data = await response.json()
-            setMessages(prev => [...prev, { role: "bot", content: data.answer }])
+            setMessages(prev => [...prev, { role: "bot", content: data.response }])
         } catch (error) {
             console.error("Chat error:", error)
             setMessages(prev => [...prev, { role: "bot", content: "❌ I'm having trouble connecting to the farm server. Please ensure the chatbot service is running on port 8000." }])

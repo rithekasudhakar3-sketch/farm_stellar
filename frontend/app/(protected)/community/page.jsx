@@ -1,6 +1,6 @@
 "use client"
 
-import { CommunityScreen } from "@/components/farmer/community-screen"
+import { CommunityScreen } from "@/components/features/farmer/community-screen"
 import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
 

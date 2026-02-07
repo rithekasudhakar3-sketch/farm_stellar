@@ -1,6 +1,6 @@
 "use client"
 
-import { FarmDetailsScreen } from "@/components/auth/farm-details-screen"
+import { FarmDetailsScreen } from "@/components/features/auth/farm-details-screen"
 import { useRouter } from "next/navigation"
 
 export default function FarmDetailsPage() {

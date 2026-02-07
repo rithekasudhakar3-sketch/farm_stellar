@@ -1,6 +1,6 @@
 "use client"
 
-import { RevampedQuestsListScreen } from "@/components/quests/revamped-quests-list-screen"
+import { RevampedQuestsListScreen } from "@/components/features/quests/revamped-quests-list-screen"
 import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
 
@@ -20,7 +20,7 @@ export default function QuestsPage() {
 
             try {
                 const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:4000"
-                
+
                 // Fetch user data
                 const userRes = await fetch(`${backendUrl}/api/users/me`, {
                     headers: {
@@ -31,7 +31,7 @@ export default function QuestsPage() {
                 if (!userRes.ok) {
                     const errorData = await userRes.json().catch(() => ({}))
                     console.error("API Error:", userRes.status, errorData)
-                    
+
                     // If unauthorized, clear token and redirect
                     if (userRes.status === 401) {
                         localStorage.removeItem("token")
@@ -40,7 +40,7 @@ export default function QuestsPage() {
                         router.push("/welcome")
                         return
                     }
-                    
+
                     throw new Error(errorData.message || "Failed to fetch user data")
                 }
 
@@ -69,7 +69,7 @@ export default function QuestsPage() {
                 }
 
                 const questsData = await questsRes.json()
-                
+
                 console.log('===== QUEST DEBUG =====')
                 console.log('Raw API response:', questsData)
                 console.log('Is array?', Array.isArray(questsData))
@@ -77,7 +77,7 @@ export default function QuestsPage() {
                 console.log('Length:', questsData?.length)
                 console.log('Keys:', Object.keys(questsData || {}))
                 console.log('========================')
-                
+
                 if (!questsData || !Array.isArray(questsData) || questsData.length === 0) {
                     console.warn('No quests returned from API or invalid format')
                     console.log('Setting empty quests array')
@@ -85,7 +85,7 @@ export default function QuestsPage() {
                 } else {
                     console.log('Fetched quests from API:', questsData.length, 'quests')
                     console.log('Quest details:', questsData.map(q => ({ id: q._id, customId: q.id, title: q.title, active: q.active })))
-                    
+
                     // Transform quests to match frontend format - use array instead of object
                     const transformedQuests = questsData.map(q => ({
                         _id: q._id,
@@ -102,7 +102,7 @@ export default function QuestsPage() {
                         stages: q.steps || q.stages || [],
                         steps: q.steps || q.stages || []
                     }))
-                    
+
                     console.log('Transformed quests array:', transformedQuests)
                     console.log('Transformed quests count:', transformedQuests.length)
                     setQuests(transformedQuests)

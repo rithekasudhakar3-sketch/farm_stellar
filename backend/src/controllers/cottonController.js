@@ -60,7 +60,7 @@ exports.verifyCotton = async (req, res) => {
     await fs.writeFile(tempFilePath, imageBuffer);
 
     // Path to Python script
-    const pythonScript = path.join(__dirname, '../cotton/cotton.py');
+    const pythonScript = path.join(__dirname, '../ai/cotton/cotton.py');
 
     // Check if Python script exists
     try {

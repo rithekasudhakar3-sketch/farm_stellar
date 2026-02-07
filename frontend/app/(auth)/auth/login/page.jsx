@@ -1,6 +1,6 @@
 "use client"
 
-import { PhoneLoginScreen } from "@/components/auth/phone-login-screen"
+import { PhoneLoginScreen } from "@/components/features/auth/phone-login-screen"
 import { useRouter } from "next/navigation"
 import { useState, useEffect } from "react"
 

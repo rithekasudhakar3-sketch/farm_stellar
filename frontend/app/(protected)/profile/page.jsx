@@ -1,6 +1,6 @@
 "use client"
 
-import { FarmerProfileScreen } from "@/components/farmer/profile-screen"
+import { FarmerProfileScreen } from "@/components/features/farmer/profile-screen"
 import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
 

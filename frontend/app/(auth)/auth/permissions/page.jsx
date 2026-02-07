@@ -1,6 +1,6 @@
 "use client"
 
-import { PermissionsScreen } from "@/components/auth/permissions-screen"
+import { PermissionsScreen } from "@/components/features/auth/permissions-screen"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
 

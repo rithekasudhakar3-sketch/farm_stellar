@@ -1,6 +1,6 @@
 "use client"
 
-import { AdminRewardsScreen } from "@/components/admin/rewards-screen"
+import { AdminRewardsScreen } from "@/components/features/admin/rewards-screen"
 import { useRouter } from "next/navigation"
 
 export default function AdminRewardsPage() {

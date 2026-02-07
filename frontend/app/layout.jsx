@@ -1,9 +1,9 @@
 import { Analytics } from "@vercel/analytics/next"
 import { Quicksand, Mali } from "next/font/google"
-import { ChatbotWidget } from "@/components/shared/chatbot-widget"
+import { ChatbotWidget } from "@/components/features/farmer/chatbot-widget"
 import "./globals.css"
-import { PreferencesProvider } from "@/components/preferences-provider"
-import { GoogleTranslate } from "@/components/google-translate"
+import { PreferencesProvider } from "@/components/providers/preferences-provider"
+import { GoogleTranslate } from "@/components/shared/google-translate"
 
 const _quicksand = Quicksand({ weight: ["400", "600", "700"], subsets: ["latin"] })
 const _mali = Mali({ weight: ["400", "600", "700"], subsets: ["latin"] })
@@ -25,7 +25,7 @@ export default function RootLayout({ children }) {
           <ChatbotWidget />
           <GoogleTranslate />
           <Analytics />
-        </PreferencesProvider>  
+        </PreferencesProvider>
       </body>
     </html>
   )

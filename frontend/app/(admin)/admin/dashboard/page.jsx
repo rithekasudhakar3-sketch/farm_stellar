@@ -1,6 +1,6 @@
 "use client"
 
-import { AdminDashboardScreen } from "@/components/admin/dashboard-screen"
+import { AdminDashboardScreen } from "@/components/features/admin/dashboard-screen"
 import { useRouter } from "next/navigation"
 import { useEffect } from "react"
 

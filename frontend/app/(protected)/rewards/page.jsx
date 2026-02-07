@@ -1,6 +1,6 @@
 "use client"
 
-import { RewardStore } from "@/components/farmer/reward-store"
+import { RewardStore } from "@/components/features/farmer/reward-store"
 import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
 

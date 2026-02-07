@@ -1,10 +1,10 @@
 const fs = require('fs');
 const path = require('path');
 
-const questDir = path.join(__dirname, '../frontend/public/images/quests');
+const questDir = path.join(__dirname, '../../frontend/public/images/quests');
 const outputStart = `const mongoose = require('mongoose');
 require('dotenv').config();
-const Quest = require('./models/Quest');
+const Quest = require('../src/models/Quest');
 
 const quests = `;
 

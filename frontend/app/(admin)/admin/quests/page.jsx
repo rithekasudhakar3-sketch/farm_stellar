@@ -1,6 +1,6 @@
 "use client"
 
-import { AdminQuestsScreen } from "@/components/admin/quests-screen"
+import { AdminQuestsScreen } from "@/components/features/admin/quests-screen"
 import { useRouter } from "next/navigation"
 import { useState, useEffect } from "react"
 
@@ -16,7 +16,7 @@ export default function AdminQuestsPage() {
                 setLoading(true)
                 const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:4000"
                 const token = localStorage.getItem("farmquest_admin_token")
-                
+
                 const response = await fetch(`${backendUrl}/api/quests`, {
                     headers: {
                         "Authorization": `Bearer ${token}`,
@@ -58,8 +58,8 @@ export default function AdminQuestsPage() {
             <div className="flex items-center justify-center min-h-screen">
                 <div className="text-center">
                     <p className="text-red-600 mb-4">Error: {error}</p>
-                    <button 
-                        onClick={() => window.location.reload()} 
+                    <button
+                        onClick={() => window.location.reload()}
                         className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
                     >
                         Retry

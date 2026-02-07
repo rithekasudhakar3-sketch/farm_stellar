@@ -1,6 +1,6 @@
 "use client"
 
-import { AdminVerificationScreen } from "@/components/admin/verification-screen"
+import { AdminVerificationScreen } from "@/components/features/admin/verification-screen"
 import { useRouter } from "next/navigation"
 
 export default function AdminVerificationPage() {

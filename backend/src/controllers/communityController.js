@@ -38,7 +38,7 @@ exports.getPosts = async (req, res) => {
 // Create a new post
 exports.createPost = async (req, res) => {
   try {
-    const { content, images, postType, relatedQuestId } = req.body;
+    const { content, images, postType, relatedQuestId, cropType, method } = req.body;
 
     if (!content || content.trim().length === 0) {
       return res.status(400).json({ message: 'Post content is required' });
@@ -62,6 +62,8 @@ exports.createPost = async (req, res) => {
       district: user.district || user.city,
       postType: postType || 'general',
       relatedQuestId,
+      cropType,
+      method,
       likes: [],
       comments: []
     });

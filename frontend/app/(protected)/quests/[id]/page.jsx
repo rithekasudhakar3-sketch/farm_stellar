@@ -1,12 +1,12 @@
 "use client"
 
-import { QuestIntroScreen } from "@/components/quests/quest-intro-screen"
-import { QuestStepsScreen } from "@/components/quests/quest-steps-screen"
-import { SubmitProofScreen } from "@/components/quests/submit-proof-screen"
-import { VerificationScreen } from "@/components/quests/verification-screen"
-import { RewardScreen } from "@/components/quests/reward-screen"
-import { LearningSummaryScreen } from "@/components/quests/learning-summary-screen"
-import { SoilEvaluationScreen } from "@/components/quests/soil-evaluation-screen"
+import { QuestIntroScreen } from "@/components/features/quests/quest-intro-screen"
+import { QuestStepsScreen } from "@/components/features/quests/quest-steps-screen"
+import { SubmitProofScreen } from "@/components/features/quests/submit-proof-screen"
+import { VerificationScreen } from "@/components/features/quests/verification-screen"
+import { RewardScreen } from "@/components/features/quests/reward-screen"
+import { LearningSummaryScreen } from "@/components/features/quests/learning-summary-screen"
+import { SoilEvaluationScreen } from "@/components/features/quests/soil-evaluation-screen"
 import { useRouter, useParams, useSearchParams } from "next/navigation"
 import { useEffect, useState, Suspense } from "react"
 
@@ -40,7 +40,7 @@ function QuestContent() {
             try {
                 const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:4000"
                 console.log("Fetching quest data for ID:", questId)
-                
+
                 // Fetch user data
                 const userRes = await fetch(`${backendUrl}/api/users/me`, {
                     headers: {
@@ -87,7 +87,7 @@ function QuestContent() {
                 const currentQuest = questsData.find(q => q._id === questId || q.id === questId || q.slug === questId)
                 console.log("Looking for quest with ID:", questId)
                 console.log("Found quest:", currentQuest ? currentQuest.title : "NOT FOUND")
-                
+
                 if (currentQuest) {
                     // Transform quest data to match frontend format
                     const transformedQuest = {
@@ -138,8 +138,8 @@ function QuestContent() {
                 <div className="text-center">
                     <p className="text-red-600 mb-4">Quest not found</p>
                     <p className="text-gray-600 mb-4">Quest ID: {questId}</p>
-                    <button 
-                        onClick={() => router.push("/quests")} 
+                    <button
+                        onClick={() => router.push("/quests")}
                         className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
                     >
                         Back to Quests

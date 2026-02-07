@@ -27,6 +27,8 @@ const CommunityPostSchema = new mongoose.Schema({
   // Post metadata
   postType: { type: String, enum: ['progress', 'tip', 'question', 'milestone', 'general'], default: 'general' },
   relatedQuestId: { type: String }, // If post is about a specific quest
+  cropType: { type: String },
+  method: { type: String },
 
   // Visibility
   isPublic: { type: Boolean, default: true },

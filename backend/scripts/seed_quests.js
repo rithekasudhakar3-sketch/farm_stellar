@@ -1,6 +1,6 @@
 require('dotenv').config();
 const mongoose = require('mongoose');
-const Quest = require('./models/Quest');
+const Quest = require('../src/models/Quest');
 
 const sampleQuests = [
     {
