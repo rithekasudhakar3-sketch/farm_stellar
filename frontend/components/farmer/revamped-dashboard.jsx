@@ -5,6 +5,7 @@ import { UserProgressCard } from "./user-progress-card"
 import { LeaderboardCard } from "./leaderboard-card"
 import { WeatherAlertCard } from "./weather-alert-card"
 import { OngoingQuestsCard } from "./ongoing-quests-card"
+import { CompletedQuestsWidget } from "./completed-quests-widget"
 
 export function RevampedDashboard({ userData, onStartQuest, onNavigate }) {
     const handleResumeQuest = (questId) => {
@@ -37,7 +38,7 @@ export function RevampedDashboard({ userData, onStartQuest, onNavigate }) {
                 <div className="container mx-auto px-4 sm:px-6 py-6">
                     <div className="flex items-center gap-3">
                         {onNavigate && (
-                            <button 
+                            <button
                                 onClick={() => onNavigate('welcome')}
                                 className="p-2 hover:bg-muted rounded-lg transition-colors"
                                 aria-label="Go back"
@@ -86,8 +87,13 @@ export function RevampedDashboard({ userData, onStartQuest, onNavigate }) {
                     </div>
                 </div>
 
+                {/* Completed Quests Widget */}
+                <div className="mb-8">
+                    <CompletedQuestsWidget completedQuests={userData?.completedQuests} />
+                </div>
+
                 {/* Quick Stats Section */}
-                <div className="mt-8 bg-card border-2 border-border rounded-3xl p-6 shadow-lg">
+                <div className="bg-card border-2 border-border rounded-3xl p-6 shadow-lg">
                     <h3 className="text-xl font-bold text-foreground mb-6">Your Achievements</h3>
                     <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
                         <div className="text-center p-4 bg-gradient-to-br from-primary/10 to-transparent rounded-2xl border border-primary/20 hover:scale-105 transition-transform">

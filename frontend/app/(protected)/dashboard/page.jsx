@@ -39,6 +39,18 @@ export default function DashboardPage() {
 
                 const user = await userRes.json()
 
+                // Fetch dashboard additional data (completed quests with full details)
+                const dashboardRes = await fetch(`${backendUrl}/api/dashboard`, {
+                    headers: {
+                        "Authorization": `Bearer ${token}`
+                    }
+                })
+
+                let dashboardData = {}
+                if (dashboardRes.ok) {
+                    dashboardData = await dashboardRes.json()
+                }
+
                 // Load local storage data for compatibility
                 const localData = JSON.parse(localStorage.getItem("farmquest_userdata") || "{}")
 
@@ -60,7 +72,7 @@ export default function DashboardPage() {
                         size: user.farm.size,
                         primaryCrop: user.farm.primaryCrop
                     } : localData.farmDetails,
-                    completedQuests: user.questsProgress?.filter(q => q.status === "completed") || [],
+                    completedQuests: dashboardData.completedQuests || user.questsProgress?.filter(q => q.status === "completed") || [],
                     badges: localData.badges || []
                 }
 
@@ -75,7 +87,7 @@ export default function DashboardPage() {
 
                 if (questsRes.ok) {
                     const questsData = await questsRes.json()
-                    
+
                     // Transform quests to match frontend format
                     const transformedQuests = {}
                     questsData.forEach(q => {
@@ -93,7 +105,7 @@ export default function DashboardPage() {
                             stages: q.stages || []
                         }
                     })
-                    
+
                     setQuests(transformedQuests)
                 }
             } catch (error) {
