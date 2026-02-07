@@ -6,6 +6,7 @@
   "dependencies": {
     "@aws-sdk/client-s3": "^3.940.0",
     "@aws-sdk/s3-request-presigner": "^3.940.0",
+    "@google/generative-ai": "^0.24.1",
     "abbrev": "^1.1.1",
     "accepts": "^1.3.8",
     "agent-base": "^6.0.2",
@@ -181,10 +182,10 @@
     "yallist": "^4.0.0"
   },
   "scripts": {
-  "dev": "nodemon index.js",
-  "start": "node index.js",
-  "chatbot": "cd chatbot_service && python bot.py",
-  "dev:all": "concurrently --kill-others --names \"BACKEND,CHATBOT\" --prefix-colors \"cyan,magenta\" \"npm run dev\" \"npm run chatbot\""
+    "dev": "nodemon index.js",
+    "start": "node index.js",
+    "chatbot": "cd chatbot_service && python bot.py",
+    "dev:all": "concurrently --kill-others --names \"BACKEND,CHATBOT\" --prefix-colors \"cyan,magenta\" \"npm run dev\" \"npm run chatbot\""
   },
   "keywords": [],
   "author": "",

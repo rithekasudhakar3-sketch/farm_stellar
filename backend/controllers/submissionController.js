@@ -28,13 +28,33 @@ exports.createSubmission = async (req, res) => {
   try {
     const { questId, stageIndex, media, notes, checklist, proofType, proofUrl, description, cottonVerification, questVerification } = req.body;
 
-    // Validate S3 uploads if media keys are provided
+    // Validate uploads
     if (media && media.length > 0) {
+      // Check if S3 is configured (same logic as uploadController)
+      const isS3Configured = process.env.AWS_ACCESS_KEY_ID &&
+        process.env.AWS_SECRET_ACCESS_KEY &&
+        process.env.AWS_S3_BUCKET &&
+        process.env.AWS_REGION &&
+        !process.env.AWS_ACCESS_KEY_ID.includes('your-') &&
+        !process.env.AWS_SECRET_ACCESS_KEY.includes('your-');
+
       for (const m of media) {
         try {
-          await s3Service.headObject(m.key);
+          if (isS3Configured) {
+            await s3Service.headObject(m.key);
+          } else {
+            // Check if file exists locally
+            const fs = require('fs');
+            const path = require('path');
+            const localPath = path.join(__dirname, '..', m.key);
+
+            if (!fs.existsSync(localPath)) {
+              throw new Error('File not found locally');
+            }
+          }
         } catch (error) {
-          return res.status(400).json({ message: 'File not found in S3 storage.' });
+          console.error(`File validation failed for ${m.key}:`, error.message);
+          return res.status(400).json({ message: isS3Configured ? 'File not found in S3 storage.' : 'File not found in local storage.' });
         }
       }
     }
@@ -58,7 +78,7 @@ exports.createSubmission = async (req, res) => {
     // Fetch quest to get XP reward
     const Quest = require('../models/Quest');
     const mongoose = require('mongoose');
-    
+
     // Check if questId is a valid ObjectId or a slug
     let quest;
     if (mongoose.Types.ObjectId.isValid(questId) && questId.length === 24) {
@@ -66,7 +86,7 @@ exports.createSubmission = async (req, res) => {
     } else {
       quest = await Quest.findOne({ slug: questId });
     }
-    
+
     const xpReward = quest?.xpReward || 0;
 
     // Update user's quest progress to "completed" status and award XP immediately
@@ -74,19 +94,19 @@ exports.createSubmission = async (req, res) => {
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
-    
+
     const questProgress = user.questsProgress.find(p => {
       const pQuestId = p.questId ? (typeof p.questId === 'string' ? p.questId : p.questId.toString()) : null;
       return pQuestId === questId;
     });
-    
+
     if (questProgress) {
       questProgress.status = 'completed';
     } else {
-      user.questsProgress.push({ 
-        questId: questId, 
-        stageIndex: stageIndex || 0, 
-        status: 'completed' 
+      user.questsProgress.push({
+        questId: questId,
+        stageIndex: stageIndex || 0,
+        status: 'completed'
       });
     }
 
@@ -109,7 +129,7 @@ exports.createSubmission = async (req, res) => {
 
     console.log('Submission created and XP awarded:', { questId, xpReward, newXP: user.xp, newLevel: user.xpLevel });
 
-    res.status(201).json({ 
+    res.status(201).json({
       submission,
       xpAwarded: xpReward,
       newXP: user.xp,
@@ -198,11 +218,11 @@ exports.getUserSubmissions = async (req, res) => {
   try {
     const { questId } = req.query;
     const query = { userId: req.user.userId };
-    
+
     if (questId) {
       query.questId = questId;
     }
-    
+
     const submissions = await Submission.find(query).sort({ createdAt: -1 });
     res.status(200).json(submissions);
   } catch (error) {

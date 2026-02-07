@@ -9,24 +9,48 @@ const os = require('os');
  */
 exports.verifyCotton = async (req, res) => {
   let tempFilePath = null;
-  
+
   try {
     const { imageKey, imageUrl } = req.body;
 
     if (!imageKey && !imageUrl) {
-      return res.status(400).json({ 
+      return res.status(400).json({
         success: false,
-        message: 'Image key or URL is required' 
+        message: 'Image key or URL is required'
       });
     }
 
     // Download image from S3 to temporary file
+    // Download image from S3 or Local to buffer
     let imageBuffer;
+
+    // Check local file first
     if (imageKey) {
-      imageBuffer = await s3Service.getObject(imageKey);
+      const localPath = path.join(__dirname, '..', imageKey);
+      try {
+        await fs.access(localPath);
+        console.log('Using local file for cotton verification:', localPath);
+        imageBuffer = await fs.readFile(localPath);
+      } catch (err) {
+        // Not local, try S3
+        try {
+          imageBuffer = await s3Service.getObject(imageKey);
+        } catch (s3Err) {
+          console.warn("S3 fetch failed, trying URL...", s3Err.message);
+          // Fallback to URL
+          if (imageUrl) {
+            const response = await fetch(imageUrl);
+            if (!response.ok) throw new Error(`Failed to fetch image from URL: ${response.statusText}`);
+            imageBuffer = Buffer.from(await response.arrayBuffer());
+          } else {
+            throw new Error("Local file and S3 failed, and no URL provided.");
+          }
+        }
+      }
     } else {
       // If URL provided, fetch it
       const response = await fetch(imageUrl);
+      if (!response.ok) throw new Error(`Failed to fetch image from URL: ${response.statusText}`);
       imageBuffer = Buffer.from(await response.arrayBuffer());
     }
 
@@ -37,15 +61,15 @@ exports.verifyCotton = async (req, res) => {
 
     // Path to Python script
     const pythonScript = path.join(__dirname, '../cotton/cotton.py');
-    
+
     // Check if Python script exists
     try {
       await fs.access(pythonScript);
     } catch (error) {
       console.error('Python script not found:', pythonScript);
-      return res.status(500).json({ 
+      return res.status(500).json({
         success: false,
-        message: 'Cotton verification script not found' 
+        message: 'Cotton verification script not found'
       });
     }
 
@@ -73,10 +97,10 @@ exports.verifyCotton = async (req, res) => {
 
       if (code !== 0) {
         console.error('Python script error:', errorData);
-        return res.status(500).json({ 
+        return res.status(500).json({
           success: false,
           message: 'Cotton verification failed',
-          error: errorData 
+          error: errorData
         });
       }
 
@@ -86,12 +110,12 @@ exports.verifyCotton = async (req, res) => {
         const jsonLine = lines[lines.length - 1];
         const result = JSON.parse(jsonLine);
         console.log('Cotton verification result:', result);
-        
+
         res.status(200).json(result);
       } catch (parseError) {
         console.error('Failed to parse Python output:', outputData);
         console.error('Parse error:', parseError.message);
-        return res.status(500).json({ 
+        return res.status(500).json({
           success: false,
           message: 'Failed to parse verification result',
           error: parseError.message,
@@ -102,7 +126,7 @@ exports.verifyCotton = async (req, res) => {
 
   } catch (error) {
     console.error('Cotton verification error:', error);
-    
+
     // Clean up temporary file on error
     if (tempFilePath) {
       try {
@@ -111,11 +135,11 @@ exports.verifyCotton = async (req, res) => {
         console.error('Failed to delete temp file:', err);
       }
     }
-    
-    res.status(500).json({ 
+
+    res.status(500).json({
       success: false,
       message: 'Server error during cotton verification',
-      error: error.message 
+      error: error.message
     });
   }
 };
