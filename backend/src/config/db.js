@@ -2,10 +2,15 @@ const mongoose = require('mongoose');
 
 const connectDB = async () => {
   try {
-    await mongoose.connect(process.env.MONGO_URI);
-    console.log('MongoDB connected');
+    // Force the database name to be 'farmquest' to satisfy the user's requirement of ONE database
+    const conn = await mongoose.connect(process.env.MONGO_URI, {
+      dbName: 'farmquest'
+    });
+
+    console.log(`MongoDB Connected: ${conn.connection.host}`);
+    console.log(`Connected to Database: ${conn.connection.name}`); // Should confirm 'farmquest'
   } catch (error) {
-    console.error('MongoDB connection error:', error);
+    console.error(`Error: ${error.message}`);
     process.exit(1);
   }
 };

@@ -3,15 +3,7 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const Admin = require('../src/models/Admin');
 
-const connectDB = async () => {
-    try {
-        await mongoose.connect(process.env.MONGO_URI);
-        console.log('MongoDB Connected');
-    } catch (err) {
-        console.error('Connection failed', err);
-        process.exit(1);
-    }
-};
+const connectDB = require('../src/config/db');
 
 const createAdmin = async () => {
     await connectDB();
