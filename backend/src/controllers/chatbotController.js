@@ -16,10 +16,15 @@ exports.sendMessage = async (req, res) => {
         // Get user context
         const user = await User.findById(userId).populate('farm');
 
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
         let response;
         try {
             // Call Python Chatbot Service (Gemini)
-            const pythonResponse = await axios.post('http://localhost:8000/ask', {
+            const aiServiceUrl = process.env.AI_SERVICE_URL || 'http://localhost:8000';
+            const pythonResponse = await axios.post(`${aiServiceUrl}/ask`, {
                 message: message,
                 session_id: userId.toString()
             });

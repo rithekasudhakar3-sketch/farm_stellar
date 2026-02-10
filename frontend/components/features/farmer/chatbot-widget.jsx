@@ -58,14 +58,27 @@ export function ChatbotWidget() {
             })
 
             if (!response.ok) {
-                throw new Error("Network response was not ok")
+                const errorData = await response.json();
+                throw new Error(errorData.error || errorData.message || "Failed to get response");
             }
 
             const data = await response.json()
             setMessages(prev => [...prev, { role: "bot", content: data.response }])
         } catch (error) {
             console.error("Chat error:", error)
-            setMessages(prev => [...prev, { role: "bot", content: "❌ I'm having trouble connecting to the farm server. Please ensure the chatbot service is running on port 8000." }])
+
+            if (error.message === "Token is not valid" || error.message === "No token, authorization denied") {
+                setMessages(prev => [...prev, { role: "bot", content: "❌ Session expired. Logging you out..." }]);
+                setTimeout(() => {
+                    if (typeof window !== 'undefined') {
+                        localStorage.removeItem("token");
+                        localStorage.removeItem("user");
+                        window.location.href = "/auth/login";
+                    }
+                }, 2000);
+            } else {
+                setMessages(prev => [...prev, { role: "bot", content: `❌ Error: ${error.message}. Please try refreshing the page or logging in again.` }])
+            }
         } finally {
             setIsLoading(false)
         }
