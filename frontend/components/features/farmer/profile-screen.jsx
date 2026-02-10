@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Slider } from "@/components/ui/slider"
 import { Switch } from "@/components/ui/switch"
-import { usePreferences } from "@/components/preferences-provider"
+import { usePreferences } from "@/components/providers/preferences-provider"
 
 export function FarmerProfileScreen({ onBack, userData }) {
   const { theme, setTheme, fontSize, setFontSize, highContrast, setHighContrast } = usePreferences()
