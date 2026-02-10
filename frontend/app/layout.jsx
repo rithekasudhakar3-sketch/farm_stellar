@@ -8,9 +8,17 @@ import { GoogleTranslate } from "@/components/shared/google-translate"
 const _quicksand = Quicksand({ weight: ["400", "600", "700"], subsets: ["latin"] })
 const _mali = Mali({ weight: ["400", "600", "700"], subsets: ["latin"] })
 
+export const viewport = {
+  themeColor: "#4CAF50",
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+}
+
 export const metadata = {
   title: "FarmStellar - Learn Sustainable Farming",
   description: "Gamified farming education app for beginners",
+  manifest: "/manifest.json",
   other: {
     google: "notranslate",
   },
