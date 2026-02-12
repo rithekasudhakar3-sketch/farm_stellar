@@ -25,7 +25,41 @@ export function SubmitProofScreen({ quest, onSubmit, onBack }) {
 
   const canSubmit = uploadedImage !== null
 
+
+  const fetchLocation = (highAccuracy = true) => {
+    if (!navigator.geolocation) return
+
+    console.log("📍 Attempting to fetch location...", { highAccuracy })
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        console.log("✅ Location obtained:", position.coords)
+        setLocation({
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude,
+          accuracy: position.coords.accuracy,
+          timestamp: new Date().toISOString()
+        })
+      },
+      (error) => {
+        console.warn("❌ Location error:", error.message)
+        // If high accuracy fails, try low accuracy
+        if (highAccuracy && error.code === error.TIMEOUT) {
+          console.log("High accuracy timed out, trying low accuracy...")
+          fetchLocation(false)
+        }
+      },
+      {
+        enableHighAccuracy: highAccuracy,
+        timeout: 15000,
+        maximumAge: 10000
+      }
+    )
+  }
+
   useEffect(() => {
+    // Initial location fetch
+    fetchLocation()
+
     // cleanup on unmount
     return () => {
       stopCamera()
@@ -38,32 +72,8 @@ export function SubmitProofScreen({ quest, onSubmit, onBack }) {
       console.log("Starting camera...")
       setIsCameraActive(true)
 
-      // attempt to get location (best-effort) with high accuracy
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-          (position) => {
-            console.log("Location obtained:", position.coords)
-            setLocation({
-              latitude: position.coords.latitude,
-              longitude: position.coords.longitude,
-              accuracy: position.coords.accuracy,
-              timestamp: new Date().toISOString()
-            })
-          },
-          (error) => {
-            console.warn("Location not available:", error)
-            if (error.code === error.PERMISSION_DENIED) {
-              alert("Location permission denied. Photos will be captured without GPS data. Please enable location access for better tracking.")
-            }
-            // don't block camera if location fails
-          },
-          {
-            enableHighAccuracy: true,
-            timeout: 10000,
-            maximumAge: 0
-          }
-        )
-      }
+      // Refresh location when camera starts
+      fetchLocation()
 
       const constraints = {
         video: {
@@ -128,8 +138,8 @@ export function SubmitProofScreen({ quest, onSubmit, onBack }) {
           const position = await new Promise((resolve, reject) => {
             navigator.geolocation.getCurrentPosition(resolve, reject, {
               enableHighAccuracy: true,
-              timeout: 5000,
-              maximumAge: 0
+              timeout: 10000,
+              maximumAge: 10000
             })
           })
           captureLocation = {
@@ -141,8 +151,8 @@ export function SubmitProofScreen({ quest, onSubmit, onBack }) {
           setLocation(captureLocation)
           console.log("Fresh location captured:", captureLocation)
         } catch (geoError) {
-          console.warn("Could not get fresh location:", geoError)
-          // Use existing location if available, or continue without
+          console.warn("Could not get fresh location, using last known:", geoError)
+          // captureLocation remains as 'location' (last known)
         }
       }
 
@@ -155,7 +165,6 @@ export function SubmitProofScreen({ quest, onSubmit, onBack }) {
       }
 
       const video = videoRef.current
-
       const canvas = document.createElement("canvas")
       canvas.width = video.videoWidth || 1280
       canvas.height = video.videoHeight || 720
@@ -174,7 +183,6 @@ export function SubmitProofScreen({ quest, onSubmit, onBack }) {
       const reader = new FileReader()
       reader.onloadend = async () => {
         try {
-
           const token = localStorage.getItem("token")
           const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:4000"
 
@@ -183,7 +191,6 @@ export function SubmitProofScreen({ quest, onSubmit, onBack }) {
             headers: {
               "Content-Type": "application/json",
               "Authorization": token ? `Bearer ${token}` : ""
-
             },
             body: JSON.stringify({
               mimeType: "image/jpeg",
@@ -192,11 +199,9 @@ export function SubmitProofScreen({ quest, onSubmit, onBack }) {
             })
           })
 
-
           if (!uploadRes.ok) {
             const errText = await uploadRes.text().catch(() => "")
             throw new Error(errText || "Failed to upload photo")
-
           }
 
           const { key, url } = await uploadRes.json().catch(() => ({}))
@@ -206,7 +211,6 @@ export function SubmitProofScreen({ quest, onSubmit, onBack }) {
             key: key || null,
             preview,
             location: captureLocation
-
           })
 
           // Show location info to user if captured
@@ -216,7 +220,6 @@ export function SubmitProofScreen({ quest, onSubmit, onBack }) {
         } catch (error) {
           console.error("Upload error:", error)
           alert("Failed to upload photo. Please try again.")
-
         } finally {
           setIsUploading(false)
           stopCamera()
@@ -237,33 +240,59 @@ export function SubmitProofScreen({ quest, onSubmit, onBack }) {
     setIsUploading(true)
 
     // 1. Capture Location immediately (Required for verification)
-    let uploadLocation = location; // current tracked location if available
-    try {
-      if (navigator.geolocation) {
-        console.log("Getting location for upload...");
+    let uploadLocation = location // current tracked location if available
+
+    // Explicitly try to fetch if we don't have one
+    if (!uploadLocation && navigator.geolocation) {
+      console.log("No location yet, forcing fetch...")
+      try {
         const position = await new Promise((resolve, reject) => {
           navigator.geolocation.getCurrentPosition(resolve, reject, {
             enableHighAccuracy: true,
-            timeout: 5000,
-            maximumAge: 0
+            timeout: 15000,
+            maximumAge: 30000 // Allow 30s old location
           })
-        });
+        })
 
         uploadLocation = {
           latitude: position.coords.latitude,
           longitude: position.coords.longitude,
           accuracy: position.coords.accuracy,
           timestamp: new Date().toISOString()
-        };
-        setLocation(uploadLocation); // Update state too
-        console.log("Location secured for upload:", uploadLocation);
+        }
+        setLocation(uploadLocation) // Update state too
+        console.log("Location secured for upload:", uploadLocation)
+      } catch (geoError) {
+        console.warn("Could not get location for upload:", geoError)
+        // Retry with low accuracy
+        try {
+          const position = await new Promise((resolve, reject) => {
+            navigator.geolocation.getCurrentPosition(resolve, reject, {
+              enableHighAccuracy: false,
+              timeout: 10000,
+              maximumAge: 60000
+            })
+          })
+          uploadLocation = {
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude,
+            accuracy: position.coords.accuracy,
+            timestamp: new Date().toISOString()
+          }
+          setLocation(uploadLocation)
+        } catch (e) {
+          console.error("Final location attempt failed", e)
+        }
       }
-    } catch (geoError) {
-      console.warn("Could not get fresh location for upload:", geoError);
-      // Fallback: If we have a previously tracked location, use it.
-      // If not, the user might be warned by the backend later.
-      if (!uploadLocation) {
-        alert("⚠️ Location Warning: We couldn't get your GPS location. Verification may fail if you are far from your farm.");
+    }
+
+    if (!uploadLocation) {
+      const confirmContinue = confirm(
+        "⚠️ We couldn't get your GPS location. Quest verification requires location data and will likely fail.\n\nDo you want to continue anyway?"
+      )
+      if (!confirmContinue) {
+        setIsUploading(false)
+        return
       }
     }
 

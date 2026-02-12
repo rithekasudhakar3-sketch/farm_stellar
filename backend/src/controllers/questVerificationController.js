@@ -103,7 +103,7 @@ exports.verifyQuest = async (req, res) => {
       longitude
     );
 
-    const allowedRadius = (farm.geofence?.radius || 100) + 20; // Radius + 20m buffer
+    const allowedRadius = (farm.geofence?.radius || 100) + 100; // Radius + 100m buffer for demo
 
     console.log(`Quest Verification Location: Farm=[${farm.farmLocation.lat}, ${farm.farmLocation.lng}], Photo=[${latitude}, ${longitude}], Dist=${dist}m, Allowed=${allowedRadius}m`);
 

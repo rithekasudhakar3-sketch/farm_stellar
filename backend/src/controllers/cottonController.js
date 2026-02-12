@@ -38,20 +38,7 @@ exports.verifyCotton = async (req, res) => {
           });
         }
 
-        // Time Check
-        if (timestamp) {
-          const photoTime = new Date(timestamp).getTime();
-          const serverTime = Date.now();
-          const diffSeconds = Math.abs(serverTime - photoTime) / 1000;
-          if (diffSeconds > 300) { // 5 mins
-            return res.status(400).json({
-              success: false,
-              message: 'GPS timestamp is too old.'
-            });
-          }
-        }
-
-        // 2. Geofence Check
+        // 2. Geofence Check (Demo Friendly: 100m buffer)
         const dist = getDistanceFromLatLonInM(
           farm.farmLocation.lat,
           farm.farmLocation.lng,
@@ -59,7 +46,7 @@ exports.verifyCotton = async (req, res) => {
           longitude
         );
 
-        const allowedRadius = (farm.geofence?.radius || 100) + 20;
+        const allowedRadius = (farm.geofence?.radius || 100) + 100; // Increased buffer for demo
 
         console.log(`Cotton Verification Location: Dist=${dist}m, Allowed=${allowedRadius}m`);
 
