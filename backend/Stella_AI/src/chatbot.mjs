@@ -100,7 +100,14 @@ app.post("/ask", async (req, res) => {
 });
 
 // Start Server
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
     console.log(`\n🚀 Server running on http://localhost:${PORT}`);
     console.log(`👉 POST http://localhost:${PORT}/api/chat`);
 });
+
+server.on('error', (error) => {
+    console.error('Server error:', error);
+});
+
+// Prevent process from exiting (if something is closing the event loop)
+setInterval(() => { }, 10000);
