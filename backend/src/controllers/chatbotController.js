@@ -22,8 +22,8 @@ exports.sendMessage = async (req, res) => {
 
         let response;
         try {
-            // Call Python Chatbot Service (Gemini)
-            const aiServiceUrl = process.env.AI_SERVICE_URL || 'http://localhost:8000';
+            // Call AI Chatbot Service (Gemini Node.js)
+            const aiServiceUrl = process.env.AI_SERVICE_URL || 'http://localhost:8001';
             const pythonResponse = await axios.post(`${aiServiceUrl}/ask`, {
                 message: message,
                 session_id: userId.toString()
