@@ -183,11 +183,12 @@
     "whatwg-url": "^14.2.0",
     "wide-align": "^1.1.5",
     "wrappy": "^1.0.2",
-    "yallist": "^4.0.0"
+    "yallist": "^4.0.0",
+    "concurrently": "^9.2.1"
   },
   "scripts": {
     "dev": "npm run dev:all",
-    "start": "node index.js",
+    "start": "concurrently --kill-others --names \"BACKEND,CHATBOT\" \"node index.js\" \"npm run chatbot\"",
     "chatbot": "node Stella_AI/src/chatbot.mjs",
     "dev:backend": "nodemon index.js",
     "dev:all": "concurrently --kill-others --names \"BACKEND,CHATBOT\" --prefix-colors \"cyan,magenta\" \"npm run dev:backend\" \"npm run chatbot\""
@@ -195,7 +196,5 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "devDependencies": {
-    "concurrently": "^9.2.1"
-  }
+  "devDependencies": {}
 }
