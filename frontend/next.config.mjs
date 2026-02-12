@@ -1,12 +1,14 @@
 import withPWA from "@ducanh2912/next-pwa";
 
 /** @type {import('next').NextConfig} */
-typescript: {
-  ignoreBuildErrors: true,
+const baseConfig = {
+  typescript: {
+    ignoreBuildErrors: true,
   },
-images: {
-  unoptimized: true,
+  images: {
+    unoptimized: true,
   },
+};
 
 export default withPWA({
   dest: "public",
@@ -14,4 +16,3 @@ export default withPWA({
   skipWaiting: true,
   disable: process.env.NODE_ENV === 'development', // Disable PWA in dev for faster builds
 })(baseConfig);
-
