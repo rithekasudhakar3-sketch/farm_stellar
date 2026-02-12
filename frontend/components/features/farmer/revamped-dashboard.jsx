@@ -6,12 +6,81 @@ import { LeaderboardCard } from "./leaderboard-card"
 import { WeatherAlertCard } from "./weather-alert-card"
 import { OngoingQuestsCard } from "./ongoing-quests-card"
 import { CompletedQuestsWidget } from "./completed-quests-widget"
+import { useState, useEffect } from "react"
+import { Button } from "@/components/ui/button"
+import { Card } from "@/components/ui/card"
 
 export function RevampedDashboard({ userData, onStartQuest, onNavigate }) {
     const handleResumeQuest = (questId) => {
         if (onStartQuest) {
             onStartQuest(questId)
         }
+    }
+
+    const [isVerifying, setIsVerifying] = useState(false)
+    const [verificationError, setVerificationError] = useState(null)
+    const [verificationSuccess, setVerificationSuccess] = useState(false)
+    const [gpsSignal, setGpsSignal] = useState(null)
+
+    // Check if location is verified
+    const isLocationVerified = userData?.farmDetails?.farmLocation?.lat && userData?.farmDetails?.farmLocation?.lng
+
+    const handleVerifyLocation = () => {
+        setIsVerifying(true)
+        setVerificationError(null)
+
+        if (!navigator.geolocation) {
+            setVerificationError("Geolocation is not supported by your browser.")
+            setIsVerifying(false)
+            return
+        }
+
+        navigator.geolocation.getCurrentPosition(
+            async (position) => {
+                const { latitude, longitude, accuracy } = position.coords
+                setGpsSignal({ accuracy })
+
+                try {
+                    const token = localStorage.getItem("token")
+                    const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:4000"
+
+                    const response = await fetch(`${backendUrl}/api/farm/me`, {
+                        method: "PATCH",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "Authorization": `Bearer ${token}`
+                        },
+                        body: JSON.stringify({
+                            farmLocation: { lat: latitude, lng: longitude },
+                            geofence: { radius: 200 } // Default 200m
+                        })
+                    })
+
+                    if (!response.ok) {
+                        throw new Error("Failed to update farm location")
+                    }
+
+                    // success
+                    setVerificationSuccess(true)
+                    // We should reload the page to refresh user data context
+                    setTimeout(() => {
+                        window.location.reload()
+                    }, 1500)
+
+                } catch (err) {
+                    console.error("Verification failed:", err)
+                    setVerificationError("Failed to save location. Please try again.")
+                } finally {
+                    setIsVerifying(false)
+                }
+            },
+            (err) => {
+                console.error("GPS Error:", err)
+                setVerificationError("Unable to retrieve location. Please check browser permissions.")
+                setIsVerifying(false)
+            },
+            { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
+        )
     }
 
     // Get time-based greeting
@@ -32,7 +101,63 @@ export function RevampedDashboard({ userData, onStartQuest, onNavigate }) {
     const GreetingIcon = greeting.icon
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
+        <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20 relative">
+            {/* Blocking Verification Modal */}
+            {!isLocationVerified && !userData?.farmerType?.includes("beginner") && (userData?.farmDetails?.hasLand !== false) && (
+                <div className="fixed inset-0 z-[100] bg-background/80 backdrop-blur-sm flex items-center justify-center p-4">
+                    <Card className="max-w-md w-full p-6 shadow-2xl border-yellow-500/50 bg-yellow-50/90 dark:bg-yellow-900/10">
+                        <div className="flex flex-col items-center text-center space-y-4">
+                            <div className="w-16 h-16 bg-yellow-100 rounded-full flex items-center justify-center animate-pulse">
+                                <svg className="w-8 h-8 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                                </svg>
+                            </div>
+                            <h2 className="text-xl font-bold text-yellow-800 dark:text-yellow-200">Verification Required</h2>
+                            <p className="text-sm text-yellow-700 dark:text-yellow-300">
+                                Your farm is registered but location is not verified. Please verify your location to access all features.
+                            </p>
+
+                            <div className="w-full bg-white/50 dark:bg-black/20 rounded-xl p-4 text-left space-y-2">
+                                <h3 className="font-semibold text-sm">Verify Location</h3>
+                                <p className="text-xs text-muted-foreground">Please stand at your farm center and take a photo. Ensure you have good GPS signal.</p>
+
+                                {gpsSignal && (
+                                    <div className="flex justify-between text-xs mt-2 bg-green-100 p-1 rounded text-green-800">
+                                        <span>GPS Signal:</span>
+                                        <span>Ready ({Math.round(gpsSignal.accuracy)}m)</span>
+                                    </div>
+                                )}
+
+                                {verificationError && (
+                                    <div className="text-xs text-destructive mt-2 font-medium bg-destructive/10 p-2 rounded">
+                                        {verificationError}
+                                    </div>
+                                )}
+
+                                {verificationSuccess ? (
+                                    <div className="text-center py-2 text-green-600 font-bold animate-bounce">
+                                        Location Verified! Redirecting...
+                                    </div>
+                                ) : (
+                                    <Button
+                                        onClick={handleVerifyLocation}
+                                        disabled={isVerifying}
+                                        className="w-full mt-2 bg-yellow-600 hover:bg-yellow-700 text-white"
+                                    >
+                                        {isVerifying ? (
+                                            <>
+                                                <div className="h-4 w-4 border-2 border-white/30 border-t-white rounded-full animate-spin mr-2" />
+                                                Verifying...
+                                            </>
+                                        ) : "Verify My Farm Location"}
+                                    </Button>
+                                )}
+                            </div>
+                        </div>
+                    </Card>
+                </div>
+            )}
+
             {/* Header */}
             <div className="bg-card/80 backdrop-blur-lg border-b border-border shadow-sm">
                 <div className="container mx-auto px-4 sm:px-6 py-6">

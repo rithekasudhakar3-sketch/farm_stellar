@@ -87,6 +87,7 @@ export function NavigationMenu({
     { icon: Users, label: "Community", screenId: "community" },
     { icon: Gift, label: "Rewards", screenId: "impact-tracker" },
     { icon: Settings, label: "Settings", screenId: "farmer-profile" },
+    { icon: MapPin, label: "My Farm", screenId: "my-farm" },
     // { icon: Settings, label: "Settings", screenId: "settings" },
     // { icon: HelpCircle, label: "Help", screenId: "farmer-dashboard" },
   ]

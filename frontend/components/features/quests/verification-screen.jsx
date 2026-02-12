@@ -2,6 +2,7 @@
 
 import { CheckCircle2, Sparkles, Brain, Eye, Zap } from "lucide-react"
 import { useState, useEffect } from "react"
+import { XPRewardPopup } from "@/components/shared/xp-reward-popup" // Import XP Popup
 
 export function VerificationScreen({ quest, onContinue, isAutoVerified = false, verificationData = null }) {
   const [verificationStage, setVerificationStage] = useState(0)
@@ -10,6 +11,11 @@ export function VerificationScreen({ quest, onContinue, isAutoVerified = false, 
   const [learningOutcomes, setLearningOutcomes] = useState([])
   const [loading, setLoading] = useState(true)
   const [genericVerificationResult, setGenericVerificationResult] = useState(null)
+
+  // XP Logic State
+  const [showXpPopup, setShowXpPopup] = useState(false)
+  const [xpGranted, setXpGranted] = useState(false)
+
 
   const stages = [
     { icon: Eye, text: "Analyzing submitted image...", duration: 0 },
@@ -25,7 +31,7 @@ export function VerificationScreen({ quest, onContinue, isAutoVerified = false, 
         const token = localStorage.getItem("token")
         const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:4000"
         const questId = quest?._id || quest?.id
-        
+
         if (questId && token) {
           const response = await fetch(`${backendUrl}/api/quests/${questId}`, {
             headers: {
@@ -33,7 +39,7 @@ export function VerificationScreen({ quest, onContinue, isAutoVerified = false, 
               "Content-Type": "application/json"
             }
           })
-          
+
           if (response.ok) {
             const questData = await response.json()
             console.log('Fetched quest data:', questData)
@@ -58,7 +64,7 @@ export function VerificationScreen({ quest, onContinue, isAutoVerified = false, 
     if (verificationData) {
       console.log('Generic quest verification data received from props:', verificationData)
       setGenericVerificationResult(verificationData)
-      
+
       // Set verification results immediately
       const results = [
         {
@@ -80,13 +86,51 @@ export function VerificationScreen({ quest, onContinue, isAutoVerified = false, 
 
       // Use actual verification data from API if available
       if (verificationData) {
+
+        let isVerified = false;
+
+        // Handle new standardized schema logic
+        if (verificationData.status) {
+          isVerified = verificationData.status === 'verified';
+        } else {
+          // Fallback legacy check
+          isVerified = verificationData.verified || verificationData.success;
+        }
+
+        // >>> XP REWARD LOGIC START <<<
+        if (isVerified && !xpGranted) {
+          console.log("Quest Verified! Awarding XP...");
+          setXpGranted(true);
+          setTimeout(() => {
+            setShowXpPopup(true);
+          }, 500); // Slight delay for dramatic effect
+        }
+        // >>> XP REWARD LOGIC END <<<
+
+
         console.log('Displaying verification data from API:', verificationData)
-        
-        // Map API response to display format for other quests
+
         const results = []
-          
-        // Add all fields from the verification response
-        Object.entries(verificationData).forEach(([key, value]) => {
+
+        // Handle new standardized schema
+        if (verificationData.status) {
+          results.push({
+            label: 'Verification Status',
+            status: isVerified ? 'Verified ✓' : 'Rejected',
+            color: isVerified ? 'text-green-500' : 'text-red-500'
+          });
+
+          // Add confidence if available (though not in current schema, good for future)
+          if (verificationData.confidence) {
+            results.push({
+              label: 'Confidence',
+              status: `${Math.round(verificationData.confidence * 100)}%`,
+              color: 'text-blue-500'
+            });
+          }
+        } else {
+          // Fallback for legacy schema
+          Object.entries(verificationData).forEach(([key, value]) => {
             if (key === 'verified' || key === 'success') {
               results.push({
                 label: 'Verification Status',
@@ -105,8 +149,8 @@ export function VerificationScreen({ quest, onContinue, isAutoVerified = false, 
                 status: `${Math.round(value * 100)}%`,
                 color: value >= 0.8 ? 'text-green-500' : value >= 0.6 ? 'text-yellow-500' : 'text-red-500'
               })
-            } else if (key === 'message' || key === 'feedback') {
-              // Skip message field, we'll display it separately
+            } else if (key === 'message' || key === 'feedback' || key === 'response' || key === 'reasons' || key === 'suggestions') {
+              // Skip message/text fields, displayed separately
             } else if (typeof value === 'boolean') {
               results.push({
                 label: key.split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' '),
@@ -114,16 +158,20 @@ export function VerificationScreen({ quest, onContinue, isAutoVerified = false, 
                 color: value ? 'text-green-500' : 'text-red-500'
               })
             } else if (typeof value === 'string' || typeof value === 'number') {
-              results.push({
-                label: key.split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' '),
-                status: String(value),
-                color: 'text-primary'
-              })
+              // Only add if not "status" since we handled it above if it exists, but here we are in legacy fallback loop
+              if (key !== 'status') {
+                results.push({
+                  label: key.split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' '),
+                  status: String(value),
+                  color: 'text-primary'
+                })
+              }
             }
           })
-          
-          setVerificationResults(results)
         }
+
+        setVerificationResults(results)
+      }
 
       setIsComplete(true)
     }
@@ -159,7 +207,7 @@ export function VerificationScreen({ quest, onContinue, isAutoVerified = false, 
             <h2 className="text-3xl font-bold text-foreground mb-3 text-balance">
               AI Verification
             </h2>
-            
+
           </div>
 
           {/* Progress Stages */}
@@ -174,10 +222,10 @@ export function VerificationScreen({ quest, onContinue, isAutoVerified = false, 
                   <div
                     key={idx}
                     className={`flex items-center gap-3 p-3 rounded-xl transition-all ${isActive
-                        ? "bg-primary/10 border-2 border-primary scale-105"
-                        : isCompleted
-                          ? "bg-accent/5 border border-accent/20"
-                          : "bg-muted/30 border border-border opacity-50"
+                      ? "bg-primary/10 border-2 border-primary scale-105"
+                      : isCompleted
+                        ? "bg-accent/5 border border-accent/20"
+                        : "bg-muted/30 border border-border opacity-50"
                       }`}
                   >
                     <div className={`w-8 h-8 rounded-full flex items-center justify-center ${isCompleted ? "bg-accent" : isActive ? "bg-primary" : "bg-muted"
@@ -228,86 +276,100 @@ export function VerificationScreen({ quest, onContinue, isAutoVerified = false, 
                   Response
                 </h3>
               </div>
-                
+
               {/* AI Response Content */}
-              <div className={`p-4 sm:p-5 rounded-xl backdrop-blur-sm border-2 ${
-                genericVerificationResult.verified || genericVerificationResult.success
-                  ? 'bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 border-green-300 dark:border-green-700'
-                  : 'bg-gradient-to-br from-red-50 to-rose-50 dark:from-red-900/20 dark:to-rose-900/20 border-red-300 dark:border-red-700'
-              }`}>
-                {(() => {
-                  const responseText = genericVerificationResult.response || genericVerificationResult.message || ''
-                  
-                  // Function to format the response into bullet points
-                  const formatResponse = (text) => {
-                    if (!text) {
-                      return genericVerificationResult.verified || genericVerificationResult.success
-                        ? ['✓ Quest verified successfully', '✓ All criteria met', '✓ Submission accepted']
-                        : ['✗ Quest verification failed', '✗ Please review requirements', '✗ Submit again with correct proof']
-                    }
+              {(() => {
+                const isVerified = genericVerificationResult.status === 'verified' || genericVerificationResult.verified || genericVerificationResult.success;
 
-                    // Split by common delimiters and clean up
-                    let points = text
-                      .split(/[.!?]\s+(?=[A-Z])|[\n•\-–—]+/)
-                      .map(point => point.trim())
-                      .filter(point => point.length > 10) // Filter out very short fragments
-                    
-                    // If we have numbered points (1., 2., etc), split by those
-                    if (text.match(/\d+\.\s/)) {
-                      points = text.split(/\d+\.\s+/).filter(p => p.trim().length > 10)
-                    }
-                    
-                    // Limit to 3-4 most important points
-                    points = points.slice(0, 4)
-                    
-                    // Add bullet points if not present
-                    return points.map(point => {
-                      // Clean up and shorten if needed
-                      let cleaned = point
-                        .replace(/^(VERIFIED:|YES|NO|Therefore,?|The clear|This image|In summary)/gi, '')
-                        .trim()
-                      
-                      // Limit length to ~100 characters
-                      if (cleaned.length > 100) {
-                        cleaned = cleaned.substring(0, 100).trim() + '...'
-                      }
-                      
-                      return cleaned
-                    }).filter(p => p.length > 0)
-                  }
+                return (
+                  <div className={`p-4 sm:p-5 rounded-xl backdrop-blur-sm border-2 ${isVerified
+                    ? 'bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 border-green-300 dark:border-green-700'
+                    : 'bg-gradient-to-br from-red-50 to-rose-50 dark:from-red-900/20 dark:to-rose-900/20 border-red-300 dark:border-red-700'
+                    }`}>
+                    {/* New Standard Schema Display */}
+                    {genericVerificationResult.status ? (
+                      <div className="space-y-3">
+                        {isVerified ? (
+                          <div className="font-medium text-green-800 dark:text-green-200">
+                            Quest verified successfully!
+                          </div>
+                        ) : (
+                          <div className="font-medium text-red-800 dark:text-red-200">
+                            Verification failed. Not all criteria met.
+                          </div>
+                        )}
 
-                  const bulletPoints = formatResponse(responseText)
-                  const isVerified = genericVerificationResult.verified || genericVerificationResult.success
+                        {/* REASONS */}
+                        {genericVerificationResult.reasons && genericVerificationResult.reasons.length > 0 && (
+                          <ul className="space-y-2">
+                            {genericVerificationResult.reasons.map((reason, idx) => (
+                              <li key={idx} className="flex items-start gap-2 text-sm sm:text-base leading-relaxed text-foreground/80">
+                                <span className={`mt-1.5 w-1.5 h-1.5 rounded-full flex-shrink-0 ${isVerified ? 'bg-green-500' : 'bg-red-500'}`} />
+                                {reason}
+                              </li>
+                            ))}
+                          </ul>
+                        )}
 
-                  return (
-                    <ul className="space-y-2">
-                      {bulletPoints.map((point, idx) => (
-                        <li key={idx} className="flex items-start gap-3">
-                          <span className={`mt-1 flex-shrink-0 ${
-                            isVerified ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'
-                          }`}>
-                            {isVerified ? '✓' : '✗'}
-                          </span>
-                          <span className={`text-sm sm:text-base leading-relaxed ${
-                            isVerified
-                              ? 'text-green-800 dark:text-green-200'
-                              : 'text-red-800 dark:text-red-200'
-                          }`}>
-                            {point}
-                          </span>
-                        </li>
-                      ))}
-                    </ul>
-                  )
-                })()}
-              </div>
+                        {/* SUGGESTIONS */}
+                        {!isVerified && genericVerificationResult.suggestions && genericVerificationResult.suggestions.length > 0 && (
+                          <div className="mt-4 pt-3 border-t border-red-200 dark:border-red-800/30">
+                            <p className="text-xs font-bold uppercase tracking-wider text-red-700 dark:text-red-300 mb-2">Suggestions</p>
+                            <ul className="space-y-1">
+                              {genericVerificationResult.suggestions.map((suggestion, idx) => (
+                                <li key={idx} className="text-sm italic text-red-800 dark:text-red-200">
+                                  • {suggestion}
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        )}
+                      </div>
+                    ) : (
+                      // LEGACY DISPLAY
+                      (() => {
+                        const responseText = genericVerificationResult.response || genericVerificationResult.message || '';
+                        const legacyBulletPoints = responseText ? responseText.split(/[.!?]\s+|\n+/).filter(p => p.trim().length > 5).slice(0, 4) : [];
+
+                        return (
+                          <ul className="space-y-2">
+                            {legacyBulletPoints.length > 0 ? legacyBulletPoints.map((point, idx) => (
+                              <li key={idx} className="flex items-start gap-3">
+                                <span className={`mt-1 flex-shrink-0 ${isVerified ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'
+                                  }`}>
+                                  {isVerified ? '✓' : '✗'}
+                                </span>
+                                <span className={`text-sm sm:text-base leading-relaxed ${isVerified
+                                  ? 'text-green-800 dark:text-green-200'
+                                  : 'text-red-800 dark:text-red-200'
+                                  }`}>
+                                  {point.replace(/^(VERIFIED:|YES|NO|Therefore,?)/gi, '').trim()}
+                                </span>
+                              </li>
+                            )) : (
+                              <li className="flex items-start gap-3">
+                                <span className={`mt-1 flex-shrink-0 ${isVerified ? 'text-green-600' : 'text-red-600'}`}>
+                                  {isVerified ? '✓' : '✗'}
+                                </span>
+                                <span className="text-sm">
+                                  {isVerified ? "Quest verified successfully." : "Quest verification failed. Please try again."}
+                                </span>
+                              </li>
+                            )}
+                          </ul>
+                        )
+                      })()
+                    )}
+                  </div>
+                );
+              })()}
             </div>
           )}
 
           {/* AI Info */}
           {!isComplete && (
             <div className="bg-primary/5 border border-primary/20 rounded-lg p-4 text-left">
-              
+
             </div>
           )}
         </div>
@@ -319,13 +381,24 @@ export function VerificationScreen({ quest, onContinue, isAutoVerified = false, 
           onClick={onContinue}
           disabled={!isComplete}
           className={`w-full font-bold py-3 sm:py-4 rounded-2xl transition-all text-sm sm:text-base ${isComplete
-              ? "bg-primary text-primary-foreground hover:bg-primary/90 active:scale-95"
-              : "bg-muted text-muted-foreground cursor-not-allowed"
+            ? "bg-primary text-primary-foreground hover:bg-primary/90 active:scale-95"
+            : "bg-muted text-muted-foreground cursor-not-allowed"
             }`}
         >
           {isAutoVerified ? "Proceed to Summary & Learning Outcomes" : "Proceed to Summary & Learning Outcomes"}
         </button>
       </div>
+
+      {/* XP Popup - Only shows when verification is verified and we enable it */}
+      {isComplete && (
+        <XPRewardPopup
+          xpAmount={quest?.xpReward || 50}
+          isVisible={showXpPopup}
+          onComplete={() => {
+            // Optional callback when animation finishes
+          }}
+        />
+      )}
     </div>
   )
 }

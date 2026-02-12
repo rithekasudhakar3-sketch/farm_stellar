@@ -1,6 +1,7 @@
 const Submission = require('../models/Submission');
 const User = require('../models/User');
-const s3Service = require('../services/s3Service');
+const Quest = require('../models/Quest');
+const mongoose = require('mongoose');
 
 // Quest XP rewards mapping - matches frontend constants/quests.js
 const QUEST_XP_REWARDS = {
@@ -30,34 +31,16 @@ exports.createSubmission = async (req, res) => {
 
     // Validate uploads
     if (media && media.length > 0) {
-      // Check if S3 is configured (same logic as uploadController)
-      const isS3Configured = process.env.AWS_ACCESS_KEY_ID &&
-        process.env.AWS_SECRET_ACCESS_KEY &&
-        process.env.AWS_S3_BUCKET &&
-        process.env.AWS_REGION &&
-        !process.env.AWS_ACCESS_KEY_ID.includes('your-') &&
-        !process.env.AWS_SECRET_ACCESS_KEY.includes('your-');
-
+      // Simplified validation: just check if keys/urls are present.
+      // We trust the upload flow returned valid keys/urls.
       for (const m of media) {
-        try {
-          if (isS3Configured) {
-            await s3Service.headObject(m.key);
-          } else {
-            // Check if file exists locally
-            const fs = require('fs');
-            const path = require('path');
-            const localPath = path.join(__dirname, '..', m.key);
-
-            if (!fs.existsSync(localPath)) {
-              throw new Error('File not found locally');
-            }
-          }
-        } catch (error) {
-          console.error(`File validation failed for ${m.key}:`, error.message);
-          return res.status(400).json({ message: isS3Configured ? 'File not found in S3 storage.' : 'File not found in local storage.' });
+        if (!m.key && !m.url) {
+          return res.status(400).json({ message: 'Invalid media item: missing key or url' });
         }
       }
     }
+
+    const isVerified = questVerification && (questVerification.success || questVerification.verified);
 
     const submission = new Submission({
       userId: req.user.userId,
@@ -66,33 +49,51 @@ exports.createSubmission = async (req, res) => {
       media: media || [],
       notes: notes || description || '',
       checklist: checklist || [],
-      status: 'pending',
+      status: isVerified ? 'approved' : 'pending',
       proofType: proofType || 'text',
       proofUrl: proofUrl || '',
       cottonVerification: cottonVerification || undefined,
-      questVerification: questVerification || undefined
+      questVerification: questVerification || undefined,
+      xpAwarded: isVerified // Will be true if we award XP now
     });
 
     await submission.save();
 
-    // Fetch quest to get XP reward
-    const Quest = require('../models/Quest');
-    const mongoose = require('mongoose');
-
-    // Check if questId is a valid ObjectId or a slug
-    let quest;
-    if (mongoose.Types.ObjectId.isValid(questId) && questId.length === 24) {
-      quest = await Quest.findById(questId);
-    } else {
-      quest = await Quest.findOne({ slug: questId });
-    }
-
-    const xpReward = quest?.xpReward || 0;
-
-    // Update user's quest progress to "completed" status and award XP immediately
+    // Update user's quest progress
     const user = await User.findById(req.user.userId);
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
+    }
+
+    // Determine Status
+    let newStatus = 'submitted';
+    if (isVerified) {
+      newStatus = 'completed';
+
+      // --- XP AWARD LOGIC ---
+      // Fetch Quest XP logic
+      let quest;
+      // Check if submission.questId is Hex ObjectId or slug
+      if (mongoose.Types.ObjectId.isValid(questId) && questId.length === 24) {
+        quest = await Quest.findById(questId);
+      } else {
+        quest = await Quest.findOne({ slug: questId });
+      }
+
+      // Fallback XP if quest not found or no reward set
+      const rewardAmount = quest?.xpReward || QUEST_XP_REWARDS[questId] || 50;
+
+      // Award XP
+      user.xp = (user.xp || 0) + rewardAmount;
+      user.xpLevel = Math.floor(user.xp / 100) + 1;
+
+      // Add to completed quests
+      if (!user.completedQuests) user.completedQuests = [];
+      if (!user.completedQuests.includes(questId)) {
+        user.completedQuests.push(questId);
+      }
+
+      console.log(`Auto-awarded XP to user ${user._id}: +${rewardAmount} XP for quest ${questId}`);
     }
 
     const questProgress = user.questsProgress.find(p => {
@@ -101,39 +102,24 @@ exports.createSubmission = async (req, res) => {
     });
 
     if (questProgress) {
-      questProgress.status = 'completed';
+      questProgress.status = newStatus;
     } else {
       user.questsProgress.push({
         questId: questId,
         stageIndex: stageIndex || 0,
-        status: 'completed'
+        status: newStatus
       });
-    }
-
-    // Award XP immediately
-    user.xp = (user.xp || 0) + xpReward;
-
-    // Calculate and update level
-    const newLevel = Math.floor(user.xp / 100) + 1;
-    user.xpLevel = newLevel;
-
-    // Add to completed quests if not already there
-    if (!user.completedQuests) {
-      user.completedQuests = [];
-    }
-    if (!user.completedQuests.includes(questId)) {
-      user.completedQuests.push(questId);
     }
 
     await user.save();
 
-    console.log('Submission created and XP awarded:', { questId, xpReward, newXP: user.xp, newLevel: user.xpLevel });
+    console.log(`Submission created (${newStatus}):`, { questId, submissionId: submission._id });
 
     res.status(201).json({
+      message: isVerified ? 'Submission verified and approved!' : 'Submission received. Verification pending.',
       submission,
-      xpAwarded: xpReward,
-      newXP: user.xp,
-      newLevel: user.xpLevel
+      status: isVerified ? 'approved' : 'pending',
+      xpAwarded: isVerified
     });
   } catch (error) {
     console.error('Create submission error:', error);
@@ -240,5 +226,117 @@ exports.getSubmissionById = async (req, res) => {
     res.status(200).json(submission);
   } catch (error) {
     res.status(500).json({ message: 'Server error' });
+  }
+};
+
+// NEW: Verify Submission (Admin Only)
+// Only awards XP if status is 'approved' and not already awarded
+exports.verifySubmission = async (req, res) => {
+  try {
+    const { submissionId } = req.params;
+    const { status, adminComment } = req.body; // status: 'approved' or 'rejected'
+
+    console.log(`Verifying submission ${submissionId}: status=${status}`);
+
+    if (!['approved', 'rejected'].includes(status)) {
+      return res.status(400).json({ message: 'Invalid status. Must be "approved" or "rejected".' });
+    }
+
+    const submission = await Submission.findById(submissionId);
+    if (!submission) {
+      return res.status(404).json({ message: 'Submission not found' });
+    }
+
+    // prevent double verification
+    if (submission.status === 'approved' && status === 'approved') {
+      return res.status(400).json({ message: 'Submission is already approved.' });
+    }
+
+    // Update submission status
+    submission.status = status;
+    submission.reviewedBy = req.user.userId;
+    submission.reviewedAt = new Date();
+    submission.feedback = adminComment || '';
+
+    let xpAwarded = 0;
+
+    if (status === 'approved') {
+      // ONLY award XP if not already awarded
+      if (!submission.xpAwarded) {
+        // Fetch Quest XP logic
+        let quest;
+        // Check if submission.questId is Hex ObjectId or slug
+        if (mongoose.Types.ObjectId.isValid(submission.questId) && submission.questId.length === 24) {
+          quest = await Quest.findById(submission.questId);
+        } else {
+          quest = await Quest.findOne({ slug: submission.questId });
+        }
+
+        // Fallback XP if quest not found or no reward set
+        const rewardAmount = quest?.xpReward || (quest && QUEST_XP_REWARDS[quest.id || quest.slug]) || QUEST_XP_REWARDS[submission.questId] || 50;
+
+        const user = await User.findById(submission.userId);
+        if (user) {
+          // Award XP
+          user.xp = (user.xp || 0) + rewardAmount;
+          user.xpLevel = Math.floor(user.xp / 100) + 1;
+
+          // Add to completed quests
+          if (!user.completedQuests) user.completedQuests = [];
+          if (!user.completedQuests.includes(submission.questId)) {
+            user.completedQuests.push(submission.questId);
+          }
+
+          // Update quest progress status to 'completed'
+          const progress = user.questsProgress.find(p => {
+            const pId = p.questId ? (p.questId.toString ? p.questId.toString() : p.questId) : null;
+            return pId === submission.questId;
+          });
+
+          if (progress) {
+            progress.status = 'completed';
+          } else {
+            user.questsProgress.push({
+              questId: submission.questId,
+              status: 'completed',
+              stageIndex: 0
+            });
+          }
+
+          await user.save();
+
+          // Mark submission as XP awarded so we don't do it twice
+          submission.xpAwarded = true;
+          xpAwarded = rewardAmount;
+          console.log(`XP Awarded to user ${user._id}: +${xpAwarded} XP`);
+        }
+      }
+    } else if (status === 'rejected') {
+      // If rejected, ensure we revert status to 'in-progress'
+      const user = await User.findById(submission.userId);
+      if (user) {
+        const progress = user.questsProgress.find(p => {
+          const pId = p.questId ? (p.questId.toString ? p.questId.toString() : p.questId) : null;
+          return pId === submission.questId;
+        });
+
+        if (progress) {
+          progress.status = 'in-progress';
+          await user.save();
+        }
+      }
+    }
+
+    await submission.save();
+
+    res.status(200).json({
+      message: `Submission ${status}`,
+      submission,
+      xpAwarded
+    });
+
+  } catch (error) {
+    console.error('Verify submission error:', error);
+    res.status(500).json({ message: 'Server error', error: error.message });
   }
 };

@@ -30,8 +30,62 @@ export function FarmDetailsScreen({ onSuccess, onBack }) {
     panchayat: "",
     landSize: "",
     soilType: "",
+    landSize: "",
+    soilType: "",
     waterSource: "",
   })
+
+  const [locationVerification, setLocationVerification] = useState({
+    verified: false,
+    lat: null,
+    lng: null,
+    accuracy: null,
+    loading: false,
+    error: null
+  })
+
+  const handleVerifyLocation = () => {
+    setLocationVerification(prev => ({ ...prev, loading: true, error: null }))
+
+    if (!navigator.geolocation) {
+      setLocationVerification(prev => ({
+        ...prev,
+        loading: false,
+        error: "Geolocation is not supported by your browser"
+      }))
+      return
+    }
+
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const { latitude, longitude, accuracy } = position.coords
+        setLocationVerification({
+          verified: true,
+          lat: latitude,
+          lng: longitude,
+          accuracy: accuracy,
+          loading: false,
+          error: null
+        })
+      },
+      (error) => {
+        let errorMsg = "Unable to retrieve your location"
+        if (error.code === error.PERMISSION_DENIED) {
+          errorMsg = "Location permission denied. Please enable location services."
+        } else if (error.code === error.POSITION_UNAVAILABLE) {
+          errorMsg = "Location information is unavailable."
+        } else if (error.code === error.TIMEOUT) {
+          errorMsg = "The request to get user location timed out."
+        }
+        setLocationVerification(prev => ({
+          ...prev,
+          loading: false,
+          error: errorMsg
+        }))
+      },
+      { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+    )
+  }
 
   const handleSubmit = (e) => {
     e.preventDefault()
@@ -50,11 +104,25 @@ export function FarmDetailsScreen({ onSuccess, onBack }) {
         location: "" // For backward compatibility
       })
     } else {
+      // Enforce location verification
+      if (!locationVerification.verified) {
+        // Scroll to location section or show error
+        setLocationVerification(prev => ({ ...prev, error: "Please verify your farm location so we can validate your quests." }))
+        return
+      }
+
       onSuccess({
         hasLand: true,
         ...farmDetails,
         city: farmDetails.district, // Map district to city for backward compatibility
-        location: `${farmDetails.panchayat}, ${farmDetails.district}, ${farmDetails.state}` // Map to location string
+        location: `${farmDetails.panchayat}, ${farmDetails.district}, ${farmDetails.state}`, // Map to location string
+        farmLocation: {
+          lat: locationVerification.lat,
+          lng: locationVerification.lng
+        },
+        geofence: {
+          radius: 200 // Default radius 200m
+        }
       })
     }
   }
@@ -245,35 +313,98 @@ export function FarmDetailsScreen({ onSuccess, onBack }) {
                     <SelectItem value="pond">Pond</SelectItem>
                   </SelectContent>
                 </Select>
-              </div>
-            </>
-          )}
+              </SelectContent>
+            </Select>
+        </div>
 
-          {!hasLand && (
-            <div className="p-4 rounded-xl bg-accent/10 border border-accent/20">
-              <div className="flex items-start gap-3">
-                <div className="text-2xl">🌱</div>
-                <div>
-                  <p className="text-sm font-medium text-foreground mb-1">Perfect! Let's start your farming journey</p>
-                  <p className="text-xs text-muted-foreground">
-                    You'll access knowledge-based quests and tutorials. When you're ready to start your own farm, you
-                    can add the details anytime from your profile.
-                  </p>
-                </div>
+        {/* Location Verification Section */}
+        <div className="space-y-3 pt-2">
+          <Label>Farm Location Verification</Label>
+          <div className="p-4 rounded-xl border-2 border-dashed border-primary/20 bg-primary/5 space-y-3">
+            <div className="flex items-start gap-3">
+              <div className="p-2 bg-primary/10 rounded-full text-primary">
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+              </div>
+              <div>
+                <h4 className="font-medium text-foreground">Verify Location</h4>
+                <p className="text-xs text-muted-foreground mt-1">
+                  We need your GPS location to verify your quests later. Please stand at the center of your farm.
+                </p>
               </div>
             </div>
+
+            {locationVerification.error && (
+              <div className="p-2 bg-destructive/10 text-destructive text-xs rounded border border-destructive/20">
+                {locationVerification.error}
+              </div>
+            )}
+
+            {locationVerification.verified ? (
+              <div className="flex items-center gap-2 text-green-600 bg-green-50 p-2 rounded border border-green-100">
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                </svg>
+                <span className="text-sm font-medium">Location Verified ({locationVerification.accuracy ? Math.round(locationVerification.accuracy) : "?"}m accuracy)</span>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  className="h-6 text-xs text-muted-foreground ml-auto"
+                  onClick={handleVerifyLocation}
+                >
+                  Update
+                </Button>
+              </div>
+            ) : (
+              <Button
+                type="button"
+                onClick={handleVerifyLocation}
+                disabled={locationVerification.loading}
+                className="w-full bg-primary/90 hover:bg-primary text-primary-foreground gap-2"
+              >
+                {locationVerification.loading ? (
+                  <>
+                    <div className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
+                    Acquiring GPS...
+                  </>
+                ) : (
+                  "📍 Capture Current Location"
+                )}
+              </Button>
+            )}
+          </div>
+        </div>
+      </>
           )}
 
-          <div className="flex gap-3 pt-4">
-            <Button type="button" variant="outline" onClick={onBack} className="flex-1 bg-transparent">
-              Back
-            </Button>
-            <Button type="submit" className="flex-1">
-              Continue
-            </Button>
+      {!hasLand && (
+        <div className="p-4 rounded-xl bg-accent/10 border border-accent/20">
+          <div className="flex items-start gap-3">
+            <div className="text-2xl">🌱</div>
+            <div>
+              <p className="text-sm font-medium text-foreground mb-1">Perfect! Let's start your farming journey</p>
+              <p className="text-xs text-muted-foreground">
+                You'll access knowledge-based quests and tutorials. When you're ready to start your own farm, you
+                can add the details anytime from your profile.
+              </p>
+            </div>
           </div>
-        </form>
-      </Card>
-    </div>
+        </div>
+      )}
+
+      <div className="flex gap-3 pt-4">
+        <Button type="button" variant="outline" onClick={onBack} className="flex-1 bg-transparent">
+          Back
+        </Button>
+        <Button type="submit" className="flex-1">
+          Continue
+        </Button>
+      </div>
+    </form>
+      </Card >
+    </div >
   )
 }

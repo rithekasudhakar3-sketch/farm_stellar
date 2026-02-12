@@ -5,8 +5,8 @@ exports.updateMyFarm = async (req, res) => {
     const { name, address, size, primaryCrop } = req.body;
     const farm = await Farm.findOneAndUpdate(
       { userId: req.user.userId },
-      { name, address, size, primaryCrop },
-      { new: true, upsert: true }
+      { name, address, landSize: size, primaryCrop, farmLocation: req.body.farmLocation, geofence: req.body.geofence },
+      { new: true, upsert: true, setDefaultsOnInsert: true }
     );
     res.status(200).json(farm);
   } catch (error) {

@@ -59,6 +59,8 @@ app.use('/api/community', communityRoutes);
 app.use('/api/weather', weatherRoutes);
 app.use('/api/cotton', cottonRoutes);
 app.use('/api/quest-verification', questVerificationRoutes);
+app.use('/api/verification', require('./src/routes/verificationRoutes'));
+app.use('/api/proofs', require('./src/routes/proofs')); // New Cloudinary Proof Route
 
 app.get('/api/health', (req, res) => {
   res.status(200).json({ status: 'ok' });
@@ -69,3 +71,5 @@ const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
+
+// Clean restart trigger

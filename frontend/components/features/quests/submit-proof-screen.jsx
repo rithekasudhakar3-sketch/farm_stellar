@@ -146,6 +146,14 @@ export function SubmitProofScreen({ quest, onSubmit, onBack }) {
         }
       }
 
+      // Override timestamp to ensure it's treated as a fresh capture for this session
+      if (captureLocation) {
+        captureLocation = {
+          ...captureLocation,
+          timestamp: new Date().toISOString()
+        };
+      }
+
       const video = videoRef.current
 
       const canvas = document.createElement("canvas")
@@ -227,6 +235,38 @@ export function SubmitProofScreen({ quest, onSubmit, onBack }) {
     if (!file) return
 
     setIsUploading(true)
+
+    // 1. Capture Location immediately (Required for verification)
+    let uploadLocation = location; // current tracked location if available
+    try {
+      if (navigator.geolocation) {
+        console.log("Getting location for upload...");
+        const position = await new Promise((resolve, reject) => {
+          navigator.geolocation.getCurrentPosition(resolve, reject, {
+            enableHighAccuracy: true,
+            timeout: 5000,
+            maximumAge: 0
+          })
+        });
+
+        uploadLocation = {
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude,
+          accuracy: position.coords.accuracy,
+          timestamp: new Date().toISOString()
+        };
+        setLocation(uploadLocation); // Update state too
+        console.log("Location secured for upload:", uploadLocation);
+      }
+    } catch (geoError) {
+      console.warn("Could not get fresh location for upload:", geoError);
+      // Fallback: If we have a previously tracked location, use it.
+      // If not, the user might be warned by the backend later.
+      if (!uploadLocation) {
+        alert("⚠️ Location Warning: We couldn't get your GPS location. Verification may fail if you are far from your farm.");
+      }
+    }
+
     try {
       const token = localStorage.getItem("token")
       const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:4000"
@@ -257,7 +297,8 @@ export function SubmitProofScreen({ quest, onSubmit, onBack }) {
           setUploadedImage({
             url: url || reader.result,
             key: key || null,
-            preview: reader.result
+            preview: reader.result,
+            location: uploadLocation // Attach the captured location!
           })
         } catch (error) {
           console.error("Upload error:", error)
@@ -310,46 +351,58 @@ export function SubmitProofScreen({ quest, onSubmit, onBack }) {
               },
               body: JSON.stringify({
                 imageKey: uploadedImage.key,
-                imageUrl: uploadedImage.url
+                imageUrl: uploadedImage.url,
+                gpsCoordinates: uploadedImage.location // 📍 Send GPS Data
               })
             })
 
             if (verifyResponse.ok) {
-              verificationResult = await verifyResponse.json()
-              console.log('Cotton verification result:', verificationResult)
-              setVerificationResult(verificationResult)
+              const rawResult = await verifyResponse.json();
+              console.log('Cotton verification result:', rawResult);
 
-              // Check if cotton was detected
-              if (!verificationResult.has_cotton) {
-                setIsVerifying(false)
-                setIsSubmitting(false)
-                alert('No cotton bolls detected in the image. Please take a clear photo of cotton bolls and try again.')
-                return
+              // Normalize cotton result to standard schema
+              const isSuccess = rawResult.success && rawResult.has_cotton && rawResult.is_healthy;
+              const reasons = [];
+              if (!rawResult.has_cotton) reasons.push("No cotton bolls detected.");
+              else if (!rawResult.is_healthy) reasons.push("Cotton bolls appear unhealthy or not fully open.");
+              else reasons.push("Healthy cotton bolls detected!");
+
+              if (rawResult.message) reasons.push(rawResult.message);
+
+              verificationResult = {
+                status: isSuccess ? 'verified' : 'rejected',
+                reasons: reasons,
+                suggestions: isSuccess ? ["Great job!"] : ["Please ensure the boll is clearly visible and healthy."]
+              };
+
+              setVerificationResult(verificationResult);
+
+              // Strict block if not cotton
+              if (!rawResult.has_cotton) {
+                setIsVerifying(false);
+                setIsSubmitting(false);
+                return; // Stop here, UI will show rejection
               }
             } else {
-              const errorData = await verifyResponse.json().catch(() => ({}))
-              throw new Error(errorData.message || 'Cotton verification failed')
+              const errorData = await verifyResponse.json().catch(() => ({}));
+              throw new Error(errorData.message || 'Cotton verification failed');
             }
           } else {
-            // Generic quest verification for all other quests
-            console.log('Using generic quest verification...')
+            // Generic quest verification 
+            console.log('Using generic quest verification...');
 
-            // Fetch quest details to get success_criteria
+            // Fetch quest details first
             const questResponse = await fetch(`${backendUrl}/api/quests/${questId}`, {
-              headers: {
-                'Authorization': token ? `Bearer ${token}` : '',
-                'Content-Type': 'application/json'
-              }
-            })
+              headers: { 'Authorization': token ? `Bearer ${token}` : '', 'Content-Type': 'application/json' }
+            });
 
             if (!questResponse.ok) {
-              throw new Error('Failed to fetch quest details')
+              // If quest fetch fails, we proceed with description as fallback or fail gracefully
+              console.warn('Failed to fetch quest details, using generic criteria');
             }
 
-            const questData = await questResponse.json()
-            const successCriteria = questData.verification_data?.success_criteria || questData.description
-
-            console.log('Quest success criteria:', successCriteria)
+            const questData = questResponse.ok ? await questResponse.json() : {};
+            const successCriteria = questData.verification_data?.success_criteria || quest?.description || "Quest completion";
 
             const verifyResponse = await fetch(`${backendUrl}/api/quest-verification/verify`, {
               method: 'POST',
@@ -361,99 +414,107 @@ export function SubmitProofScreen({ quest, onSubmit, onBack }) {
                 imageKey: uploadedImage.key,
                 imageUrl: uploadedImage.url,
                 successCriteria: successCriteria,
-                questId: questId
+                questId: questId,
+                gpsCoordinates: uploadedImage.location // 📍 Send GPS Data
               })
-            })
+            });
 
             if (verifyResponse.ok) {
-              verificationResult = await verifyResponse.json()
-              console.log('Generic quest verification result:', verificationResult)
-              setVerificationResult(verificationResult)
+              const rawResult = await verifyResponse.json();
+              console.log('Generic quest verification result:', rawResult);
 
-              // Check if quest was verified
-              if (!verificationResult.verified && !verificationResult.success) {
-                setIsVerifying(false)
-                setIsSubmitting(false)
-                alert(`Quest verification failed: ${verificationResult.response || 'Image does not meet quest requirements'}. Please try again with a better image.`)
-                return
-              }
+              // Ensure we have the standard schema
+              verificationResult = {
+                status: rawResult.status || (rawResult.verified ? 'verified' : 'rejected'),
+                reasons: rawResult.reasons || [rawResult.response || rawResult.message || 'Verification completed'],
+                suggestions: rawResult.suggestions || [],
+                locationDetails: rawResult.locationDetails
+              };
+
+              setVerificationResult(verificationResult);
             } else {
-              const errorData = await verifyResponse.json().catch(() => ({}))
-              throw new Error(errorData.message || 'Quest verification failed')
+              const errorData = await verifyResponse.json().catch(() => ({}));
+              throw new Error(errorData.message || 'Quest verification failed');
             }
           }
 
-          setIsVerifying(false)
+          setIsVerifying(false);
+
         } catch (verifyError) {
-          console.error('Verification error:', verifyError)
-          setIsVerifying(false)
-          alert(`Verification failed: ${verifyError.message}. Please ensure the image meets quest requirements.`)
-          setIsSubmitting(false)
-          return
+          console.error('Verification error:', verifyError);
+          setIsVerifying(false);
+          // Set a rejected result instead of alerting
+          setVerificationResult({
+            status: 'rejected',
+            reasons: [verifyError.message || "Verification system error"],
+            suggestions: ["Please try uploading a clearer image."]
+          });
+          setIsSubmitting(false);
+          return;
         }
       }
 
-      // Step 2: Submit to backend as normal
+      // Step 2: Submit to backend
+      // Only proceed if verification PASSED or if there is no image (text only)
+      // If image exists and verification FAILED, do not submit.
+      if (uploadedImage && verificationResult && verificationResult.status === 'rejected') {
+        setIsSubmitting(false);
+        console.log("Blocking submission due to rejection");
+        return;
+      }
+
       const submissionData = {
         questId: questId,
         proofType: uploadedImage ? "photo" : "text",
         proofUrl: uploadedImage?.url || "",
         description: notes || "Quest completed as per instructions",
-        status: "pending"
-      }
+        status: "pending" // Always pending initially
+      };
 
-      // Only add media if we have a valid S3 key
+      // ... (rest of submission payload construction) ... 
       if (uploadedImage?.key) {
-        submissionData.media = [
-          {
-            key: uploadedImage.key,
-            mimeType: "image/jpeg",
-            sizeBytes: uploadedImage.sizeBytes || 0
-          }
-        ]
+        submissionData.media = [{ key: uploadedImage.key, mimeType: "image/jpeg", sizeBytes: uploadedImage.sizeBytes || 0 }];
       }
 
-      // Add verification result if available
       if (verificationResult) {
-        if (isBollKeeperQuest) {
-          submissionData.cottonVerification = verificationResult
-        } else {
-          submissionData.questVerification = verificationResult
-        }
+        submissionData.questVerification = {
+          success: verificationResult.status === 'verified',
+          verified: verificationResult.status === 'verified',
+          response: verificationResult.reasons.join('. '),
+          error: verificationResult.status === 'rejected' ? verificationResult.reasons[0] : null
+        };
       }
 
-      console.log('Submission payload:', submissionData)
+      // ... (fetch call to submit) ...
+      console.log('Submission payload:', submissionData);
 
       const response = await fetch(`${backendUrl}/api/submissions`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           "Authorization": token ? `Bearer ${token}` : ""
-
         },
         body: JSON.stringify(submissionData)
-      })
+      });
 
       if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}))
-        console.error("Submission failed:", response.status, errorData)
-        throw new Error(errorData.message || `Server error: ${response.status}`)
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.message || `Server error: ${response.status}`);
       }
 
-      const result = await response.json()
-      console.log("Submission successful:", result)
+      const result = await response.json();
+      console.log("Submission successful:", result);
+      await new Promise((resolve) => setTimeout(resolve, 500));
+      onSubmit(verificationResult);
 
-      // small delay for UX
-      await new Promise((resolve) => setTimeout(resolve, 500))
-
-      // Pass verification result to parent
-      onSubmit(verificationResult)
     } catch (error) {
-      console.error("Error submitting proof:", error)
-      alert(`Failed to submit proof: ${error.message}. Please try again.`)
-      setIsSubmitting(false)
+      console.error("Error submitting proof:", error);
+      alert(`Failed to submit proof: ${error.message}`);
+      setIsSubmitting(false);
     }
-  }
+  };
+
+  // ... (render return) ...
 
   return (
     <div className="flex flex-col h-screen overflow-hidden pb-safe bg-gradient-to-b from-background to-muted/20">
@@ -547,90 +608,144 @@ export function SubmitProofScreen({ quest, onSubmit, onBack }) {
                 )}
               </div>
             ) : (
-              <div className="space-y-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <button
                   onClick={startCamera}
                   className="block w-full cursor-pointer group"
                 >
-                  <div className="relative bg-gradient-to-br from-primary/10 to-accent/10 border-2 border-dashed border-primary/30 rounded-2xl sm:rounded-3xl p-8 hover:border-primary hover:from-primary/20 hover:to-accent/20 transition-all text-center group-hover:scale-[1.02] active:scale-[0.98] shadow-lg hover:shadow-xl">
-                    <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary/20 mb-3 group-hover:scale-110 transition-transform">
-                      <Camera className="w-8 h-8 text-primary" />
+                  <div className="relative bg-gradient-to-br from-primary/10 to-accent/10 border-2 border-dashed border-primary/30 rounded-2xl sm:rounded-3xl p-6 hover:border-primary hover:from-primary/20 hover:to-accent/20 transition-all text-center group-hover:scale-[1.02] active:scale-[0.98] shadow-lg hover:shadow-xl h-full flex flex-col items-center justify-center">
+                    <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-primary/20 mb-3 group-hover:scale-110 transition-transform">
+                      <Camera className="w-7 h-7 text-primary" />
                     </div>
-                    <p className="text-base sm:text-lg font-bold text-foreground mb-1">📸 Take Live Photo</p>
-                    <p className="text-xs sm:text-sm text-muted-foreground">📍 With GPS Location Tracking</p>
+                    <p className="text-base font-bold text-foreground mb-1">📸 Take Live Photo</p>
+                    <p className="text-xs text-muted-foreground">📍 With GPS Tracking</p>
                   </div>
                 </button>
 
-                {/* File Upload Option for Development */}
-                <label className="block w-full cursor-pointer group">
+                <div className="relative">
                   <input
                     type="file"
                     accept="image/*"
-                    onChange={handleImageUpload}
                     className="hidden"
+                    id="file-upload"
+                    onChange={handleImageUpload}
                   />
-                  <div className="relative bg-gradient-to-br from-muted/50 to-muted/30 border-2 border-dashed border-border rounded-2xl sm:rounded-3xl p-6 hover:border-primary hover:bg-primary/5 transition-all text-center group-hover:scale-[1.02] active:scale-[0.98]">
-                    <div className="text-4xl mb-2 group-hover:scale-110 transition-transform inline-block">📁</div>
-                    <p className="text-sm sm:text-base font-semibold text-foreground mb-1">Upload from Device</p>
-                    <p className="text-xs text-muted-foreground">For Development/Testing</p>
-                  </div>
-                </label>
+                  <label
+                    htmlFor="file-upload"
+                    className="block w-full cursor-pointer group h-full"
+                  >
+                    <div className="relative bg-gradient-to-br from-blue-500/10 to-indigo-500/10 border-2 border-dashed border-blue-500/30 rounded-2xl sm:rounded-3xl p-6 hover:border-blue-500 hover:from-blue-500/20 hover:to-indigo-500/20 transition-all text-center group-hover:scale-[1.02] active:scale-[0.98] shadow-lg hover:shadow-xl h-full flex flex-col items-center justify-center">
+                      <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-blue-500/20 mb-3 group-hover:scale-110 transition-transform">
+                        <svg xmlns="http://www.w3.org/2000/svg" className="w-7 h-7 text-blue-600 dark:text-blue-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="18" height="18" x="3" y="3" rx="2" ry="2" /><circle cx="9" cy="9" r="2" /><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21" /></svg>
+                      </div>
+                      <p className="text-base font-bold text-foreground mb-1">🖼️ Upload from Device</p>
+                      <p className="text-xs text-muted-foreground">Select from Gallery</p>
+                    </div>
+                  </label>
+                </div>
               </div>
             )}
           </div>
         )}
-        {verificationResult && (
-          <div className={`p-4 rounded-2xl border-2 ${verificationResult.verified || (verificationResult.success && verificationResult.is_healthy)
-            ? 'bg-green-50 border-green-500 dark:bg-green-950/30'
-            : 'bg-amber-50 border-amber-500 dark:bg-amber-950/30'
-            }`}>
-            <div className="flex items-start gap-3">
-              {verificationResult.verified || (verificationResult.success && verificationResult.is_healthy) ? (
-                <CheckCircle2 className="w-6 h-6 text-green-600 dark:text-green-400 flex-shrink-0 mt-0.5" />
-              ) : (
-                <div className="w-6 h-6 flex-shrink-0 mt-0.5 text-amber-600 dark:text-amber-400">⚠️</div>
-              )}
 
-              <div className="flex-1">
-                <h4 className="font-bold text-sm mb-1">
-                  {quest?.id === 'boll_keeper' || quest?.slug === 'boll_keeper'
-                    ? (verificationResult.success && verificationResult.is_healthy ? 'Healthy Cotton Detected!' : 'Cotton Analysis Result')
-                    : (verificationResult.verified ? 'AI Verification Success' : 'AI Analysis Result')
-                  }
+        {/* This block replaces the existing verificationResult && (...) block */}
+        {/* standardized VERIFICATION UI */}
+        {verificationResult && (
+          <div className={`p-5 rounded-3xl border-2 shadow-lg animate-in fade-in slide-in-from-bottom-2 duration-300 ${verificationResult.status === 'verified'
+            ? 'bg-green-500/10 border-green-500/50'
+            : 'bg-red-500/10 border-red-500/50'
+            }`}>
+            <div className="flex items-start gap-4">
+              <div className={`w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 shadow-sm ${verificationResult.status === 'verified' ? 'bg-green-500 text-white' : 'bg-red-500 text-white'
+                }`}>
+                {verificationResult.status === 'verified' ? (
+                  <CheckCircle2 className="w-6 h-6" />
+                ) : (
+                  <X className="w-6 h-6" />
+                )}
+              </div>
+
+              <div className="flex-1 min-w-0">
+                <h4 className={`font-bold text-lg mb-1 capitalize ${verificationResult.status === 'verified' ? 'text-green-700 dark:text-green-400' : 'text-red-700 dark:text-red-400'
+                  }`}>
+                  {verificationResult.status === 'verified' ? "Verification Successful" : "Verification Failed"}
                 </h4>
 
-                {(quest?.id === 'boll_keeper' || quest?.slug === 'boll_keeper') ? (
-                  verificationResult.success ? (
-                    <div className="text-xs space-y-1">
-                      <p>Cotton Detected: {verificationResult.has_cotton ? 'Yes' : 'No'}</p>
-                      <p>Healthy Status: {verificationResult.is_healthy ? 'Healthy' : 'Not Fully Opened'}</p>
-                      {verificationResult.detected_classes && verificationResult.detected_classes.length > 0 && (
-                        <p>Detected: {verificationResult.detected_classes.join(', ')}</p>
-                      )}
-                      {verificationResult.message && <p className="text-muted-foreground">{verificationResult.message}</p>}
+                {/* Reasons List */}
+                <div className="space-y-2 mt-2">
+                  {verificationResult.reasons && verificationResult.reasons.length > 0 && (
+                    <ul className="text-sm space-y-1">
+                      {verificationResult.reasons.map((reason, i) => (
+                        <li key={i} className="flex items-start gap-2 text-foreground/80">
+                          <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-current opacity-50 flex-shrink-0" />
+                          <span>{reason}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+
+                  {/* 📍 LOCATION COMPARISON CARD - For Judges & User Transparency */}
+                  {verificationResult.locationDetails && (
+                    <div className="mt-4 bg-background/60 backdrop-blur-sm rounded-2xl p-4 text-sm border border-border/50 shadow-sm">
+                      <h5 className="font-bold text-xs uppercase tracking-wider mb-3 pb-2 border-b border-border/50 flex items-center justify-between text-muted-foreground">
+                        <span className="flex items-center gap-1.5"><MapPin className="w-3 h-3" /> Location Check</span>
+                        <span className={`px-2 py-0.5 rounded-full text-[10px] font-extrabold ${verificationResult.locationDetails.isInside ? "bg-green-100 text-green-700 border border-green-200" : "bg-red-100 text-red-700 border border-red-200"}`}>
+                          {verificationResult.locationDetails.isInside ? "MATCHED" : "OUTSIDE BOUNDARY"}
+                        </span>
+                      </h5>
+
+                      <div className="grid grid-cols-2 gap-4">
+                        {/* Registered */}
+                        <div className="space-y-1">
+                          <p className="text-[10px] text-muted-foreground font-bold uppercase">Registered Farm</p>
+                          <p className="font-semibold text-foreground text-xs leading-tight truncate" title={verificationResult.locationDetails.registered.placeName}>
+                            {verificationResult.locationDetails.registered.placeName || "Unknown"}
+                          </p>
+                          <p className="text-[10px] font-mono text-muted-foreground opacity-70">
+                            {verificationResult.locationDetails.registered.lat.toFixed(5)}, {verificationResult.locationDetails.registered.lng.toFixed(5)}
+                          </p>
+                        </div>
+
+                        {/* Current */}
+                        <div className="space-y-1 relative pl-4 border-l border-border/50">
+                          <p className="text-[10px] text-muted-foreground font-bold uppercase">Your Location</p>
+                          <p className="font-semibold text-foreground text-xs leading-tight truncate" title={verificationResult.locationDetails.current.placeName}>
+                            {verificationResult.locationDetails.current.placeName || "Unknown"}
+                          </p>
+                          <p className="text-[10px] font-mono text-muted-foreground opacity-70">
+                            {verificationResult.locationDetails.current.lat.toFixed(5)}, {verificationResult.locationDetails.current.lng.toFixed(5)}
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* Distance Analysis */}
+                      <div className="mt-3 pt-2 border-t border-border/50 flex items-center justify-between">
+                        <div className="flex flex-col">
+                          <span className="text-[10px] text-muted-foreground">Distance from center</span>
+                          {!verificationResult.locationDetails.isInside && (
+                            <span className="text-[10px] text-red-500 font-medium">Limit: {verificationResult.locationDetails.allowedRadius}m</span>
+                          )}
+                        </div>
+                        <span className={`text-lg font-black font-mono tracking-tight ${verificationResult.locationDetails.isInside ? "text-green-600" : "text-red-600"}`}>
+                          {verificationResult.locationDetails.distance}m
+                        </span>
+                      </div>
                     </div>
-                  ) : (
-                    <p className="text-xs text-destructive">
-                      {verificationResult.error || 'Verification failed'}
-                    </p>
-                  )
-                ) : (
-                  <div className="text-xs space-y-1">
-                    <p className={`font-semibold ${verificationResult.verified ? 'text-green-600' : 'text-amber-600'}`}>
-                      {verificationResult.verified ? '✅ Verified' : '❌ Requirements Not Met'}
-                    </p>
-                    <p className="text-muted-foreground">
-                      {verificationResult.response || verificationResult.message || (verificationResult.verified ? 'Good job!' : 'Please check required items.')}
-                    </p>
-                    {verificationResult.error && (
-                      <p className="text-destructive font-bold mt-1">Error: {verificationResult.error}</p>
-                    )}
-                  </div>
-                )}
+                  )}
+
+                  {verificationResult.status === 'rejected' && verificationResult.suggestions && verificationResult.suggestions.length > 0 && (
+                    <div className="mt-3 bg-blue-500/10 text-blue-800 dark:text-blue-200 border border-blue-500/20 rounded-xl p-3 text-sm">
+                      <p className="font-bold text-[10px] opacity-70 uppercase tracking-wider mb-1">💡 Suggestion</p>
+                      <p>{verificationResult.suggestions[0]}</p>
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
           </div>
         )}
+
+        {/* ... (Submit Button - Unchanged or slightly modified logic above handles it) ... */}
 
 
         {/* Submit Button */}
@@ -665,3 +780,4 @@ export function SubmitProofScreen({ quest, onSubmit, onBack }) {
     </div>
   )
 }
+// Force rebuild

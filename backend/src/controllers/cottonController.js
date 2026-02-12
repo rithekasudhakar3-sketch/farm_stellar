@@ -3,6 +3,8 @@ const path = require('path');
 const fs = require('fs').promises;
 const s3Service = require('../services/s3Service');
 const os = require('os');
+const Farm = require('../models/Farm');
+const { getDistanceFromLatLonInM } = require('../utils/geoUtils');
 
 /**
  * Verify cotton boll health from uploaded image
@@ -11,7 +13,8 @@ exports.verifyCotton = async (req, res) => {
   let tempFilePath = null;
 
   try {
-    const { imageKey, imageUrl } = req.body;
+    const { imageKey, imageUrl, gpsCoordinates } = req.body;
+    const userId = req.user?.userId;
 
     if (!imageKey && !imageUrl) {
       return res.status(400).json({
@@ -20,12 +23,77 @@ exports.verifyCotton = async (req, res) => {
       });
     }
 
+    // --- 🌍 LOCATION VERIFICATION (STRICT) ---
+    if (userId) {
+      const farm = await Farm.findOne({ userId });
+
+      if (farm && gpsCoordinates) {
+        const { latitude, longitude, accuracy, timestamp } = gpsCoordinates;
+
+        // 1. GPS Integrity Check
+        if (accuracy && accuracy > 100) {
+          return res.status(400).json({
+            success: false,
+            message: `GPS signal too weak (Accuracy: ${Math.round(accuracy)}m).`
+          });
+        }
+
+        // Time Check
+        if (timestamp) {
+          const photoTime = new Date(timestamp).getTime();
+          const serverTime = Date.now();
+          const diffSeconds = Math.abs(serverTime - photoTime) / 1000;
+          if (diffSeconds > 300) { // 5 mins
+            return res.status(400).json({
+              success: false,
+              message: 'GPS timestamp is too old.'
+            });
+          }
+        }
+
+        // 2. Geofence Check
+        const dist = getDistanceFromLatLonInM(
+          farm.farmLocation.lat,
+          farm.farmLocation.lng,
+          latitude,
+          longitude
+        );
+
+        const allowedRadius = (farm.geofence?.radius || 100) + 20;
+
+        console.log(`Cotton Verification Location: Dist=${dist}m, Allowed=${allowedRadius}m`);
+
+        if (dist > allowedRadius) {
+          return res.status(400).json({
+            success: false,
+            message: `Location verification failed. You are ${Math.round(dist - allowedRadius)}m outside your farm boundary.`
+          });
+        }
+      } else if (!farm) {
+        console.warn("User has no farm registered, skipping strict location check for cotton (or should we fail?)");
+        // The prompt says "If the farmer has no registered farm -> ❌ reject immediately."
+        return res.status(400).json({
+          success: false,
+          message: 'No registered farm found. Please register your farm first.'
+        });
+      }
+    } else {
+      return res.status(401).json({ success: false, message: 'Unauthorized' });
+    }
+
     // Download image from S3 to temporary file
     // Download image from S3 or Local to buffer
     let imageBuffer;
 
-    // Check local file first
-    if (imageKey) {
+    // 1. Prefer fetching from URL (Cloudinary)
+    if (imageUrl) {
+      console.log('Fetching cotton image from URL:', imageUrl);
+      const response = await fetch(imageUrl);
+      if (!response.ok) throw new Error(`Failed to fetch image from URL: ${response.statusText}`);
+      imageBuffer = Buffer.from(await response.arrayBuffer());
+    }
+    // 2. Fallback to local/S3 if only key is provided (Legacy)
+    else if (imageKey) {
       const localPath = path.join(__dirname, '..', imageKey);
       try {
         await fs.access(localPath);
@@ -36,22 +104,11 @@ exports.verifyCotton = async (req, res) => {
         try {
           imageBuffer = await s3Service.getObject(imageKey);
         } catch (s3Err) {
-          console.warn("S3 fetch failed, trying URL...", s3Err.message);
-          // Fallback to URL
-          if (imageUrl) {
-            const response = await fetch(imageUrl);
-            if (!response.ok) throw new Error(`Failed to fetch image from URL: ${response.statusText}`);
-            imageBuffer = Buffer.from(await response.arrayBuffer());
-          } else {
-            throw new Error("Local file and S3 failed, and no URL provided.");
-          }
+          throw new Error("Local file and S3 failed, and no URL provided.");
         }
       }
     } else {
-      // If URL provided, fetch it
-      const response = await fetch(imageUrl);
-      if (!response.ok) throw new Error(`Failed to fetch image from URL: ${response.statusText}`);
-      imageBuffer = Buffer.from(await response.arrayBuffer());
+      throw new Error("No image key or URL provided.");
     }
 
     // Create temporary file

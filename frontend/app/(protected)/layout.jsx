@@ -109,6 +109,7 @@ export default function ProtectedLayout({ children }) {
             "farmer-profile": "/profile",
             "settings": "/profile", // Redirects to profile since settings are integrated there
             "impact-tracker": "/rewards",
+            "my-farm": "/my-farm",
         }
 
         if (routes[screen]) {

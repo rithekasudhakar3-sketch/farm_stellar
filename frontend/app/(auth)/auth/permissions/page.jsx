@@ -47,8 +47,10 @@ export default function PermissionsPage() {
             const farmData = {
                 name: farmDetails.farmName || `${farmDetails.name}'s Farm`,
                 address: farmDetails.address || `${farmDetails.district}, ${farmDetails.state}`,
-                size: parseFloat(farmDetails.farmSize) || 0,
-                primaryCrop: farmDetails.crops || ""
+                size: parseFloat(farmDetails.farmSize) || parseFloat(farmDetails.landSize) || 0,
+                primaryCrop: farmDetails.crops || farmDetails.primaryCrop || "",
+                farmLocation: farmDetails.farmLocation,
+                geofence: farmDetails.geofence
             }
 
             console.log("Signing up with:", signupData)

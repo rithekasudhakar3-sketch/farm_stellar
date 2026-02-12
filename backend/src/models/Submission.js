@@ -13,7 +13,8 @@ const SubmissionSchema = new mongoose.Schema({
   ],
   notes: { type: String },
   checklist: [{ type: String }],
-  status: { type: String, default: 'pending' },
+  status: { type: String, default: 'pending', enum: ['pending', 'approved', 'rejected'] },
+  xpAwarded: { type: Boolean, default: false },
   proofType: { type: String, default: 'text' },
   proofUrl: { type: String, default: '' },
   cottonVerification: {

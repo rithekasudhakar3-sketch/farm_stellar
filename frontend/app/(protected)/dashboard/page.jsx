@@ -70,7 +70,9 @@ export default function DashboardPage() {
                         name: user.farm.name,
                         address: user.farm.address,
                         size: user.farm.size,
-                        primaryCrop: user.farm.primaryCrop
+                        primaryCrop: user.farm.primaryCrop,
+                        farmLocation: user.farm.farmLocation,
+                        geofence: user.farm.geofence
                     } : localData.farmDetails,
                     completedQuests: dashboardData.completedQuests || user.questsProgress?.filter(q => q.status === "completed") || [],
                     badges: localData.badges || []

@@ -1,4 +1,12 @@
-import "dotenv/config";
+import { fileURLToPath } from 'url';
+import path from 'path';
+import dotenv from 'dotenv';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// Load .env from parent directory (Stella_AI root)
+dotenv.config({ path: path.join(__dirname, '../.env') });
 import express from "express";
 import cors from "cors";
 import { ChatGoogleGenerativeAI } from "@langchain/google-genai";
@@ -7,7 +15,7 @@ import { RunnableSequence } from "@langchain/core/runnables";
 import { StringOutputParser } from "@langchain/core/output_parsers";
 
 const app = express();
-const PORT = process.env.PORT || 8000;
+const PORT = process.env.CHATBOT_PORT || 8001;
 
 // Middleware
 app.use(cors());

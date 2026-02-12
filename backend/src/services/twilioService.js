@@ -76,7 +76,7 @@ exports.sendOTP = async (phone) => {
     return { success: true, message: 'OTP sent successfully' };
   } catch (error) {
     console.error('Twilio Verify error:', error);
-    throw new Error('Failed to send OTP');
+    throw new Error(`Failed to send OTP: ${error.message}`);
   }
 };
 
