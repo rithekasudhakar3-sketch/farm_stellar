@@ -1,27 +1,12 @@
 import withPWA from "@ducanh2912/next-pwa";
 
 /** @type {import('next').NextConfig} */
-const baseConfig = {
-  typescript: {
-    ignoreBuildErrors: true,
+typescript: {
+  ignoreBuildErrors: true,
   },
-  eslint: {
-    ignoreDuringBuilds: true,
+images: {
+  unoptimized: true,
   },
-  images: {
-    unoptimized: true,
-  },
-  experimental: {
-    turbo: {
-      rules: {
-        '*.svg': {
-          loaders: ['@svgr/webpack'],
-          as: '*.js',
-        },
-      },
-    },
-  },
-};
 
 export default withPWA({
   dest: "public",
