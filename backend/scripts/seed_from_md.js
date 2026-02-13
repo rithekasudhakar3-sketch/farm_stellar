@@ -444,6 +444,9 @@ const quests = [
       }
     ],
     "active": true,
+    "verification_data": {
+      "success_criteria": "Visible fermentation setup including a plastic barrel or container with brown liquid (jaggery and coconut water mixture), showing foam or bubbles indicating active fermentation, or clear preparation steps with green coconuts and jaggery."
+    },
     "activities": [
       "Ingredient Collection & Preparation",
       "The Base Preparation",
